@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { Hero } from '../components/ui/Hero';
 import { Mail, Phone, MapPin, Send } from 'lucide-react';
 
 export const Contact: React.FC = () => {
@@ -15,8 +16,15 @@ export const Contact: React.FC = () => {
   const MotionDiv = motion.div as any;
 
   return (
-    <div className="pt-10 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+    <div className="pb-20">
+      <Hero
+        bgImage="https://i.gifer.com/AcM.gif" // Global connections/Map
+        overlayOpacity={0.85}
+        title="Let's Talk"
+        subtitle="Have a project in mind? We'd love to hear from you. Send us a message and we'll respond as soon as possible."
+      />
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-24">
           
           {/* Contact Info */}
@@ -26,9 +34,9 @@ export const Contact: React.FC = () => {
             className="space-y-8"
           >
             <div>
-              <h1 className="text-4xl md:text-5xl font-bold text-white font-display mb-6">Let's Talk</h1>
-              <p className="text-xl text-slate-400">
-                Have a project in mind? We'd love to hear from you. Send us a message and we'll respond as soon as possible.
+              <h2 className="text-2xl font-bold text-white mb-4">Get in Touch</h2>
+              <p className="text-slate-400">
+                Whether you have a question about our services, pricing, or just want to say hello, our team is ready to answer all your questions.
               </p>
             </div>
 

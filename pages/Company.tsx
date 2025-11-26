@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'framer-motion';
 import { Card } from '../components/ui/Card';
+import { Hero } from '../components/ui/Hero';
 import { Compass, Users, Rocket, Shield, Cpu, Network } from 'lucide-react';
 
 export const Company: React.FC = () => {
@@ -28,23 +29,18 @@ export const Company: React.FC = () => {
   ];
 
   return (
-    <div className="pt-10 pb-20 overflow-x-hidden">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        
-        {/* Header */}
-        <MotionDiv 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-20"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-white font-display mb-6">Our Story</h1>
-          <p className="text-xl text-slate-400 max-w-3xl mx-auto">
-            Building a future where technology amplifies human potential, not replaces it.
-          </p>
-        </MotionDiv>
+    <div className="pb-20 overflow-x-hidden">
+      {/* Hero */}
+      <Hero
+        bgImage="https://i.gifer.com/X0XF.gif" // Purple waves abstract
+        title="Our Story"
+        subtitle="Building a future where technology amplifies human potential, not replaces it. Learn about our journey, our values, and the people behind the code."
+      />
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
+        
         {/* Leadership Principles */}
-        <div className="mb-24">
+        <div className="mb-24 mt-10">
           <MotionDiv 
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}

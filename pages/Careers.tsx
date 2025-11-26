@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { JOBS } from '../constants';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { Hero } from '../components/ui/Hero';
 import { MapPin, Briefcase, Filter } from 'lucide-react';
 
 export const Careers: React.FC = () => {
@@ -13,15 +14,15 @@ export const Careers: React.FC = () => {
   const MotionDiv = motion.div as any;
 
   return (
-    <div className="pt-10 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-white font-display mb-6">Join Our Team</h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto mb-8">
-            Work on the cutting edge of AI and software engineering. We are looking for dreamers and doers.
-          </p>
-        </div>
+    <div className="pb-20">
+      <Hero
+        bgImage="https://i.gifer.com/1jL.gif" // People/Hologram connection
+        overlayOpacity={0.8}
+        title="Join Our Team"
+        subtitle="Work on the cutting edge of AI and software engineering. We are looking for dreamers, doers, and innovators who want to shape the future."
+      />
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
           {/* Filters */}
           <div className="lg:col-span-1">

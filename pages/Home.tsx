@@ -1,8 +1,9 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { ChevronRight, ArrowRight, Brain, Shield, Code, Zap, Users } from 'lucide-react';
+import { ChevronRight, ArrowRight, Brain, Shield, Zap, Users } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { Hero } from '../components/ui/Hero';
 import { Link } from 'react-router-dom';
 import { PROJECTS } from '../constants';
 
@@ -15,67 +16,30 @@ const fadeInUp = {
 
 export const Home: React.FC = () => {
   const MotionDiv = motion.div as any;
+  
   return (
     <div className="overflow-hidden">
       {/* Hero Section */}
-      <section className="relative min-h-[90vh] flex items-center justify-center px-4 overflow-hidden">
-        {/* Abstract Background Elements */}
-        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-primary/20 rounded-full blur-[100px] animate-pulse-slow"></div>
-        <div className="absolute bottom-1/4 right-1/4 w-96 h-96 bg-secondary/20 rounded-full blur-[100px] animate-pulse-slow delay-1000"></div>
-        
-        <div className="relative z-10 max-w-5xl mx-auto text-center">
-          <MotionDiv
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div className="inline-flex items-center space-x-2 px-3 py-1 rounded-full bg-white/5 border border-white/10 mb-8">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-primary opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-primary"></span>
-              </span>
-              <span className="text-sm font-medium text-slate-300">Leading the AI Revolution</span>
-            </div>
-            
-            <h1 className="text-5xl md:text-7xl font-bold font-display text-white mb-6 leading-tight">
-              Innovation <br/>
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-emerald-400">
-                Elevated
-              </span>
-            </h1>
-            
-            <p className="text-lg md:text-xl text-slate-400 mb-10 max-w-2xl mx-auto leading-relaxed">
-              TechSafi is a next-generation technology partner delivering enterprise-grade AI solutions, 
-              robust cybersecurity, and transformative digital experiences.
-            </p>
-            
-            <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-              <Link to="/contact">
-                <Button size="lg">Start Project <ChevronRight className="ml-2 w-4 h-4" /></Button>
-              </Link>
-              <Link to="/portfolio">
-                <Button variant="outline" size="lg">View Portfolio</Button>
-              </Link>
-            </div>
-          </MotionDiv>
-        </div>
-        
-        {/* Floating tech elements */}
-        <MotionDiv 
-           className="absolute top-20 right-[10%] opacity-20 hidden lg:block"
-           animate={{ y: [0, -20, 0] }}
-           transition={{ duration: 5, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <Brain size={64} className="text-primary" />
-        </MotionDiv>
-        <MotionDiv 
-           className="absolute bottom-40 left-[10%] opacity-20 hidden lg:block"
-           animate={{ y: [0, 20, 0] }}
-           transition={{ duration: 6, repeat: Infinity, ease: "easeInOut", delay: 1 }}
-        >
-          <Code size={64} className="text-secondary" />
-        </MotionDiv>
-      </section>
+      <Hero
+        bgImage="https://i.gifer.com/7SSp.gif" // Blue network/nodes GIF
+        overlayOpacity={0.8}
+        title={
+          <>
+            Innovation <br/>
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-emerald-400">
+              Elevated
+            </span>
+          </>
+        }
+        subtitle="TechSafi is a next-generation technology partner delivering enterprise-grade AI solutions, robust cybersecurity, and transformative digital experiences."
+      >
+        <Link to="/contact">
+          <Button size="lg">Start Project <ChevronRight className="ml-2 w-4 h-4" /></Button>
+        </Link>
+        <Link to="/portfolio">
+          <Button variant="outline" size="lg">View Portfolio</Button>
+        </Link>
+      </Hero>
 
       {/* Services Overview */}
       <section className="py-24 bg-[#050b1d]">

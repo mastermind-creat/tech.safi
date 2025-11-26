@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import { PRICING_PLANS } from '../constants';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
+import { Hero } from '../components/ui/Hero';
 import { Check } from 'lucide-react';
 
 export const Pricing: React.FC = () => {
@@ -10,13 +11,14 @@ export const Pricing: React.FC = () => {
   const MotionDiv = motion.div as any;
 
   return (
-    <div className="pt-10 pb-20">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h1 className="text-4xl md:text-5xl font-bold text-white font-display mb-6">Simple, Transparent Pricing</h1>
-          <p className="text-xl text-slate-400 mb-8">Choose the plan that fits your ambition.</p>
-          
-          <div className="inline-flex items-center p-1 bg-white/5 rounded-full border border-white/10">
+    <div className="pb-20">
+      <Hero
+        bgImage="https://i.gifer.com/J4o.gif" // Abstract geometric/plexus
+        overlayOpacity={0.8}
+        title="Simple, Transparent Pricing"
+        subtitle="Choose the plan that fits your ambition. Scale up or down as your business needs evolve."
+      >
+        <div className="inline-flex items-center p-1 bg-white/5 rounded-full border border-white/10 backdrop-blur-md">
             <button 
               onClick={() => setBillingCycle('monthly')}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
@@ -33,9 +35,10 @@ export const Pricing: React.FC = () => {
             >
               Annual <span className="ml-1 text-[10px] bg-green-500 text-white px-1.5 py-0.5 rounded-full">-20%</span>
             </button>
-          </div>
         </div>
+      </Hero>
 
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {PRICING_PLANS.map((plan, idx) => (
             <MotionDiv

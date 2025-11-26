@@ -2,6 +2,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { SERVICES } from '../constants';
 import { Card } from '../components/ui/Card';
+import { Hero } from '../components/ui/Hero';
 import { Brain, Server, Shield, Zap, Smartphone, Globe, CheckCircle2 } from 'lucide-react';
 
 const iconMap: Record<string, React.ReactNode> = {
@@ -16,19 +17,14 @@ const iconMap: Record<string, React.ReactNode> = {
 export const Services: React.FC = () => {
   const MotionDiv = motion.div as any;
   return (
-    <div className="pt-10 pb-20">
-       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <MotionDiv 
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          className="text-center mb-16"
-        >
-          <h1 className="text-4xl md:text-5xl font-bold text-white font-display mb-6">Services & Solutions</h1>
-          <p className="text-xl text-slate-400 max-w-2xl mx-auto">
-            Comprehensive technology services tailored to accelerate your growth.
-          </p>
-        </MotionDiv>
+    <div className="pb-20">
+      <Hero
+        bgImage="https://i.gifer.com/1pW.gif" // Spinning wireframe globe/network
+        title="Services & Solutions"
+        subtitle="Comprehensive technology services tailored to accelerate your growth. From AI development to cybersecurity, we have you covered."
+      />
 
+       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {SERVICES.map((service, idx) => (
             <MotionDiv
