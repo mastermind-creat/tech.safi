@@ -1,11 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import * as RouterDOM from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronRight, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_ITEMS } from '../constants';
-
-// Bypass type checking for react-router-dom imports due to environment issues
-const { NavLink, useLocation } = RouterDOM as any;
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);

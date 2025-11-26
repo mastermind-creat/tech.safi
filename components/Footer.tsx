@@ -1,8 +1,6 @@
 import React from 'react';
-import * as RouterDOM from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { Twitter, Facebook, Instagram, Linkedin, Cloud } from 'lucide-react';
-
-const { NavLink } = RouterDOM as any;
 
 export const Footer: React.FC = () => {
   return (

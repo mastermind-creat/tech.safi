@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import * as RouterDOM from 'react-router-dom';
+import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { Home } from './pages/Home';
 import { Company } from './pages/Company';
@@ -8,10 +8,6 @@ import { Services } from './pages/Services';
 import { Pricing } from './pages/Pricing';
 import { Careers } from './pages/Careers';
 import { Contact } from './pages/Contact';
-
-// Bypass type checking for react-router-dom imports
-const { HashRouter, Routes, Route, useLocation } = RouterDOM as any;
-const Router = HashRouter;
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -34,7 +30,6 @@ const App: React.FC = () => {
           <Route path="/company" element={<Company />} />
           <Route path="/portfolio" element={<Portfolio />} />
           <Route path="/services" element={<Services />} />
-          {/* Reusing Services page for AI Solutions for simplicity, but logically focusing on AI sections */}
           <Route path="/ai-solutions" element={<Services />} /> 
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/careers" element={<Careers />} />

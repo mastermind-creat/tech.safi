@@ -3,10 +3,8 @@ import { motion } from 'framer-motion';
 import { ChevronRight, ArrowRight, Brain, Shield, Code, Zap, Users } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
-import * as RouterDOM from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { PROJECTS } from '../constants';
-
-const { Link } = RouterDOM as any;
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
