@@ -1,7 +1,9 @@
+
 import React, { ReactNode } from 'react';
 import { Navbar } from './Navbar';
 import { Footer } from './Footer';
 import { InstallPrompt } from './ui/InstallPrompt';
+import { Chatbot } from './Chatbot';
 
 interface LayoutProps {
   children: ReactNode;
@@ -16,6 +18,7 @@ export const Layout: React.FC<LayoutProps> = ({ children }) => {
       </main>
       <Footer />
       <InstallPrompt />
+      <Chatbot />
     </div>
   );
 };

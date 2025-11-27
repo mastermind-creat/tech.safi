@@ -156,20 +156,20 @@ export const Careers: React.FC = () => {
     <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-0 transition-colors duration-300">
       
       {/* Hero Section */}
-      <div className="relative pt-32 pb-24 overflow-hidden bg-slate-900 dark:bg-[#020617]">
+      <div className="relative pt-32 pb-24 overflow-hidden bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
         {/* Background Effects */}
-        <div className="absolute inset-0 bg-gradient-to-br from-purple-900/20 via-[#020617] to-blue-900/20"></div>
-        <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-purple-600/10 via-transparent to-transparent blur-[100px] pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-br from-purple-100/40 via-slate-50 to-blue-100/40 dark:from-purple-900/20 dark:via-[#020617] dark:to-blue-900/20"></div>
+        <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-b from-purple-200/20 via-transparent to-transparent dark:from-purple-600/10 dark:via-transparent dark:to-transparent blur-[100px] pointer-events-none"></div>
         
         {/* Abstract Shapes */}
-        <div className="absolute top-20 right-[10%] w-32 h-32 border border-white/5 rounded-lg rotate-12 animate-float opacity-30"></div>
+        <div className="absolute top-20 right-[10%] w-32 h-32 border border-slate-200 dark:border-white/5 rounded-lg rotate-12 animate-float opacity-30"></div>
         <div className="absolute bottom-20 left-[5%] w-24 h-24 bg-blue-500/10 rounded-full blur-xl animate-pulse-slow"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <MotionDiv
              initial={{ opacity: 0, y: -20 }}
              animate={{ opacity: 1, y: 0 }}
-             className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs font-bold tracking-widest uppercase mb-6 text-purple-300"
+             className="inline-flex items-center px-4 py-1.5 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md text-xs font-bold tracking-widest uppercase mb-6 text-purple-600 dark:text-purple-300 shadow-sm"
           >
              <Users size={12} className="mr-2" /> Join Our Team
           </MotionDiv>
@@ -179,9 +179,9 @@ export const Careers: React.FC = () => {
              animate={{ opacity: 1, scale: 1 }}
              transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-display text-white mb-6 tracking-tight">
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-display text-slate-900 dark:text-white mb-6 tracking-tight">
               Build the Future <br />
-              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">With Us</span>
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-400 dark:to-pink-500">With Us</span>
             </h1>
           </MotionDiv>
           
@@ -190,8 +190,8 @@ export const Careers: React.FC = () => {
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed mb-10">
-              Work with a <span className="text-white font-semibold">passionate team</span> that values <span className="text-pink-400">innovation</span>, <span className="text-purple-400">creativity</span>, and making a real impact in the tech world.
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed mb-10">
+              Work with a <span className="text-slate-900 dark:text-white font-semibold">passionate team</span> that values <span className="text-pink-600 dark:text-pink-400">innovation</span>, <span className="text-purple-600 dark:text-purple-400">creativity</span>, and making a real impact in the tech world.
             </p>
           </MotionDiv>
 
@@ -203,17 +203,17 @@ export const Careers: React.FC = () => {
              className="flex flex-wrap justify-center gap-4 mb-10"
           >
             {[
-              { icon: Users, text: "5+ Team Members", color: "bg-white/5" },
-              { icon: Globe, text: "Remote Work Anywhere", color: "bg-white/5" },
-              { icon: Heart, text: "Great Culture", color: "bg-white/5" }
+              { icon: Users, text: "5+ Team Members", color: "bg-white dark:bg-white/5" },
+              { icon: Globe, text: "Remote Work Anywhere", color: "bg-white dark:bg-white/5" },
+              { icon: Heart, text: "Great Culture", color: "bg-white dark:bg-white/5" }
             ].map((badge, idx) => (
-              <div key={idx} className={`${badge.color} backdrop-blur-md border border-white/10 px-4 py-2 rounded-xl flex items-center space-x-2 text-sm font-medium text-slate-300`}>
-                <badge.icon size={16} className="text-purple-400" />
+              <div key={idx} className={`${badge.color} backdrop-blur-md border border-slate-200 dark:border-white/10 px-4 py-2 rounded-xl flex items-center space-x-2 text-sm font-medium text-slate-700 dark:text-slate-300 shadow-sm`}>
+                <badge.icon size={16} className="text-purple-500 dark:text-purple-400" />
                 <span>{badge.text}</span>
               </div>
             ))}
-            <div className="bg-purple-500/20 backdrop-blur-md border border-purple-500/30 px-3 py-2 rounded-full flex items-center justify-center">
-               <Rocket size={14} className="text-purple-400 animate-pulse" />
+            <div className="bg-purple-100 dark:bg-purple-500/20 backdrop-blur-md border border-purple-200 dark:border-purple-500/30 px-3 py-2 rounded-full flex items-center justify-center">
+               <Rocket size={14} className="text-purple-600 dark:text-purple-400 animate-pulse" />
             </div>
           </MotionDiv>
 
@@ -223,10 +223,10 @@ export const Careers: React.FC = () => {
              transition={{ duration: 0.5, delay: 0.4 }}
              className="flex flex-col sm:flex-row justify-center gap-4"
           >
-            <Button className="bg-white text-purple-900 hover:bg-slate-100 font-bold px-8 py-3 rounded-full">
+            <Button className="bg-slate-900 dark:bg-white text-white dark:text-purple-900 hover:bg-slate-800 dark:hover:bg-slate-100 font-bold px-8 py-3 rounded-full shadow-lg">
               <CheckCircle2 size={18} className="mr-2" /> Explore Our Culture
             </Button>
-            <Button variant="outline" className="border-purple-500/50 text-purple-300 hover:bg-purple-500/10 px-8 py-3 rounded-full">
+            <Button variant="outline" className="border-purple-500/50 text-purple-600 dark:text-purple-300 hover:bg-purple-50 dark:hover:bg-purple-500/10 px-8 py-3 rounded-full bg-white/50 dark:bg-transparent">
               <Briefcase size={18} className="mr-2" /> View Open Positions
             </Button>
           </MotionDiv>
@@ -239,9 +239,9 @@ export const Careers: React.FC = () => {
             initial={{ opacity: 0, y: 40 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.6, delay: 0.5 }}
-            className="bg-white dark:bg-[#0f172a] border border-orange-500/20 rounded-2xl p-1 overflow-hidden shadow-2xl shadow-orange-500/5 dark:shadow-orange-900/10"
+            className="bg-white dark:bg-[#0f172a] border border-orange-200 dark:border-orange-500/20 rounded-2xl p-1 overflow-hidden shadow-2xl shadow-orange-500/5 dark:shadow-orange-900/10"
          >
-            <div className="bg-orange-50 dark:bg-[#1e293b]/50 rounded-xl p-8 md:p-10 border border-slate-200 dark:border-white/5 relative overflow-hidden">
+            <div className="bg-orange-50/50 dark:bg-[#1e293b]/50 rounded-xl p-8 md:p-10 border border-slate-200 dark:border-white/5 relative overflow-hidden">
                {/* Background Glow */}
                <div className="absolute top-0 right-0 w-64 h-64 bg-orange-500/5 rounded-full blur-3xl -translate-y-1/2 translate-x-1/3 pointer-events-none"></div>
 
@@ -398,7 +398,7 @@ export const Careers: React.FC = () => {
       </div>
 
       {/* Employee Benefits Section */}
-      <div className="bg-white dark:bg-[#0f172a] py-24 mb-24 border-y border-slate-200 dark:border-white/5">
+      <div className="bg-white dark:bg-[#0f172a] py-24 mb-24 border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
              <MotionDiv
                 initial={{ opacity: 0, y: 20 }}
@@ -551,7 +551,7 @@ export const Careers: React.FC = () => {
       </div>
 
       {/* Internship & Industrial Attachment Section */}
-      <div className="bg-slate-100 dark:bg-[#0f172a] py-24 mb-24 border-y border-slate-200 dark:border-white/5">
+      <div className="bg-slate-100 dark:bg-[#0f172a] py-24 mb-24 border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv
                initial={{ opacity: 0, y: 20 }}
