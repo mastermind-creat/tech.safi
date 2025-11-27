@@ -225,7 +225,13 @@ export const AiSolutions: React.FC = () => {
               <div className="h-full bg-white dark:bg-[#1e293b]/40 rounded-2xl border border-slate-200 dark:border-white/5 p-8 hover:border-slate-300 dark:hover:border-white/10 dark:hover:bg-[#1e293b]/60 transition-all duration-300 shadow-lg dark:shadow-none">
                 {/* Icon */}
                 <div className={`w-12 h-12 rounded-xl bg-${feature.color}-100 dark:bg-${feature.color}-500/10 flex items-center justify-center text-${feature.color}-600 dark:text-${feature.color}-500 mb-6 border border-${feature.color}-200 dark:border-${feature.color}-500/20 group-hover:scale-110 transition-transform duration-300`}>
-                  <feature.icon size={24} />
+                  <MotionDiv
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    whileHover={{ rotate: [0, -10, 10, -10, 10, 0] }}
+                  >
+                    <feature.icon size={24} />
+                  </MotionDiv>
                 </div>
                 
                 <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{feature.title}</h3>
@@ -235,10 +241,18 @@ export const AiSolutions: React.FC = () => {
 
                 <div className="space-y-2">
                   {feature.subFeatures.map((sub, sIdx) => (
-                    <div key={sIdx} className="flex items-center text-xs text-slate-500 dark:text-slate-300">
-                      <CheckCircle2 size={12} className={`text-${feature.color}-500 mr-2`} />
-                      {sub}
-                    </div>
+                    <MotionDiv 
+                      key={sIdx} 
+                      className="flex items-center text-xs text-slate-500 dark:text-slate-300 group/item"
+                      whileHover={{ x: 3 }}
+                    >
+                      <MotionDiv
+                        whileHover={{ scale: 1.3, color: "#10b981" }}
+                      >
+                        <CheckCircle2 size={12} className={`text-${feature.color}-500 mr-2`} />
+                      </MotionDiv>
+                      <span className="group-hover/item:text-slate-700 dark:group-hover/item:text-white transition-colors">{sub}</span>
+                    </MotionDiv>
                   ))}
                 </div>
               </div>
@@ -281,7 +295,12 @@ export const AiSolutions: React.FC = () => {
                 >
                    <div className={`h-full bg-white dark:bg-[${card.color === 'blue' ? '#0f172a' : '#1e1b4b'}]/30 border border-slate-200 dark:border-white/5 rounded-xl p-6 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group shadow-md dark:shadow-none`}>
                       <div className={`w-10 h-10 rounded-lg bg-${card.color}-100 dark:bg-${card.color}-500/10 flex items-center justify-center text-${card.color}-500 dark:text-${card.color}-400 mb-4 group-hover:scale-110 transition-transform`}>
-                         <card.icon size={20} />
+                         <MotionDiv
+                           whileHover={{ rotate: 360, scale: 1.2 }}
+                           transition={{ duration: 0.5 }}
+                         >
+                           <card.icon size={20} />
+                         </MotionDiv>
                       </div>
                       <h3 className="text-slate-900 dark:text-white font-bold mb-2">{card.title}</h3>
                       <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">{card.desc}</p>
@@ -355,10 +374,14 @@ export const AiSolutions: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
-                  className="w-full md:w-48 text-center relative z-10"
+                  className="w-full md:w-48 text-center relative z-10 group"
                >
-                  <div className={`w-16 h-16 rounded-full bg-${item.color}-100 dark:bg-[#1e293b] border-4 border-white dark:border-[#020617] flex items-center justify-center text-${item.color}-500 mx-auto mb-6 shadow-lg`}>
-                     <item.icon size={24} />
+                  <div className={`w-16 h-16 rounded-full bg-${item.color}-100 dark:bg-[#1e293b] border-4 border-white dark:border-[#020617] flex items-center justify-center text-${item.color}-500 mx-auto mb-6 shadow-lg group-hover:scale-110 transition-transform`}>
+                     <MotionDiv
+                        whileHover={{ rotate: 15 }}
+                     >
+                       <item.icon size={24} />
+                     </MotionDiv>
                   </div>
                   <h3 className="text-slate-900 dark:text-white font-bold text-sm mb-2">{item.step}</h3>
                   <p className="text-slate-500 dark:text-slate-400 text-[10px] leading-relaxed px-2">{item.desc}</p>
@@ -401,9 +424,15 @@ export const AiSolutions: React.FC = () => {
                      whileInView={{ opacity: 1, scale: 1 }}
                      viewport={{ once: true }}
                      transition={{ delay: idx * 0.05 }}
-                     className="bg-white dark:bg-[#1e293b] p-4 rounded-xl flex flex-col items-center justify-center hover:bg-slate-50 dark:hover:bg-[#2d3b4e] transition-colors border border-slate-200 dark:border-white/5 shadow-sm dark:shadow-none"
+                     className="bg-white dark:bg-[#1e293b] p-4 rounded-xl flex flex-col items-center justify-center hover:bg-slate-50 dark:hover:bg-[#2d3b4e] transition-colors border border-slate-200 dark:border-white/5 shadow-sm dark:shadow-none group"
                   >
-                     <tech.icon size={24} className={`mb-2 ${tech.color}`} />
+                     <MotionDiv
+                        animate={{ y: [0, -2, 0] }}
+                        transition={{ duration: 3, repeat: Infinity, ease: "easeInOut", delay: idx * 0.2 }}
+                        whileHover={{ scale: 1.2, rotate: 5 }}
+                     >
+                       <tech.icon size={24} className={`mb-2 ${tech.color}`} />
+                     </MotionDiv>
                      <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">{tech.name}</span>
                   </MotionDiv>
                ))}
@@ -436,10 +465,14 @@ export const AiSolutions: React.FC = () => {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
-                  className="bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 p-8 rounded-2xl text-center hover:border-slate-300 dark:hover:border-white/20 transition-all shadow-lg dark:shadow-none"
+                  className="bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 p-8 rounded-2xl text-center hover:border-slate-300 dark:hover:border-white/20 transition-all shadow-lg dark:shadow-none group"
                >
-                  <div className={`w-14 h-14 mx-auto rounded-full bg-${item.color}-100 dark:bg-${item.color}-500/10 flex items-center justify-center text-${item.color}-600 dark:text-${item.color}-500 mb-6`}>
-                     <item.icon size={24} />
+                  <div className={`w-14 h-14 mx-auto rounded-full bg-${item.color}-100 dark:bg-${item.color}-500/10 flex items-center justify-center text-${item.color}-600 dark:text-${item.color}-500 mb-6 group-hover:scale-110 transition-transform`}>
+                     <MotionDiv
+                        whileHover={{ rotate: [0, -10, 10, 0] }}
+                     >
+                       <item.icon size={24} />
+                     </MotionDiv>
                   </div>
                   <h3 className="text-slate-900 dark:text-white font-bold mb-3">{item.title}</h3>
                   <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">{item.desc}</p>
@@ -473,7 +506,7 @@ export const AiSolutions: React.FC = () => {
                      whileInView={{ opacity: 1, scale: 1 }}
                      viewport={{ once: true }}
                      transition={{ delay: idx * 0.1 }}
-                     className="bg-white dark:bg-[#1e293b]/40 p-8 rounded-2xl border border-slate-200 dark:border-white/5 relative shadow-lg dark:shadow-none"
+                     className="bg-white dark:bg-[#1e293b]/40 p-8 rounded-2xl border border-slate-200 dark:border-white/5 relative shadow-lg dark:shadow-none hover:-translate-y-1 transition-transform"
                   >
                      <div className="flex items-center mb-6">
                         <div className={`w-10 h-10 rounded-full bg-${testimonial.bg}-600 flex items-center justify-center text-white font-bold text-sm mr-3`}>
@@ -513,7 +546,7 @@ export const AiSolutions: React.FC = () => {
               { icon: Factory, title: "Finance", desc: "Fraud detection, risk assessment, algorithmic trading, and credit scoring.", color: "emerald" },
               { icon: Factory, title: "Manufacturing", desc: "Predictive maintenance, quality control, supply chain optimization, and process automation.", color: "orange" },
               { icon: Truck, title: "Transportation", desc: "Route optimization, autonomous vehicles, traffic prediction, and fleet management.", color: "red" },
-              { icon: Megaphone, title: "Marketing", desc: "Customer segmentation, campaign optimization, content generation, and sentiment analysis.", color: "pink" },
+              { icon: Users, title: "Marketing", desc: "Customer segmentation, campaign optimization, content generation, and sentiment analysis.", color: "pink" },
               { icon: GraduationCap, title: "Education", desc: "Personalized learning paths, automated grading, student performance prediction, and adaptive content.", color: "indigo" },
               { icon: Truck, title: "Logistics", desc: "Supply chain optimization, demand forecasting, warehouse automation, and delivery route planning.", color: "teal" },
               { icon: Home, title: "Real Estate", desc: "Property valuation, market trend analysis, virtual property tours, and intelligent property matching.", color: "orange" }
@@ -524,9 +557,9 @@ export const AiSolutions: React.FC = () => {
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.05 }}
-                  className="bg-white dark:bg-[#1e293b]/30 p-6 rounded-xl border border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-[#1e293b]/50 transition-all shadow-sm dark:shadow-none"
+                  className="bg-white dark:bg-[#1e293b]/30 p-6 rounded-xl border border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-[#1e293b]/50 transition-all shadow-sm dark:shadow-none group"
                >
-                  <div className={`text-${useCase.color}-500 mb-4`}>
+                  <div className={`text-${useCase.color}-500 mb-4 group-hover:scale-110 transition-transform`}>
                      {useCase.title === 'Marketing' ? <Zap size={24} /> : <useCase.icon size={24} />}
                   </div>
                   <h3 className="text-slate-900 dark:text-white font-bold mb-2">{useCase.title}</h3>
@@ -605,9 +638,9 @@ export const AiSolutions: React.FC = () => {
                      whileInView={{ opacity: 1, y: 0 }}
                      viewport={{ once: true }}
                      transition={{ delay: idx * 0.1 }}
-                     className="bg-white dark:bg-[#1e293b]/40 rounded-2xl p-8 border border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20 transition-all shadow-lg dark:shadow-none"
+                     className="bg-white dark:bg-[#1e293b]/40 rounded-2xl p-8 border border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20 transition-all shadow-lg dark:shadow-none hover:-translate-y-1"
                   >
-                     <div className={`w-12 h-12 rounded-full bg-${story.color}-100 dark:bg-${story.color}-500/20 flex items-center justify-center text-${story.color}-600 dark:text-${story.color}-400 mb-6`}>
+                     <div className={`w-12 h-12 rounded-full bg-${story.color}-100 dark:bg-${story.color}-500/20 flex items-center justify-center text-${story.color}-600 dark:text-${story.color}-400 mb-6 group-hover:scale-110 transition-transform`}>
                         <story.icon size={24} />
                      </div>
                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{story.title}</h3>
@@ -640,22 +673,3 @@ export const AiSolutions: React.FC = () => {
     </div>
   );
 };
-
-// Helper component for Marketing Icon
-const Megaphone = ({ size, className }: { size?: number, className?: string }) => (
-  <svg 
-    xmlns="http://www.w3.org/2000/svg" 
-    width={size} 
-    height={size} 
-    viewBox="0 0 24 24" 
-    fill="none" 
-    stroke="currentColor" 
-    strokeWidth="2" 
-    strokeLinecap="round" 
-    strokeLinejoin="round" 
-    className={className}
-  >
-    <path d="m3 11 18-5v12L3 14v-3z"/>
-    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
-  </svg>
-);

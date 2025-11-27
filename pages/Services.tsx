@@ -280,8 +280,9 @@ export const Services: React.FC = () => {
                 {/* Icon with Animation */}
                 <div className={`w-14 h-14 rounded-xl bg-${service.color}-100 dark:bg-${service.color}-500/10 flex items-center justify-center text-${service.color}-600 dark:text-${service.color}-500 mb-6 group-hover:scale-110 transition-transform duration-300 border border-${service.color}-200 dark:border-${service.color}-500/20`}>
                   <MotionDiv
-                    whileHover={{ rotate: 15, scale: 1.2 }}
-                    transition={{ type: "spring", stiffness: 300 }}
+                    animate={{ y: [0, -3, 0] }}
+                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+                    whileHover={{ rotate: [0, -10, 10, -10, 10, 0], scale: 1.1 }}
                   >
                     <service.icon size={28} />
                   </MotionDiv>
@@ -298,12 +299,17 @@ export const Services: React.FC = () => {
                    {service.features.map((feature, fIdx) => (
                      <MotionDiv 
                         key={fIdx} 
-                        className="flex items-start"
+                        className="flex items-start group/item"
                         initial={{ opacity: 0.8 }}
                         whileHover={{ x: 5, opacity: 1 }}
                      >
-                        <CheckCircle2 size={16} className={`text-${service.color}-500 mt-0.5 mr-3 flex-shrink-0`} />
-                        <span className="text-xs md:text-sm text-slate-500 dark:text-slate-300">{feature}</span>
+                        <MotionDiv
+                          whileHover={{ scale: 1.3, rotate: 15 }}
+                          className="mr-3 flex-shrink-0"
+                        >
+                           <CheckCircle2 size={16} className={`text-${service.color}-500 mt-0.5`} />
+                        </MotionDiv>
+                        <span className="text-xs md:text-sm text-slate-500 dark:text-slate-300 transition-colors group-hover/item:text-slate-700 dark:group-hover/item:text-white">{feature}</span>
                      </MotionDiv>
                    ))}
                 </div>
@@ -379,7 +385,11 @@ export const Services: React.FC = () => {
                            {idx + 1}
                         </div>
                         <div className="mb-4">
-                           <step.icon size={24} className="text-slate-400 mx-auto mb-2" />
+                           <MotionDiv
+                             whileHover={{ rotate: 20, scale: 1.2 }}
+                           >
+                             <step.icon size={24} className="text-slate-400 mx-auto mb-2" />
+                           </MotionDiv>
                            <h3 className="text-xl font-bold text-slate-900 dark:text-white">{step.title}</h3>
                         </div>
                         <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
@@ -426,10 +436,15 @@ export const Services: React.FC = () => {
                      whileInView={{ opacity: 1, scale: 1 }}
                      viewport={{ once: true }}
                      transition={{ delay: idx * 0.05 }}
-                     className="flex flex-col items-center"
+                     className="flex flex-col items-center group"
                   >
-                     <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-[#1e293b] flex items-center justify-center mb-4 border border-slate-200 dark:border-white/5 shadow-sm dark:shadow-none">
-                        <stack.icon size={24} className={stack.color} />
+                     <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-[#1e293b] flex items-center justify-center mb-4 border border-slate-200 dark:border-white/5 shadow-sm dark:shadow-none group-hover:scale-110 transition-transform">
+                        <MotionDiv
+                          whileHover={{ rotate: 360 }}
+                          transition={{ duration: 0.7 }}
+                        >
+                           <stack.icon size={24} className={stack.color} />
+                        </MotionDiv>
                      </div>
                      <h3 className="text-slate-900 dark:text-white font-bold text-sm mb-3">{stack.category}</h3>
                      <ul className="space-y-1.5 text-center">

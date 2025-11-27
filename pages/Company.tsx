@@ -351,7 +351,13 @@ export const Company: React.FC = () => {
               >
                 <Card className="h-full p-8 border border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20 transition-all duration-300 bg-white dark:bg-[#0f172a] group hover:-translate-y-2 shadow-lg dark:shadow-none">
                   <div className={`w-16 h-16 rounded-2xl ${principle.color} flex items-center justify-center mb-6 mx-auto group-hover:scale-110 transition-transform`}>
-                    {principle.icon}
+                    <MotionDiv
+                      animate={{ y: [0, -3, 0] }}
+                      transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: idx * 0.5 }}
+                      whileHover={{ rotate: 15 }}
+                    >
+                      {principle.icon}
+                    </MotionDiv>
                   </div>
                   <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4 text-center">{principle.title}</h3>
                   <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm text-center">
