@@ -1,31 +1,62 @@
+
 import React from 'react';
 import { motion, useScroll, useTransform } from 'framer-motion';
 import { 
-  ArrowRight, Brain, Shield, Zap, 
+  ArrowRight, Brain, Shield, 
   Clock, Server, Globe, Smartphone, 
-  Code2, Rocket, CheckCircle2, Award, Bot, 
-  Layout, Cpu, Layers, TrendingUp, ChevronRight,
-  Cloud
+  Code2, Rocket, Bot, 
+  Layout, Cloud, ChevronRight
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Typewriter } from '../components/ui/Typewriter';
 import { PROJECTS } from '../constants';
 
+// Animation Variants
 const fadeInUp = {
-  initial: { opacity: 0, y: 40 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-50px" },
-  transition: { duration: 0.7, ease: "easeOut" }
+  hidden: { opacity: 0, y: 60 },
+  visible: { 
+    opacity: 1, 
+    y: 0,
+    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
+  }
+};
+
+const fadeInRight = {
+  hidden: { opacity: 0, x: -60 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { duration: 0.8, ease: "easeOut" }
+  }
+};
+
+const fadeInLeft = {
+  hidden: { opacity: 0, x: 60 },
+  visible: { 
+    opacity: 1, 
+    x: 0,
+    transition: { duration: 0.8, ease: "easeOut" }
+  }
 };
 
 const staggerContainer = {
   hidden: { opacity: 0 },
-  show: {
+  visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15
+      staggerChildren: 0.15,
+      delayChildren: 0.1
     }
+  }
+};
+
+const scaleIn = {
+  hidden: { opacity: 0, scale: 0.8 },
+  visible: { 
+    opacity: 1, 
+    scale: 1,
+    transition: { duration: 0.6, ease: "backOut" }
   }
 };
 
@@ -35,7 +66,6 @@ export const Home: React.FC = () => {
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
 
   const MotionDiv = motion.div as any;
-  const MotionImg = motion.img as any;
 
   return (
     <div className="overflow-hidden bg-slate-50 dark:bg-[#020617] text-slate-900 dark:text-slate-200 selection:bg-cyan-500/30 transition-colors duration-300">
@@ -45,7 +75,6 @@ export const Home: React.FC = () => {
           
           {/* Animated Background */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-             {/* Moving Gradients */}
              <MotionDiv 
                style={{ y: y1, x: -100 }}
                className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-blue-400/10 dark:bg-blue-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen"
@@ -55,10 +84,8 @@ export const Home: React.FC = () => {
                className="absolute bottom-[10%] right-[20%] w-[600px] h-[600px] bg-purple-400/10 dark:bg-purple-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen"
              />
              
-             {/* Tech Grid Overlay */}
              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] dark:opacity-[0.03]"></div>
              
-             {/* Floating Particles */}
              {[...Array(20)].map((_, i) => (
                <MotionDiv
                  key={i}
@@ -138,7 +165,7 @@ export const Home: React.FC = () => {
                className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
              >
                 <Link to="/contact" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-lg dark:shadow-[0_0_30px_rgba(6,182,212,0.3)] border-0 text-white font-bold py-4 px-8 text-lg rounded-xl">
+                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-lg dark:shadow-[0_0_30px_rgba(6,182,212,0.3)] border-0 text-white font-bold py-4 px-8 text-lg rounded-xl transform hover:-translate-y-1 transition-transform duration-300">
                     Start Your Project
                   </Button>
                 </Link>
@@ -176,7 +203,13 @@ export const Home: React.FC = () => {
       {/* --- SERVICES PREVIEW --- */}
       <section className="py-24 relative z-10 bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <MotionDiv {...fadeInUp} className="text-center mb-16">
+           <MotionDiv 
+             variants={fadeInUp}
+             initial="hidden"
+             whileInView="visible"
+             viewport={{ once: true, margin: "-100px" }}
+             className="text-center mb-16"
+           >
               <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-6">
                  Intelligent <span className="text-cyan-500 dark:text-cyan-400">Services</span>
               </h2>
@@ -188,8 +221,8 @@ export const Home: React.FC = () => {
            <MotionDiv 
              variants={staggerContainer}
              initial="hidden"
-             whileInView="show"
-             viewport={{ once: true, margin: "-100px" }}
+             whileInView="visible"
+             viewport={{ once: true, margin: "-50px" }}
              className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
            >
               {[
@@ -202,10 +235,9 @@ export const Home: React.FC = () => {
               ].map((service, idx) => (
                 <MotionDiv 
                   key={idx}
-                  variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}
-                  className="group relative p-8 bg-white dark:bg-[#0f172a]/60 border border-slate-200 dark:border-white/5 rounded-2xl hover:border-blue-500/30 dark:hover:bg-[#1e293b]/80 dark:hover:border-white/10 transition-all duration-300 hover:-translate-y-1 overflow-hidden shadow-lg dark:shadow-none"
+                  variants={fadeInUp}
+                  className="group relative p-8 bg-white dark:bg-[#0f172a]/60 border border-slate-200 dark:border-white/5 rounded-2xl hover:border-blue-500/30 dark:hover:bg-[#1e293b]/80 dark:hover:border-white/10 transition-all duration-300 hover:-translate-y-2 overflow-hidden shadow-lg dark:shadow-none"
                 >
-                   {/* Hover Gradient */}
                    <div className={`absolute inset-0 bg-gradient-to-br from-${service.color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
                    
                    <div className={`w-14 h-14 rounded-xl bg-${service.color}-100 dark:bg-${service.color}-500/10 flex items-center justify-center text-${service.color}-600 dark:text-${service.color}-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-${service.color}-200 dark:border-${service.color}-500/20`}>
@@ -217,7 +249,7 @@ export const Home: React.FC = () => {
                       {service.desc}
                    </p>
                    
-                   <Link to="/services" className={`inline-flex items-center text-xs font-bold uppercase tracking-wider text-${service.color}-600 dark:text-${service.color}-400 hover:text-${service.color}-500 dark:hover:text-${service.color}-300 relative z-10`}>
+                   <Link to="/services" className={`inline-flex items-center text-xs font-bold uppercase tracking-wider text-${service.color}-600 dark:text-${service.color}-400 hover:text-${service.color}-500 dark:hover:text-${service.color}-300 relative z-10 group-hover:translate-x-1 transition-transform`}>
                       Learn More <ChevronRight size={14} className="ml-1" />
                    </Link>
                 </MotionDiv>
@@ -231,10 +263,10 @@ export const Home: React.FC = () => {
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                <MotionDiv 
-                 initial={{ opacity: 0, x: -30 }}
-                 whileInView={{ opacity: 1, x: 0 }}
+                 variants={fadeInRight}
+                 initial="hidden"
+                 whileInView="visible"
                  viewport={{ once: true }}
-                 transition={{ duration: 0.6 }}
                >
                   <div className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold tracking-widest uppercase mb-6">
                      About TechSafi
@@ -253,7 +285,7 @@ export const Home: React.FC = () => {
                   </div>
                   <div className="mt-10">
                      <Link to="/company">
-                        <Button className="bg-slate-900 dark:bg-white text-white dark:text-purple-900 hover:bg-slate-800 dark:hover:bg-slate-100 font-bold px-8 py-3 rounded-lg shadow-lg">
+                        <Button className="bg-slate-900 dark:bg-white text-white dark:text-purple-900 hover:bg-slate-800 dark:hover:bg-slate-100 font-bold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
                            Discover Our Story
                         </Button>
                      </Link>
@@ -261,16 +293,14 @@ export const Home: React.FC = () => {
                </MotionDiv>
 
                <MotionDiv
-                 initial={{ opacity: 0, x: 30 }}
-                 whileInView={{ opacity: 1, x: 0 }}
+                 variants={fadeInLeft}
+                 initial="hidden"
+                 whileInView="visible"
                  viewport={{ once: true }}
-                 transition={{ duration: 0.6 }}
                  className="relative"
                >
-                  {/* Abstract Tech Illustration Placeholder */}
                   <div className="relative aspect-square md:aspect-[4/3] bg-slate-50 dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-blue-900/20 rounded-3xl border border-slate-200 dark:border-white/10 overflow-hidden flex items-center justify-center shadow-2xl dark:shadow-none">
                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/circuit-board.png')] opacity-[0.05] dark:opacity-10"></div>
-                     {/* Floating Elements */}
                      <MotionDiv 
                         animate={{ y: [-10, 10, -10] }}
                         transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
@@ -313,7 +343,12 @@ export const Home: React.FC = () => {
       <section className="py-24 relative bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
-               <MotionDiv {...fadeInUp}>
+               <MotionDiv 
+                 variants={fadeInUp}
+                 initial="hidden"
+                 whileInView="visible"
+                 viewport={{ once: true }}
+               >
                   <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
                      Selected <span className="text-blue-500">Works</span>
                   </h2>
@@ -321,22 +356,32 @@ export const Home: React.FC = () => {
                      A glimpse into the digital solutions we've crafted.
                   </p>
                </MotionDiv>
-               <Link to="/portfolio">
-                  <Button variant="ghost" className="text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 group">
-                     View All Projects <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-               </Link>
+               <MotionDiv
+                 initial={{ opacity: 0, x: 20 }}
+                 whileInView={{ opacity: 1, x: 0 }}
+                 viewport={{ once: true }}
+                 transition={{ delay: 0.2 }}
+               >
+                 <Link to="/portfolio">
+                    <Button variant="ghost" className="text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 group">
+                       View All Projects <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                    </Button>
+                 </Link>
+               </MotionDiv>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            <MotionDiv 
+               variants={staggerContainer}
+               initial="hidden"
+               whileInView="visible"
+               viewport={{ once: true, margin: "-50px" }}
+               className="grid grid-cols-1 md:grid-cols-3 gap-8"
+            >
                {PROJECTS.slice(0, 3).map((project, idx) => (
                   <MotionDiv
                      key={project.id}
-                     initial={{ opacity: 0, y: 30 }}
-                     whileInView={{ opacity: 1, y: 0 }}
-                     viewport={{ once: true }}
-                     transition={{ delay: idx * 0.1, duration: 0.5 }}
-                     className="group relative rounded-2xl overflow-hidden aspect-[4/3] cursor-pointer shadow-lg dark:shadow-none"
+                     variants={scaleIn}
+                     className="group relative rounded-2xl overflow-hidden aspect-[4/3] cursor-pointer shadow-lg dark:shadow-none hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
                   >
                      <img 
                        src={project.image} 
@@ -363,7 +408,7 @@ export const Home: React.FC = () => {
                      </div>
                   </MotionDiv>
                ))}
-            </div>
+            </MotionDiv>
          </div>
       </section>
 
@@ -371,8 +416,9 @@ export const Home: React.FC = () => {
       <section className="py-24 bg-slate-100 dark:bg-[#0f172a]/30 border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv 
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
+               variants={fadeInUp}
+               initial="hidden"
+               whileInView="visible"
                viewport={{ once: true }}
                className="text-center mb-20"
             >
@@ -381,7 +427,13 @@ export const Home: React.FC = () => {
                </h2>
             </MotionDiv>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <MotionDiv 
+               variants={staggerContainer}
+               initial="hidden"
+               whileInView="visible"
+               viewport={{ once: true }}
+               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
+            >
                {[
                  { icon: Rocket, title: "Fast Delivery", desc: "Agile methodologies that ensure rapid deployment without compromising quality." },
                  { icon: Brain, title: "AI-Driven", desc: "We integrate intelligence into every layer of development for smarter solutions." },
@@ -391,11 +443,8 @@ export const Home: React.FC = () => {
                ].slice(0, 4).map((item, idx) => (
                  <MotionDiv
                     key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="bg-white dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-2xl p-8 hover:border-emerald-500/30 transition-colors group shadow-lg dark:shadow-none"
+                    variants={fadeInUp}
+                    className="bg-white dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-2xl p-8 hover:border-emerald-500/30 transition-all group shadow-lg dark:shadow-none hover:-translate-y-1 duration-300"
                  >
                     <div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-[#1e293b] flex items-center justify-center text-slate-700 dark:text-white mb-6 group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
                        <item.icon size={28} />
@@ -406,14 +455,20 @@ export const Home: React.FC = () => {
                     </p>
                  </MotionDiv>
                ))}
-            </div>
+            </MotionDiv>
          </div>
       </section>
 
       {/* --- STATS SECTION --- */}
       <section className="py-20 border-y border-slate-200 dark:border-white/5 bg-white dark:bg-[#050b1d] transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center">
+            <MotionDiv 
+               variants={staggerContainer}
+               initial="hidden"
+               whileInView="visible"
+               viewport={{ once: true }}
+               className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center"
+            >
                {[
                  { val: "50+", label: "Projects Completed", color: "text-blue-600 dark:text-blue-400" },
                  { val: "90%", label: "Client Retention", color: "text-purple-600 dark:text-purple-400" },
@@ -422,10 +477,7 @@ export const Home: React.FC = () => {
                ].map((stat, idx) => (
                  <MotionDiv
                     key={idx}
-                    initial={{ opacity: 0, scale: 0.5 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1, type: "spring" }}
+                    variants={scaleIn}
                  >
                     <div className={`text-4xl md:text-6xl font-bold ${stat.color} font-display mb-2 drop-shadow-lg`}>
                        {stat.val}
@@ -435,7 +487,7 @@ export const Home: React.FC = () => {
                     </div>
                  </MotionDiv>
                ))}
-            </div>
+            </MotionDiv>
          </div>
       </section>
 
@@ -446,9 +498,10 @@ export const Home: React.FC = () => {
          
          <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
             <MotionDiv
-               initial={{ opacity: 0, y: 30 }}
+               initial={{ opacity: 0, y: 40 }}
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
+               transition={{ duration: 0.8 }}
             >
                <h2 className="text-4xl md:text-6xl font-bold text-white font-display mb-8 leading-tight">
                   Let’s Build the Future of <br /> Technology Together
@@ -457,9 +510,13 @@ export const Home: React.FC = () => {
                   Ready to transform your ideas into reality? Our team is standing by to help you launch your next big project.
                </p>
                <Link to="/contact">
-                  <button className="bg-white text-blue-900 hover:bg-gray-100 font-bold text-lg px-10 py-5 rounded-full shadow-2xl hover:scale-105 transition-all transform duration-300">
+                  <motion.button 
+                    whileHover={{ scale: 1.05 }}
+                    whileTap={{ scale: 0.95 }}
+                    className="bg-white text-blue-900 hover:bg-gray-100 font-bold text-lg px-10 py-5 rounded-full shadow-2xl transition-all duration-300"
+                  >
                      Contact Us Today
-                  </button>
+                  </motion.button>
                </Link>
             </MotionDiv>
          </div>
