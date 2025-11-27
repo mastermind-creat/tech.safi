@@ -304,19 +304,19 @@ export const Pricing: React.FC = () => {
     <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-0 transition-colors duration-300">
       
       {/* Hero Section */}
-      <div className="relative pt-32 pb-24 overflow-hidden bg-slate-900 dark:bg-[#020617]">
+      <div className="relative pt-32 pb-24 overflow-hidden bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
         {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-[#020617] to-transparent dark:to-[#020617]"></div>
-        <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-pink-600/10 blur-[100px] pointer-events-none"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-100/40 via-slate-50 to-transparent dark:from-purple-900/20 dark:via-[#020617] dark:to-[#020617] z-0"></div>
+        <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-r from-blue-200/20 via-purple-200/20 to-pink-200/20 dark:from-blue-600/10 dark:via-purple-600/10 dark:to-pink-600/10 blur-[100px] pointer-events-none"></div>
         
         {/* Decorative Grid */}
-        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-5 mix-blend-overlay"></div>
+        <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.03] dark:opacity-5 mix-blend-overlay"></div>
 
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <MotionDiv
              initial={{ opacity: 0, y: -20 }}
              animate={{ opacity: 1, y: 0 }}
-             className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-xs font-bold tracking-widest uppercase mb-6 text-purple-300"
+             className="inline-flex items-center px-4 py-1.5 rounded-full bg-purple-100 dark:bg-white/10 border border-purple-200 dark:border-white/20 backdrop-blur-md text-xs font-bold tracking-widest uppercase mb-6 text-purple-600 dark:text-purple-300"
           >
              <CreditCard size={12} className="mr-2" /> Transparent Pricing
           </MotionDiv>
@@ -326,8 +326,8 @@ export const Pricing: React.FC = () => {
              animate={{ opacity: 1, scale: 1 }}
              transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-display text-white mb-6 tracking-tight">
-              Simple, <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Affordable</span> Pricing
+            <h1 className="text-4xl md:text-6xl lg:text-7xl font-bold font-display text-slate-900 dark:text-white mb-6 tracking-tight">
+              Simple, <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">Affordable</span> Pricing
             </h1>
           </MotionDiv>
           
@@ -336,8 +336,8 @@ export const Pricing: React.FC = () => {
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <p className="text-lg md:text-xl text-slate-300 max-w-2xl mx-auto leading-relaxed mb-10">
-              Perfect for <span className="text-white font-semibold">startups</span>, portfolios, and growing businesses. No hidden fees, cancel anytime.
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed mb-10">
+              Perfect for <span className="text-slate-900 dark:text-white font-semibold">startups</span>, portfolios, and growing businesses. No hidden fees, cancel anytime.
             </p>
           </MotionDiv>
 
@@ -353,8 +353,8 @@ export const Pricing: React.FC = () => {
               { icon: CreditCard, text: "Flexible payment plans" },
               { icon: Clock, text: "24/7 support included" }
             ].map((badge, idx) => (
-              <div key={idx} className="bg-white/5 backdrop-blur-md border border-white/10 px-4 py-2 rounded-full flex items-center space-x-2 text-xs font-medium text-slate-300">
-                <badge.icon size={14} className="text-purple-400" />
+              <div key={idx} className="bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 px-4 py-2 rounded-full flex items-center space-x-2 text-xs font-medium text-slate-600 dark:text-slate-300 shadow-sm dark:shadow-none">
+                <badge.icon size={14} className="text-purple-500 dark:text-purple-400" />
                 <span>{badge.text}</span>
               </div>
             ))}
@@ -365,12 +365,12 @@ export const Pricing: React.FC = () => {
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.5, delay: 0.4 }}
-             className="inline-flex items-center p-1 bg-white/5 rounded-full border border-white/10 backdrop-blur-md"
+             className="inline-flex items-center p-1 bg-slate-200 dark:bg-white/5 rounded-full border border-slate-300 dark:border-white/10 backdrop-blur-md"
           >
             <button 
               onClick={() => setBillingCycle('monthly')}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                billingCycle === 'monthly' ? 'bg-purple-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'
+                billingCycle === 'monthly' ? 'bg-white dark:bg-purple-600 text-slate-900 dark:text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               One-Time
@@ -378,7 +378,7 @@ export const Pricing: React.FC = () => {
             <button 
               onClick={() => setBillingCycle('annual')}
               className={`px-6 py-2 rounded-full text-sm font-medium transition-all ${
-                billingCycle === 'annual' ? 'bg-purple-600 text-white shadow-lg' : 'text-slate-400 hover:text-white'
+                billingCycle === 'annual' ? 'bg-white dark:bg-purple-600 text-slate-900 dark:text-white shadow-md' : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white'
               }`}
             >
               Retainer <span className="ml-1 text-[10px] bg-pink-500 text-white px-1.5 py-0.5 rounded-full">Save 20%</span>
@@ -453,7 +453,7 @@ export const Pricing: React.FC = () => {
       </div>
 
       {/* Mobile App Development Section */}
-      <div className="bg-slate-100 dark:bg-[#0f172a] py-24 mb-24 border-t border-slate-200 dark:border-white/5 relative overflow-hidden">
+      <div className="bg-slate-100 dark:bg-[#0f172a] py-24 mb-24 border-t border-slate-200 dark:border-white/5 relative overflow-hidden transition-colors duration-300">
          {/* Background Glow */}
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-600/5 rounded-full blur-[100px] pointer-events-none"></div>
 
@@ -714,17 +714,28 @@ export const Pricing: React.FC = () => {
       </div>
 
       {/* CTA */}
-      <div className="bg-gradient-to-r from-purple-900 to-blue-900 py-16 text-center">
-         <div className="max-w-4xl mx-auto px-4">
-            <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">Need a Custom Solution?</h2>
-            <p className="text-blue-100 mb-8 max-w-2xl mx-auto text-sm">
-               Don't see a package that fits your needs? We offer tailored solutions for enterprises and complex projects.
-            </p>
-            <Link to="/contact">
-               <Button className="bg-white text-purple-900 hover:bg-gray-100 font-bold px-8 shadow-xl">
-                  Contact Sales Team
-               </Button>
-            </Link>
+      <div className="relative py-20 overflow-hidden">
+         <div className="absolute inset-0 bg-gradient-to-r from-purple-600 to-blue-600 dark:from-purple-900 dark:to-blue-900"></div>
+         {/* Decorative elements */}
+         <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+         <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+
+         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <MotionDiv
+               initial={{ opacity: 0, scale: 0.9 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               viewport={{ once: true }}
+            >
+                <h2 className="text-2xl md:text-3xl font-bold text-white mb-6">Need a Custom Solution?</h2>
+                <p className="text-blue-100 mb-8 max-w-2xl mx-auto text-sm md:text-base">
+                   Don't see a package that fits your needs? We offer tailored solutions for enterprises and complex projects.
+                </p>
+                <Link to="/contact">
+                   <Button className="bg-white text-purple-600 dark:text-purple-900 hover:bg-gray-100 font-bold px-8 py-3 shadow-xl">
+                      Contact Sales Team
+                   </Button>
+                </Link>
+            </MotionDiv>
          </div>
       </div>
 
