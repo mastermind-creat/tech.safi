@@ -9,7 +9,7 @@ import {
   Wallet, Palmtree, Home, Dumbbell, Baby, Utensils,
   Info, Bell, Laptop, FileText, MessageCircle, Phone, 
   ChevronDown, Plus, Minus, Star, Award, Calendar, MapPin, Clock,
-  Brain, Palette, Lock
+  Brain, Palette, Lock, AlertTriangle, Zap
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -110,6 +110,45 @@ export const Careers: React.FC = () => {
     }
   ];
 
+  const roadmapSteps = [
+    {
+      id: 1,
+      title: "Foundation Building",
+      status: "We're currently here!",
+      features: [
+        "Building client base and brand recognition",
+        "Commission-based compensation model",
+        "Assembling passionate founding team"
+      ],
+      icon: Sprout,
+      color: "blue"
+    },
+    {
+      id: 2,
+      title: "Revenue Growth",
+      status: "Next Phase",
+      features: [
+        "Consistent monthly revenue streams",
+        "Introduction of base salaries + commissions",
+        "Expanded team and project portfolio"
+      ],
+      icon: TrendingUp,
+      color: "purple"
+    },
+    {
+      id: 3,
+      title: "Stable Operations",
+      status: "Future Goal",
+      features: [
+        "Full-time positions with competitive salaries",
+        "Comprehensive benefits package",
+        "Early team members prioritized for permanent roles"
+      ],
+      icon: Trophy,
+      color: "emerald"
+    }
+  ];
+
   return (
     <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-0 transition-colors duration-300">
       
@@ -167,10 +206,66 @@ export const Careers: React.FC = () => {
         </div>
       </div>
 
+      {/* --- GROWTH PHASE NOTIFICATION CARD (Restored) --- */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 -mt-12 relative z-20 mb-20">
+        <MotionDiv
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.5 }}
+          className="bg-amber-50 dark:bg-amber-950/20 border border-amber-200 dark:border-amber-500/20 rounded-2xl p-8 shadow-xl backdrop-blur-md relative overflow-hidden"
+        >
+          <div className="absolute top-0 right-0 p-4 opacity-10 pointer-events-none">
+             <Rocket size={120} className="text-amber-500" />
+          </div>
+          
+          <div className="relative z-10">
+             <div className="inline-flex items-center px-3 py-1 rounded bg-amber-100 dark:bg-amber-500/20 text-amber-700 dark:text-amber-400 text-[10px] font-bold uppercase tracking-wider mb-4 border border-amber-200 dark:border-amber-500/20">
+                <AlertTriangle size={12} className="mr-2" /> Early Stage
+             </div>
+             
+             <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 flex items-center">
+                Building Together, Growing Together
+             </h3>
+             
+             <div className="space-y-4 text-slate-700 dark:text-slate-300 text-sm leading-relaxed">
+                <p>
+                   Right now, <span className="font-bold">TechSafi</span> is still in its early growth phase, so we're not offering fixed salaries yet. We're building our client base and growing the brand so that we can eventually create stable, well-paying positions for the team.
+                </p>
+                <p>
+                   At this stage, I'm bringing together passionate and skilled individuals who are currently unemployed but want to grow with the agency. We'll be working collaboratively to build something solid and long-term.
+                </p>
+             </div>
+
+             <div className="mt-6 bg-white dark:bg-[#0f172a] border border-amber-200 dark:border-amber-500/20 rounded-xl p-4 flex items-start">
+                <div className="bg-green-100 dark:bg-green-900/30 p-2 rounded-lg text-green-600 dark:text-green-400 mr-4 flex-shrink-0">
+                   <Handshake size={20} />
+                </div>
+                <div>
+                   <h4 className="text-slate-900 dark:text-white font-bold text-sm mb-1">Commission-Based Opportunities</h4>
+                   <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">
+                      We offer commissions based on the clients you bring in — meaning you still earn as we grow together. And once we start generating consistent revenue, those who helped build the foundation will be the first to benefit from permanent roles and higher rewards.
+                   </p>
+                </div>
+             </div>
+
+             <div className="mt-6 pt-6 border-t border-amber-200 dark:border-amber-500/10 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                <p className="text-xs text-slate-500 dark:text-slate-400 italic">
+                   If you're someone who's ready to learn, contribute, and grow in a forward-thinking team, I'd really love to have you on board.
+                </p>
+                <Link to="/contact">
+                   <Button size="sm" className="bg-amber-600 hover:bg-amber-700 text-white border-0 shadow-lg shadow-amber-900/10 whitespace-nowrap">
+                      Join Our Journey
+                   </Button>
+                </Link>
+             </div>
+          </div>
+        </MotionDiv>
+      </div>
+
       {/* Modernized Job Card Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 mt-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-             {/* Marketing Role Card - Upgraded Visuals */}
+             {/* Marketing Role Card */}
              <MotionDiv
                 initial={{ opacity: 0, x: -20 }}
                 whileInView={{ opacity: 1, x: 0 }}
@@ -188,14 +283,14 @@ export const Careers: React.FC = () => {
                 </div>
 
                 <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 leading-relaxed">
-                   We're inviting experienced growth marketers to support our expansion. Due to our ongoing growth phase, you must read and comply with the Growth Phase Notification.
+                   We're inviting experienced growth marketers to support our expansion. Due to our ongoing growth phase, you must read and comply with the Growth Phase Notification before applying.
                 </p>
                 
                 <div className="space-y-3 mb-6">
                    {[
-                     "3+ years in growth marketing",
-                     "Experience with acquisition funnels",
-                     "Comfortable in startup environments"
+                     "3+ years in growth or performance marketing",
+                     "Hands-on experience with acquisition funnels and analytics",
+                     "Comfortable in fast-moving, startup-like environments"
                    ].map((req, i) => (
                       <div key={i} className="flex items-start">
                          <CheckCircle2 size={14} className="text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
@@ -209,16 +304,19 @@ export const Careers: React.FC = () => {
                       {agreedToNotice && <CheckCircle2 size={12} className="text-white" />}
                    </div>
                    <span className="text-xs text-slate-500 dark:text-slate-400 select-none">
-                      I accept the <span className="text-blue-500 dark:text-blue-400 font-bold">Growth Phase Terms</span>.
+                      I confirm I've read and accept the <span className="text-blue-500 dark:text-blue-400 font-bold">Growth Phase Notification</span>.
                    </span>
                 </div>
 
-                <Button 
-                   className={`w-full ${agreedToNotice ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-slate-300 dark:bg-slate-700 cursor-not-allowed opacity-50 text-white'}`}
-                   disabled={!agreedToNotice}
-                >
-                   <Send size={16} className="mr-2" /> Apply Now
-                </Button>
+                <Link to="/contact">
+                   <Button 
+                      className={`w-full ${agreedToNotice ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-slate-300 dark:bg-slate-700 cursor-not-allowed opacity-50 text-white'}`}
+                      disabled={!agreedToNotice}
+                   >
+                      <Send size={16} className="mr-2" /> Apply via Contact Form
+                   </Button>
+                </Link>
+                <p className="text-[10px] text-slate-400 mt-2 text-center">Only apply if you're genuinely interested and meet the Growth Phase requirements.</p>
              </MotionDiv>
 
              {/* Talent Pool / General Interest */}
@@ -243,8 +341,11 @@ export const Careers: React.FC = () => {
                 />
                 
                 <Button className="w-full bg-purple-600 hover:bg-purple-700 text-white mb-4">
-                   Join Talent Network
+                   Notify Me About New Jobs
                 </Button>
+                <div className="text-center">
+                   <Link to="/contact" className="text-xs text-slate-500 hover:text-purple-500 hover:underline">Or send us a message describing your skills.</Link>
+                </div>
              </MotionDiv>
          </div>
 
@@ -288,8 +389,101 @@ export const Careers: React.FC = () => {
          </div>
       </div>
 
+      {/* --- GROWTH ROADMAP SECTION (Added) --- */}
+      <div className="py-24 bg-slate-900 dark:bg-[#0a0f1d] border-y border-white/5 overflow-hidden relative">
+         {/* Background Effects */}
+         <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20"></div>
+         <div className="absolute top-[-10%] left-[-10%] w-[500px] h-[500px] bg-blue-600/10 rounded-full blur-[100px]"></div>
+         <div className="absolute bottom-[-10%] right-[-10%] w-[500px] h-[500px] bg-purple-600/10 rounded-full blur-[100px]"></div>
+
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <MotionDiv
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-20"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                  Our Growth <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-400">Roadmap</span>
+               </h2>
+               <div className="h-1 w-20 bg-blue-500 rounded-full mx-auto mb-6"></div>
+               <p className="text-slate-400 max-w-2xl mx-auto">
+                  See where we're heading and how you can be part of our journey
+               </p>
+            </MotionDiv>
+
+            <div className="relative">
+               {/* Vertical Line */}
+               <div className="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-1 bg-gradient-to-b from-blue-500 via-purple-500 to-emerald-500 hidden md:block"></div>
+
+               <div className="space-y-16">
+                  {roadmapSteps.map((step, idx) => (
+                     <MotionDiv
+                        key={step.id}
+                        initial={{ opacity: 0, y: 30 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-100px" }}
+                        transition={{ delay: idx * 0.2 }}
+                        className={`flex flex-col md:flex-row items-center gap-8 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''}`}
+                     >
+                        {/* Empty Side */}
+                        <div className="hidden md:block w-1/2"></div>
+
+                        {/* Center Icon */}
+                        <div className="absolute left-1/2 transform -translate-x-1/2 z-10 hidden md:flex items-center justify-center">
+                           <div className={`w-16 h-16 rounded-full bg-${step.color}-600 border-4 border-slate-900 flex items-center justify-center text-white shadow-lg shadow-${step.color}-500/30`}>
+                              <step.icon size={28} />
+                           </div>
+                        </div>
+
+                        {/* Content Card */}
+                        <div className="w-full md:w-1/2">
+                           <div className={`bg-white/5 border border-white/10 backdrop-blur-md rounded-2xl p-8 hover:border-${step.color}-500/50 transition-colors group relative overflow-hidden ${idx % 2 === 0 ? 'md:text-right md:pr-12' : 'md:pl-12'}`}>
+                              <div className={`absolute top-0 w-full h-1 bg-${step.color}-500 opacity-50 left-0`}></div>
+                              
+                              <div className={`flex items-center gap-3 mb-4 ${idx % 2 === 0 ? 'md:flex-row-reverse' : ''}`}>
+                                 <div className={`md:hidden w-10 h-10 rounded-full bg-${step.color}-500/20 flex items-center justify-center text-${step.color}-400`}>
+                                    <step.icon size={18} />
+                                 </div>
+                                 <span className={`px-3 py-1 rounded text-[10px] font-bold uppercase tracking-wider bg-${step.color}-500/10 text-${step.color}-400 border border-${step.color}-500/20`}>
+                                    {step.id}
+                                 </span>
+                                 <h3 className="text-xl font-bold text-white">{step.title}</h3>
+                              </div>
+
+                              <p className={`text-slate-400 text-xs italic mb-4 ${step.color === 'blue' ? 'text-blue-300' : ''}`}>
+                                 {step.status}
+                              </p>
+
+                              <ul className={`space-y-2 inline-block text-left`}>
+                                 {step.features.map((feat, i) => (
+                                    <li key={i} className="flex items-start text-slate-300 text-sm">
+                                       <CheckCircle2 size={14} className={`mt-1 mr-3 flex-shrink-0 text-${step.color}-500`} />
+                                       {feat}
+                                    </li>
+                                 ))}
+                              </ul>
+                           </div>
+                        </div>
+                     </MotionDiv>
+                  ))}
+               </div>
+            </div>
+         </div>
+      </div>
+
       {/* Why Join TechSafi Section (Refined) */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+         <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+         >
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Why Join <span className="text-blue-500">TechSafi</span>?</h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">Be part of building something meaningful from the ground up</p>
+         </MotionDiv>
+
          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {benefits.map((benefit, idx) => (
                <MotionDiv
@@ -312,9 +506,38 @@ export const Careers: React.FC = () => {
          </div>
       </div>
 
-      {/* FAQ Accordion (Clean) */}
-      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
-         <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-white mb-8">Compensation FAQ</h2>
+      {/* Employee Benefits Grid */}
+      <div className="py-24 bg-slate-100 dark:bg-[#0f172a]/50 border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-white mb-4">Employee <span className="text-purple-500">Benefits</span></h2>
+            <p className="text-slate-600 dark:text-slate-400 text-center text-sm mb-16 max-w-2xl mx-auto">We offer competitive benefits to support you and your family's health, wealth, and well-being.</p>
+            
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+               {employeeBenefits.map((benefit, idx) => (
+                  <MotionDiv
+                     key={idx}
+                     initial={{ opacity: 0, scale: 0.9 }}
+                     whileInView={{ opacity: 1, scale: 1 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: idx * 0.05 }}
+                     className="bg-white dark:bg-[#1e293b]/40 p-6 rounded-2xl border border-slate-200 dark:border-white/5 hover:border-blue-500/30 transition-all text-center"
+                  >
+                     <div className="w-10 h-10 mx-auto bg-slate-100 dark:bg-white/5 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 mb-4">
+                        <benefit.icon size={18} />
+                     </div>
+                     <h4 className="font-bold text-slate-900 dark:text-white text-sm mb-2">{benefit.title}</h4>
+                     <p className="text-slate-500 dark:text-slate-400 text-[10px]">{benefit.desc}</p>
+                  </MotionDiv>
+               ))}
+            </div>
+         </div>
+      </div>
+
+      {/* FAQ Accordion */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+         <h2 className="text-2xl font-bold text-center text-slate-900 dark:text-white mb-2">Compensation <span className="text-blue-500">FAQ</span></h2>
+         <p className="text-slate-600 dark:text-slate-400 text-center text-sm mb-10">Common questions about our compensation model and growth opportunities</p>
+         
          <div className="space-y-4">
             {compFaqs.map((faq, idx) => (
                <div key={idx} className="bg-white dark:bg-[#1e293b]/30 border border-slate-200 dark:border-white/5 rounded-xl overflow-hidden shadow-sm dark:shadow-none">
@@ -344,6 +567,29 @@ export const Careers: React.FC = () => {
                   </AnimatePresence>
                </div>
             ))}
+         </div>
+      </div>
+
+      {/* Bottom CTA */}
+      <div className="bg-gradient-to-r from-cyan-600 to-blue-600 py-20 text-center relative overflow-hidden">
+         <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+         <div className="max-w-4xl mx-auto px-4 relative z-10">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Join Our Team?</h2>
+            <p className="text-cyan-100 text-sm md:text-base mb-10 max-w-2xl mx-auto">
+               Even without current openings, we're always interested in connecting with talented individuals who are passionate about technology and innovation.
+            </p>
+            <div className="flex justify-center gap-4">
+               <Link to="/contact">
+                  <Button className="bg-white text-blue-600 hover:bg-gray-100 font-bold px-8 py-3 shadow-xl">
+                     <Send size={18} className="mr-2" /> Send Us Your Resume
+                  </Button>
+               </Link>
+               <Link to="/company">
+                  <Button variant="outline" className="border-white text-white hover:bg-white/10 font-bold px-8 py-3">
+                     <Users size={18} className="mr-2" /> Learn About Our Team
+                  </Button>
+               </Link>
+            </div>
          </div>
       </div>
 
