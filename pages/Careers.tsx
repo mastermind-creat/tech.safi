@@ -8,7 +8,8 @@ import {
   ArrowRight, CheckCircle2, Send, Sparkles,
   Wallet, Palmtree, Home, Dumbbell, Baby, Utensils,
   Info, Bell, Laptop, FileText, MessageCircle, Phone, 
-  ChevronDown, Plus, Minus, Star, Award, Calendar, MapPin, Clock
+  ChevronDown, Plus, Minus, Star, Award, Calendar, MapPin, Clock,
+  Brain, Palette, Lock
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -61,6 +62,33 @@ export const Careers: React.FC = () => {
     { icon: Dumbbell, title: "Wellness", desc: "Gym & mental health support." },
     { icon: Baby, title: "Family", desc: "Parental leave & support." },
     { icon: Utensils, title: "Food", desc: "Catered lunches & snacks." }
+  ];
+
+  const futureRoles = [
+    { 
+      title: "Chief AI Officer", 
+      icon: Brain, 
+      department: "Engineering",
+      desc: "Will lead advanced AI strategy, research initiatives, and machine learning innovation across all product lines." 
+    },
+    { 
+      title: "Chief Design Officer", 
+      icon: Palette, 
+      department: "Design",
+      desc: "Will champion UX/UI excellence, brand strategy, and design systems to create intuitive, beautiful user experiences." 
+    },
+    { 
+      title: "Chief Sales Officer", 
+      icon: TrendingUp, 
+      department: "Sales",
+      desc: "Will steer revenue growth, customer acquisition strategies, and build high-performance sales teams across markets." 
+    },
+    { 
+      title: "Chief HR Officer", 
+      icon: Heart, 
+      department: "Operations",
+      desc: "Will nurture company culture, talent development, and organizational design to support sustainable growth and innovation." 
+    }
   ];
 
   const compFaqs = [
@@ -218,6 +246,45 @@ export const Careers: React.FC = () => {
                    Join Talent Network
                 </Button>
              </MotionDiv>
+         </div>
+
+         {/* Upcoming Strategic Roles Grid */}
+         <div className="mt-16">
+            <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-8 border-l-4 border-slate-300 dark:border-slate-700 pl-4">Upcoming Strategic Roles</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+               {futureRoles.map((role, idx) => (
+                  <MotionDiv
+                     key={idx}
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: idx * 0.1 }}
+                     className="bg-white dark:bg-[#1e293b]/20 border border-slate-200 dark:border-white/5 rounded-2xl p-6 hover:bg-slate-50 dark:hover:bg-[#1e293b]/40 transition-all group"
+                  >
+                     <div className="flex justify-between items-start mb-4">
+                        <div className="flex items-center gap-3">
+                           <div className="w-10 h-10 rounded-lg bg-slate-100 dark:bg-white/5 flex items-center justify-center text-slate-500 dark:text-slate-400 group-hover:text-purple-500 dark:group-hover:text-purple-400 transition-colors">
+                              <role.icon size={20} />
+                           </div>
+                           <div>
+                              <h4 className="font-bold text-slate-900 dark:text-white">{role.title}</h4>
+                              <span className="text-xs text-slate-500 uppercase tracking-wide">{role.department}</span>
+                           </div>
+                        </div>
+                        <span className="bg-slate-100 dark:bg-white/5 text-slate-500 text-[10px] font-bold px-2 py-1 rounded uppercase tracking-wider">Pending</span>
+                     </div>
+                     <p className="text-slate-600 dark:text-slate-400 text-sm mb-6 min-h-[40px]">
+                        {role.desc}
+                     </p>
+                     <Button 
+                        disabled 
+                        className="w-full bg-slate-100 dark:bg-white/5 text-slate-400 dark:text-slate-500 border border-slate-200 dark:border-white/5 cursor-not-allowed hover:bg-slate-100 dark:hover:bg-white/5 py-2 text-xs"
+                     >
+                        <Lock size={12} className="mr-2" /> Opening Soon
+                     </Button>
+                  </MotionDiv>
+               ))}
+            </div>
          </div>
       </div>
 
