@@ -1,6 +1,7 @@
 {
   "short_name": "TechSafi",
   "name": "TechSafi - Innovation Elevated",
+  "description": "A futuristic, AI-driven tech company website offering custom software and digital solutions.",
   "icons": [
     {
       "src": "https://cdn-icons-png.flaticon.com/512/3208/3208728.png",
@@ -13,8 +14,10 @@
       "type": "image/png"
     }
   ],
-  "start_url": ".",
+  "start_url": "/",
+  "scope": "/",
   "display": "standalone",
+  "orientation": "portrait",
   "theme_color": "#020617",
   "background_color": "#020617"
 }

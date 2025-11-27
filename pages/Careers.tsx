@@ -945,12 +945,6 @@ export const Careers: React.FC = () => {
          </div>
       </div>
 
-      <div className="fixed bottom-8 right-8 z-50">
-         <Button className="bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 rounded-full px-6">
-            <Briefcase size={16} className="mr-2" /> Install App
-         </Button>
-      </div>
-
     </div>
   );
 };
