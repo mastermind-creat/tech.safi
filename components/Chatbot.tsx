@@ -3,6 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, X, Send, Bot, Minimize2, User, Sparkles } from 'lucide-react';
 import { Button } from './ui/Button';
+import { GoogleGenAI } from "@google/genai";
 
 interface Message {
   id: string;
@@ -18,14 +19,69 @@ export const Chatbot: React.FC = () => {
     {
       id: '1',
       type: 'bot',
-      text: "Hello! 👋 I'm the TechSafi virtual assistant. How can I help you today?",
+      text: "Hello! 👋 I'm the TechSafi AI assistant. Ask me about our web packages, mobile apps, AI solutions, or pricing!",
       timestamp: new Date()
     }
   ]);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const chatSessionRef = useRef<any>(null);
   const MotionDiv = motion.div as any;
   const MotionButton = motion.button as any;
+
+  // Initialize Gemini Chat Session with detailed company knowledge
+  useEffect(() => {
+    try {
+      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+      chatSessionRef.current = ai.chats.create({
+        model: 'gemini-3-pro-preview',
+        config: {
+          systemInstruction: `You are the intelligent virtual assistant for TechSafi, a premier AI-driven software company in Nairobi, Kenya.
+          
+          **Company Profile:**
+          - **Name:** TechSafi
+          - **Tagline:** Innovation Elevated
+          - **Mission:** Empowering businesses with AI, custom software, and digital transformation.
+          - **Location:** Nairobi, Kenya.
+          - **Contact:** info@techsafi.com | +254 751 380 948 | +254 110 046 523
+          - **Support:** Available 24/7.
+
+          **Services & Pricing (KES):**
+          *Web Development:*
+          - **Portfolio Website:** KES 35,000 (5 pages, Basic SEO)
+          - **Business Website:** KES 85,000 (10 pages, CMS, Blog)
+          - **E-commerce Store:** KES 150,000 (Shopping cart, M-Pesa Integration)
+
+          *Mobile App Development:*
+          - **Basic App:** KES 250,000 (Cross-platform, 5 screens)
+          - **Advanced App:** KES 550,000 (Native, User Auth, Payments)
+
+          *AI Integration:*
+          - **AI Chatbot:** KES 60,000
+          - **Advanced AI Features:** KES 180,000 (GPT Integration, Recommendations)
+          - **Enterprise AI Suite:** KES 350,000
+          - **AI-Powered Website:** KES 280,000
+          - **Custom AI Application:** Starting at KES 700,000+
+
+          *Monthly Services:*
+          - **Chatbot Maintenance:** KES 10,000/mo
+          - **Website Maintenance:** KES 15,000/mo
+          - **SEO Optimization:** KES 25,000/mo
+          - **AI Model Training:** KES 30,000/mo
+
+          **Tone & Style:**
+          - Professional, enthusiastic, and helpful.
+          - Use Markdown formatting for lists and bold text to make responses readable.
+          - Keep answers concise but informative.
+          - If asked about custom projects not listed, encourage the user to use the Contact form for a custom quote.
+          - Always mention prices in KES.
+          `
+        }
+      });
+    } catch (error) {
+      console.error("Failed to initialize AI:", error);
+    }
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -35,32 +91,7 @@ export const Chatbot: React.FC = () => {
     scrollToBottom();
   }, [messages, isTyping, isOpen]);
 
-  const generateResponse = (input: string) => {
-    const lowerInput = input.toLowerCase();
-    
-    if (lowerInput.includes('price') || lowerInput.includes('cost') || lowerInput.includes('quote')) {
-      return "Our pricing is transparent! Web development packages start at KES 35,000. For AI solutions, we offer custom quotes. You can view our full pricing page or request a custom quote via our contact form.";
-    }
-    if (lowerInput.includes('service') || lowerInput.includes('do you offer') || lowerInput.includes('build')) {
-      return "We offer a wide range of services including Web Development, Mobile Apps, AI Integration, Cloud Solutions, and Digital Marketing. Would you like to know more about a specific service?";
-    }
-    if (lowerInput.includes('contact') || lowerInput.includes('email') || lowerInput.includes('phone') || lowerInput.includes('support')) {
-      return "You can reach us at info@techsafi.com or call +254 751 380 948. Our support team is available 24/7!";
-    }
-    if (lowerInput.includes('job') || lowerInput.includes('career') || lowerInput.includes('hiring') || lowerInput.includes('intern')) {
-      return "We're always looking for talent! Check out our Careers page for current openings, including internships and commission-based roles.";
-    }
-    if (lowerInput.includes('location') || lowerInput.includes('office') || lowerInput.includes('where')) {
-      return "We are based in Nairobi, Kenya, serving clients across East Africa and globally.";
-    }
-    if (lowerInput.includes('ai') || lowerInput.includes('artificial intelligence')) {
-      return "AI is our specialty! We build chatbots, recommendation engines, predictive analytics models, and integrate OpenAI/GPT into existing apps. Check our AI Solutions page for details.";
-    }
-    
-    return "Thanks for your message! To get a specific answer, you might want to ask about our services, pricing, or how to contact us. Alternatively, you can fill out the contact form for a detailed consultation.";
-  };
-
-  const handleSend = (e?: React.FormEvent) => {
+  const handleSend = async (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!inputValue.trim()) return;
 
@@ -75,17 +106,52 @@ export const Chatbot: React.FC = () => {
     setInputValue('');
     setIsTyping(true);
 
-    // Simulate thinking/typing delay
-    setTimeout(() => {
+    try {
+      if (!chatSessionRef.current) {
+         // Re-init if lost (though useEffect should handle it)
+         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
+         chatSessionRef.current = ai.chats.create({ model: 'gemini-3-pro-preview' });
+      }
+
+      const result = await chatSessionRef.current.sendMessage({ message: userMsg.text });
+      
       const botResponse: Message = {
         id: (Date.now() + 1).toString(),
         type: 'bot',
-        text: generateResponse(userMsg.text),
+        text: result.text || "I'm processing that information but didn't get a clear result. Could you rephrase?",
         timestamp: new Date()
       };
       setMessages(prev => [...prev, botResponse]);
+    } catch (error) {
+      console.error("AI Error:", error);
+      const errorResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'bot',
+        text: "I'm currently experiencing high traffic. Please email info@techsafi.com for immediate assistance.",
+        timestamp: new Date()
+      };
+      setMessages(prev => [...prev, errorResponse]);
+    } finally {
       setIsTyping(false);
-    }, 1500);
+    }
+  };
+
+  // Helper to render basic markdown-like formatting
+  const formatMessage = (text: string) => {
+    return text.split('\n').map((line, i) => {
+      // Bold text handling (**text**)
+      const parts = line.split(/(\*\*.*?\*\*)/g);
+      return (
+        <div key={i} className={`min-h-[1.2em] ${line.trim().startsWith('-') || line.trim().startsWith('•') ? 'ml-4' : ''}`}>
+          {parts.map((part, j) => {
+            if (part.startsWith('**') && part.endsWith('**')) {
+              return <strong key={j} className="font-bold text-slate-900 dark:text-white">{part.slice(2, -2)}</strong>;
+            }
+            return part;
+          })}
+        </div>
+      );
+    });
   };
 
   return (
@@ -102,7 +168,7 @@ export const Chatbot: React.FC = () => {
             className="fixed bottom-24 right-6 z-50 w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-lg shadow-purple-500/30 flex items-center justify-center text-white focus:outline-none"
           >
             <MessageCircle size={28} />
-            <span className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-[#020617]"></span>
+            <span className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-[#020617] animate-pulse"></span>
           </MotionButton>
         )}
       </AnimatePresence>
@@ -114,19 +180,19 @@ export const Chatbot: React.FC = () => {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className="fixed bottom-6 right-6 z-50 w-[90vw] md:w-[380px] h-[500px] max-h-[80vh] bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden font-sans"
+            className="fixed bottom-6 right-6 z-50 w-[90vw] md:w-[400px] h-[600px] max-h-[85vh] bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden font-sans"
           >
             {/* Header */}
             <div className="p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-between shrink-0">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm">
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm shadow-inner">
                   <Bot size={20} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">TechSafi Assistant</h3>
+                  <h3 className="font-bold text-sm">TechSafi AI Assistant</h3>
                   <div className="flex items-center text-[10px] text-blue-100">
                     <span className="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5 animate-pulse"></span>
-                    Online
+                    Gemini 3 Pro Powered
                   </div>
                 </div>
               </div>
@@ -163,7 +229,7 @@ export const Chatbot: React.FC = () => {
                         ? 'bg-blue-600 text-white rounded-br-none' 
                         : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-white/5 rounded-bl-none'
                     }`}>
-                      {msg.text}
+                      {msg.type === 'bot' ? formatMessage(msg.text) : msg.text}
                     </div>
                   </div>
                 </MotionDiv>
@@ -193,7 +259,7 @@ export const Chatbot: React.FC = () => {
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Type a message..."
+                  placeholder="Ask about pricing, services..."
                   className="flex-1 bg-slate-100 dark:bg-[#1e293b] text-slate-900 dark:text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/50 border border-transparent focus:bg-white dark:focus:bg-[#0f172a] transition-all placeholder-slate-400"
                 />
                 <Button 
@@ -205,7 +271,7 @@ export const Chatbot: React.FC = () => {
                 </Button>
               </form>
               <div className="text-[10px] text-center text-slate-400 mt-2">
-                Powered by TechSafi AI • Responds instantly
+                Powered by Gemini 3 Pro
               </div>
             </div>
           </MotionDiv>
