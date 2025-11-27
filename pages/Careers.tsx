@@ -7,7 +7,7 @@ import {
   ArrowRight, CheckCircle2, Send, Sparkles,
   Wallet, Palmtree, Home, Dumbbell, Baby, Utensils,
   Info, Bell, Laptop, FileText, MessageCircle, Phone, 
-  ChevronDown, Plus, Minus, Star, Award
+  ChevronDown, Plus, Minus, Star, Award, Calendar
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -152,7 +152,7 @@ export const Careers: React.FC = () => {
   ];
 
   return (
-    <div className="bg-[#020617] min-h-screen pb-20">
+    <div className="bg-[#020617] min-h-screen pb-0">
       
       {/* Hero Section */}
       <div className="relative pt-32 pb-24 overflow-hidden">
@@ -778,7 +778,7 @@ export const Careers: React.FC = () => {
       </div>
 
       {/* Growth Roadmap */}
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -786,6 +786,7 @@ export const Careers: React.FC = () => {
             className="text-center mb-16"
          >
             <h2 className="text-3xl font-bold text-white mb-2">Our Growth <span className="text-purple-500">Roadmap</span></h2>
+            <div className="h-1 w-16 bg-purple-500 rounded-full mx-auto mb-6"></div>
             <p className="text-slate-400 text-sm">
                See where we're heading and how you can be part of our journey
             </p>
@@ -793,23 +794,28 @@ export const Careers: React.FC = () => {
 
          <div className="relative">
             {/* Timeline Line */}
-            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 to-purple-500"></div>
+            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 via-purple-500 to-pink-500"></div>
 
-            <div className="space-y-12">
-               {/* Phase 1 */}
+            <div className="space-y-16">
+               {/* Phase 1: Foundation Building */}
                <div className="flex flex-col md:flex-row items-center relative">
-                  <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center border-4 border-[#020617] z-10">
+                  <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center border-4 border-[#020617] z-10 shadow-lg shadow-blue-500/20">
                      <Sprout size={24} className="text-white" />
                   </div>
                   
                   <div className="ml-24 md:ml-0 md:w-1/2 md:pr-12 md:text-right">
-                     <div className="bg-[#1e293b]/40 border border-blue-500/30 p-6 rounded-xl relative">
+                     <MotionDiv
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="bg-[#1e293b]/40 border border-blue-500/30 p-6 rounded-xl relative hover:bg-[#1e293b]/60 transition-all"
+                     >
                         <div className="absolute top-6 -right-3 w-6 h-6 bg-[#1e293b] border-l border-t border-blue-500/30 transform rotate-45 hidden md:block"></div>
                         <div className="absolute top-6 -left-3 w-6 h-6 bg-[#1e293b] border-r border-b border-blue-500/30 transform rotate-45 md:hidden"></div>
                         
                         <div className="flex items-center md:justify-end mb-2">
-                           <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded mr-2 md:mr-0 md:ml-2">Current Phase</span>
-                           <h3 className="text-white font-bold">Foundation Building</h3>
+                           <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded mr-2 md:mr-0 md:ml-2 order-1 md:order-2">Current Phase</span>
+                           <h3 className="text-white font-bold order-2 md:order-1">Foundation Building</h3>
                         </div>
                         <p className="text-slate-400 text-xs mb-4">We're currently here!</p>
                         <ul className="space-y-2">
@@ -825,11 +831,117 @@ export const Careers: React.FC = () => {
                               </li>
                            ))}
                         </ul>
-                     </div>
+                     </MotionDiv>
+                  </div>
+                  <div className="md:w-1/2"></div>
+               </div>
+
+               {/* Phase 2: Revenue Growth */}
+               <div className="flex flex-col md:flex-row items-center relative">
+                  <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-purple-600 flex items-center justify-center border-4 border-[#020617] z-10 shadow-lg shadow-purple-500/20">
+                     <TrendingUp size={24} className="text-white" />
+                  </div>
+                  
+                  <div className="md:w-1/2"></div>
+                  <div className="ml-24 md:ml-0 md:w-1/2 md:pl-12 md:text-left">
+                     <MotionDiv
+                        initial={{ opacity: 0, x: 20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="bg-[#1e293b]/40 border border-purple-500/30 p-6 rounded-xl relative hover:bg-[#1e293b]/60 transition-all"
+                     >
+                        <div className="absolute top-6 -left-3 w-6 h-6 bg-[#1e293b] border-r border-b border-purple-500/30 transform rotate-45 hidden md:block"></div>
+                        <div className="absolute top-6 -left-3 w-6 h-6 bg-[#1e293b] border-r border-b border-purple-500/30 transform rotate-45 md:hidden"></div>
+                        
+                        <div className="flex items-center mb-4">
+                           <h3 className="text-white font-bold">Revenue Growth</h3>
+                        </div>
+                        <ul className="space-y-2">
+                           {[
+                             "Consistent monthly revenue streams",
+                             "Introduction of base salaries + commissions",
+                             "Expanded team and project portfolio",
+                             "Investment in advanced AI research"
+                           ].map((item, i) => (
+                              <li key={i} className="text-slate-300 text-xs flex items-center">
+                                 <ArrowRight size={12} className="text-purple-500 mr-2 flex-shrink-0" />
+                                 <span>{item}</span>
+                              </li>
+                           ))}
+                        </ul>
+                     </MotionDiv>
+                  </div>
+               </div>
+
+               {/* Phase 3: Stable Operations */}
+               <div className="flex flex-col md:flex-row items-center relative">
+                  <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-pink-600 flex items-center justify-center border-4 border-[#020617] z-10 shadow-lg shadow-pink-500/20">
+                     <Trophy size={24} className="text-white" />
+                  </div>
+                  
+                  <div className="ml-24 md:ml-0 md:w-1/2 md:pr-12 md:text-right">
+                     <MotionDiv
+                        initial={{ opacity: 0, x: -20 }}
+                        whileInView={{ opacity: 1, x: 0 }}
+                        viewport={{ once: true }}
+                        className="bg-[#1e293b]/40 border border-pink-500/30 p-6 rounded-xl relative hover:bg-[#1e293b]/60 transition-all"
+                     >
+                        <div className="absolute top-6 -right-3 w-6 h-6 bg-[#1e293b] border-l border-t border-pink-500/30 transform rotate-45 hidden md:block"></div>
+                        <div className="absolute top-6 -left-3 w-6 h-6 bg-[#1e293b] border-r border-b border-pink-500/30 transform rotate-45 md:hidden"></div>
+                        
+                        <div className="flex items-center md:justify-end mb-4">
+                           <h3 className="text-white font-bold">Stable Operations</h3>
+                        </div>
+                        <ul className="space-y-2">
+                           {[
+                             "Full-time positions with competitive salaries",
+                             "Comprehensive benefits package",
+                             "Early team members prioritized for permanent roles",
+                             "Regional expansion and new markets"
+                           ].map((item, i) => (
+                              <li key={i} className="text-slate-300 text-xs flex items-center md:justify-end">
+                                 <span className="md:order-2">{item}</span>
+                                 <ArrowRight size={12} className="text-pink-500 mr-2 md:mr-0 md:ml-2 flex-shrink-0" />
+                              </li>
+                           ))}
+                        </ul>
+                     </MotionDiv>
                   </div>
                   <div className="md:w-1/2"></div>
                </div>
             </div>
+         </div>
+      </div>
+
+      {/* Ready to Join CTA */}
+      <div className="bg-gradient-to-r from-sky-600 to-blue-800 py-20 relative overflow-hidden">
+         <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+         <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+         
+         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <MotionDiv
+               initial={{ opacity: 0, scale: 0.9 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               viewport={{ once: true }}
+            >
+               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">Ready to Join Our Team?</h2>
+               <p className="text-blue-100 text-sm md:text-base mb-10 max-w-2xl mx-auto">
+                  Even without current openings, we're always interested in connecting with talented individuals who are passionate about technology and innovation.
+               </p>
+               
+               <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link to="/contact">
+                     <Button className="bg-white text-blue-700 hover:bg-gray-100 font-bold px-8 py-3 rounded-lg shadow-xl">
+                        <Send size={16} className="mr-2" /> Send Us Your Resume
+                     </Button>
+                  </Link>
+                  <Link to="/company">
+                     <Button variant="outline" className="border-white text-white hover:bg-white/10 font-bold px-8 py-3 rounded-lg">
+                        <Users size={16} className="mr-2" /> Learn About Our Team
+                     </Button>
+                  </Link>
+               </div>
+            </MotionDiv>
          </div>
       </div>
 
