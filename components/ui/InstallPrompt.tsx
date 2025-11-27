@@ -7,6 +7,7 @@ import { Button } from './Button';
 export const InstallPrompt: React.FC = () => {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
   const [isVisible, setIsVisible] = useState(false);
+  const MotionDiv = motion.div as any;
 
   useEffect(() => {
     const handler = (e: Event) => {
@@ -42,7 +43,7 @@ export const InstallPrompt: React.FC = () => {
   return (
     <AnimatePresence>
       {isVisible && (
-        <motion.div
+        <MotionDiv
           initial={{ opacity: 0, y: 50 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: 50 }}
@@ -64,7 +65,7 @@ export const InstallPrompt: React.FC = () => {
               <X size={12} />
             </button>
           </div>
-        </motion.div>
+        </MotionDiv>
       )}
     </AnimatePresence>
   );

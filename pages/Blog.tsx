@@ -3,7 +3,7 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { BLOG_POSTS } from '../constants';
 import { Link } from 'react-router-dom';
-import { Calendar, Clock, ArrowRight, Tag, Search, Newspaper, Mail } from 'lucide-react';
+import { Calendar, Clock, ArrowRight, Tag, Search, Newspaper, Mail, Share2, Facebook, Twitter, Linkedin } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 export const Blog: React.FC = () => {
@@ -64,14 +64,23 @@ export const Blog: React.FC = () => {
                  <h2 className="text-3xl md:text-4xl font-bold text-white mb-4 max-w-3xl leading-tight group-hover:text-blue-400 transition-colors">
                     {featuredPost.title}
                  </h2>
-                 <p className="text-slate-200 text-sm md:text-base max-w-2xl mb-6 line-clamp-2">
+                 <p className="text-slate-200 text-sm md:text-base max-w-2xl mb-6 line-clamp-2 leading-relaxed">
                     {featuredPost.excerpt}
                  </p>
-                 <div className="flex items-center">
-                    <img src={featuredPost.author.avatar} alt={featuredPost.author.name} className="w-10 h-10 rounded-full border-2 border-white/10 mr-3" />
-                    <div>
-                       <div className="text-white text-sm font-bold">{featuredPost.author.name}</div>
-                       <div className="text-slate-300 text-xs">{featuredPost.date}</div>
+                 <div className="flex items-center justify-between">
+                    <div className="flex items-center">
+                        <img src={featuredPost.author.avatar} alt={featuredPost.author.name} className="w-10 h-10 rounded-full border-2 border-white/10 mr-3" />
+                        <div>
+                        <div className="text-white text-sm font-bold">{featuredPost.author.name}</div>
+                        <div className="text-slate-300 text-xs">{featuredPost.date}</div>
+                        </div>
+                    </div>
+                    
+                    {/* Floating Share Buttons */}
+                    <div className="hidden md:flex gap-2">
+                        <button className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"><Twitter size={16}/></button>
+                        <button className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"><Linkedin size={16}/></button>
+                        <button className="p-2 bg-white/10 hover:bg-white/20 rounded-full text-white transition-colors"><Share2 size={16}/></button>
                     </div>
                  </div>
               </div>

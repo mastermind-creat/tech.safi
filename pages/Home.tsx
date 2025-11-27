@@ -1,11 +1,11 @@
 
-import React from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import React, { useState, useEffect } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
 import { 
   ArrowRight, Brain, Shield, 
   Clock, Server, Globe, Smartphone, 
   Code2, Rocket, Bot, 
-  Layout, Cloud, ChevronRight
+  Layout, Cloud, ChevronRight, Star, ChevronLeft, Quote
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
@@ -19,24 +19,6 @@ const fadeInUp = {
     opacity: 1, 
     y: 0,
     transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-  }
-};
-
-const fadeInRight = {
-  hidden: { opacity: 0, x: -60 },
-  visible: { 
-    opacity: 1, 
-    x: 0,
-    transition: { duration: 0.8, ease: "easeOut" }
-  }
-};
-
-const fadeInLeft = {
-  hidden: { opacity: 0, x: 60 },
-  visible: { 
-    opacity: 1, 
-    x: 0,
-    transition: { duration: 0.8, ease: "easeOut" }
   }
 };
 
@@ -64,8 +46,32 @@ export const Home: React.FC = () => {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
+  const [greeting, setGreeting] = useState('');
+  const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
   const MotionDiv = motion.div as any;
+  const MotionButton = motion.button as any;
+
+  useEffect(() => {
+    const hour = new Date().getHours();
+    if (hour < 12) setGreeting('Good Morning');
+    else if (hour < 18) setGreeting('Good Afternoon');
+    else setGreeting('Good Evening');
+  }, []);
+
+  const testimonials = [
+    { name: "James D.", role: "CTO, RetailTech", text: "TechSafi's AI recommendation engine transformed our e-commerce platform. Conversion rates increased by 34% in three months.", bg: "blue" },
+    { name: "Sarah M.", role: "Ops Director, HealthPlus", text: "The diagnostic system TechSafi developed has significantly improved patient outcomes while reducing diagnostic time by over 60%.", bg: "purple" },
+    { name: "Robert K.", role: "CEO, Manufacturing Pro", text: "Predictive maintenance saved us millions. Their expertise in both AI and manufacturing infrastructure is unmatched.", bg: "emerald" }
+  ];
+
+  const nextTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev + 1) % testimonials.length);
+  };
+
+  const prevTestimonial = () => {
+    setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
 
   return (
     <div className="overflow-hidden bg-slate-50 dark:bg-[#020617] text-slate-900 dark:text-slate-200 selection:bg-cyan-500/30 transition-colors duration-300">
@@ -73,55 +79,31 @@ export const Home: React.FC = () => {
       {/* --- HERO SECTION --- */}
       <section className="relative min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-20 overflow-hidden">
           
-          {/* Animated Background */}
+          {/* Animated Background Mesh */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
+             <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent animate-pulse-slow"></div>
              <MotionDiv 
                style={{ y: y1, x: -100 }}
-               className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-blue-400/10 dark:bg-blue-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen"
+               className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-cyan-400/20 dark:bg-cyan-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen"
              />
              <MotionDiv 
                style={{ y: y2, x: 100 }}
-               className="absolute bottom-[10%] right-[20%] w-[600px] h-[600px] bg-purple-400/10 dark:bg-purple-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen"
+               className="absolute bottom-[10%] right-[20%] w-[600px] h-[600px] bg-purple-400/20 dark:bg-purple-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen"
              />
-             
              <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] dark:opacity-[0.03]"></div>
-             
-             {[...Array(20)].map((_, i) => (
-               <MotionDiv
-                 key={i}
-                 className="absolute w-1 h-1 bg-slate-900/10 dark:bg-white/20 rounded-full"
-                 initial={{ 
-                   x: Math.random() * 100 + "%", 
-                   y: Math.random() * 100 + "%", 
-                   scale: Math.random() * 0.5 + 0.5 
-                 }}
-                 animate={{ 
-                   y: [null, Math.random() * -100],
-                   opacity: [0, 1, 0]
-                 }}
-                 transition={{ 
-                   duration: Math.random() * 10 + 10, 
-                   repeat: Infinity, 
-                   ease: "linear" 
-                 }}
-               />
-             ))}
           </div>
 
           <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
-             {/* Badge */}
+             {/* Dynamic Greeting Badge */}
              <MotionDiv 
                initial={{ opacity: 0, y: -20 }} 
                animate={{ opacity: 1, y: 0 }} 
                transition={{ duration: 0.6 }}
-               className="inline-flex items-center px-4 py-2 rounded-full bg-white dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-md dark:shadow-lg dark:shadow-cyan-500/10 group cursor-default"
+               className="inline-flex items-center px-4 py-2 rounded-full bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm dark:shadow-lg group cursor-default"
              >
-               <span className="relative flex h-2 w-2 mr-3">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
-               </span>
-               <span className="text-xs md:text-sm font-medium tracking-wide text-slate-700 dark:text-cyan-100">
-                 Next-Gen AI Software Solutions
+               <span className="mr-2 text-lg">👋</span>
+               <span className="text-sm font-medium tracking-wide text-slate-700 dark:text-cyan-100">
+                 {greeting}, welcome to TechSafi
                </span>
              </MotionDiv>
              
@@ -165,7 +147,7 @@ export const Home: React.FC = () => {
                className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
              >
                 <Link to="/contact" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-lg dark:shadow-[0_0_30px_rgba(6,182,212,0.3)] border-0 text-white font-bold py-4 px-8 text-lg rounded-xl transform hover:-translate-y-1 transition-transform duration-300">
+                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-lg shadow-cyan-500/20 border-0 text-white font-bold py-4 px-8 text-lg rounded-xl transform hover:-translate-y-1 transition-transform duration-300">
                     Start Your Project
                   </Button>
                 </Link>
@@ -177,7 +159,7 @@ export const Home: React.FC = () => {
              </MotionDiv>
           </div>
 
-          {/* Stats Bar */}
+          {/* Floating Elements / Stats */}
           <MotionDiv 
              initial={{ opacity: 0, y: 40 }}
              animate={{ opacity: 1, y: 0 }}
@@ -263,10 +245,10 @@ export const Home: React.FC = () => {
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                <MotionDiv 
-                 variants={fadeInRight}
-                 initial="hidden"
-                 whileInView="visible"
+                 initial={{ opacity: 0, x: -30 }}
+                 whileInView={{ opacity: 1, x: 0 }}
                  viewport={{ once: true }}
+                 transition={{ duration: 0.8 }}
                >
                   <div className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold tracking-widest uppercase mb-6">
                      About TechSafi
@@ -293,13 +275,13 @@ export const Home: React.FC = () => {
                </MotionDiv>
 
                <MotionDiv
-                 variants={fadeInLeft}
-                 initial="hidden"
-                 whileInView="visible"
+                 initial={{ opacity: 0, x: 30 }}
+                 whileInView={{ opacity: 1, x: 0 }}
                  viewport={{ once: true }}
+                 transition={{ duration: 0.8 }}
                  className="relative"
                >
-                  <div className="relative aspect-square md:aspect-[4/3] bg-slate-50 dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-blue-900/20 rounded-3xl border border-slate-200 dark:border-white/10 overflow-hidden flex items-center justify-center shadow-2xl dark:shadow-none">
+                  <div className="relative aspect-square md:aspect-[4/3] bg-slate-50 dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-blue-900/20 rounded-3xl border border-slate-200 dark:border-white/10 overflow-hidden flex items-center justify-center shadow-2xl dark:shadow-none group">
                      <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/circuit-board.png')] opacity-[0.05] dark:opacity-10"></div>
                      <MotionDiv 
                         animate={{ y: [-10, 10, -10] }}
@@ -320,18 +302,11 @@ export const Home: React.FC = () => {
                         transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
                         className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-slate-200 dark:border-white/5 rounded-full"
                      />
-                     <div className="absolute bottom-8 left-8 right-8 bg-white/80 dark:bg-[#020617]/80 backdrop-blur p-4 rounded-xl border border-slate-100 dark:border-white/10 shadow-lg">
-                        <div className="flex items-center gap-3">
-                           <div className="h-2 flex-1 bg-slate-200 dark:bg-white/10 rounded-full overflow-hidden">
-                              <MotionDiv 
-                                 initial={{ width: 0 }}
-                                 whileInView={{ width: "85%" }}
-                                 transition={{ duration: 1.5, delay: 0.5 }}
-                                 className="h-full bg-gradient-to-r from-blue-500 to-purple-500"
-                              />
-                           </div>
-                           <span className="text-xs font-bold text-slate-900 dark:text-white">System Optimized</span>
-                        </div>
+                     {/* Hover Interaction Overlay */}
+                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
+                        <Link to="/company" className="px-6 py-3 bg-white text-slate-900 rounded-full font-bold transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                           Meet The Team
+                        </Link>
                      </div>
                   </div>
                </MotionDiv>
@@ -412,8 +387,60 @@ export const Home: React.FC = () => {
          </div>
       </section>
 
+      {/* --- TESTIMONIALS CAROUSEL (NEW) --- */}
+      <section className="py-24 bg-white dark:bg-[#050b1d] border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv 
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-16"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
+                  Success <span className="text-emerald-500">Stories</span>
+               </h2>
+            </MotionDiv>
+
+            <div className="relative max-w-4xl mx-auto">
+               <div className="overflow-hidden relative min-h-[300px]">
+                  <AnimatePresence mode="wait">
+                     <MotionDiv
+                        key={currentTestimonial}
+                        initial={{ opacity: 0, x: 50 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        exit={{ opacity: 0, x: -50 }}
+                        transition={{ duration: 0.5 }}
+                        className="bg-slate-50 dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 rounded-3xl p-8 md:p-12 text-center"
+                     >
+                        <Quote size={40} className={`text-${testimonials[currentTestimonial].bg}-500 mx-auto mb-6 opacity-50`} />
+                        <p className="text-xl md:text-2xl text-slate-700 dark:text-slate-300 font-light italic mb-8 leading-relaxed">
+                           "{testimonials[currentTestimonial].text}"
+                        </p>
+                        <div>
+                           <h4 className="text-lg font-bold text-slate-900 dark:text-white">{testimonials[currentTestimonial].name}</h4>
+                           <p className={`text-sm text-${testimonials[currentTestimonial].bg}-600 dark:text-${testimonials[currentTestimonial].bg}-400 font-medium`}>
+                              {testimonials[currentTestimonial].role}
+                           </p>
+                        </div>
+                     </MotionDiv>
+                  </AnimatePresence>
+               </div>
+
+               {/* Controls */}
+               <div className="flex justify-center gap-4 mt-8">
+                  <button onClick={prevTestimonial} className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors">
+                     <ChevronLeft size={24} className="text-slate-600 dark:text-slate-400" />
+                  </button>
+                  <button onClick={nextTestimonial} className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors">
+                     <ChevronRight size={24} className="text-slate-600 dark:text-slate-400" />
+                  </button>
+               </div>
+            </div>
+         </div>
+      </section>
+
       {/* --- WHY CHOOSE US --- */}
-      <section className="py-24 bg-slate-100 dark:bg-[#0f172a]/30 border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
+      <section className="py-24 bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv 
                variants={fadeInUp}
@@ -444,7 +471,7 @@ export const Home: React.FC = () => {
                  <MotionDiv
                     key={idx}
                     variants={fadeInUp}
-                    className="bg-white dark:bg-[#020617] border border-slate-200 dark:border-white/5 rounded-2xl p-8 hover:border-emerald-500/30 transition-all group shadow-lg dark:shadow-none hover:-translate-y-1 duration-300"
+                    className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 rounded-2xl p-8 hover:border-emerald-500/30 transition-all group shadow-lg dark:shadow-none hover:-translate-y-1 duration-300"
                  >
                     <div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-[#1e293b] flex items-center justify-center text-slate-700 dark:text-white mb-6 group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
                        <item.icon size={28} />
@@ -510,13 +537,13 @@ export const Home: React.FC = () => {
                   Ready to transform your ideas into reality? Our team is standing by to help you launch your next big project.
                </p>
                <Link to="/contact">
-                  <motion.button 
+                  <MotionButton 
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
                     className="bg-white text-blue-900 hover:bg-gray-100 font-bold text-lg px-10 py-5 rounded-full shadow-2xl transition-all duration-300"
                   >
                      Contact Us Today
-                  </motion.button>
+                  </MotionButton>
                </Link>
             </MotionDiv>
          </div>

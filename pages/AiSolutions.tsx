@@ -562,7 +562,7 @@ export const AiSolutions: React.FC = () => {
                   </button>
                   <AnimatePresence>
                      {openFaqIndex === idx && (
-                        <motion.div
+                        <MotionDiv
                            initial={{ height: 0, opacity: 0 }}
                            animate={{ height: 'auto', opacity: 1 }}
                            exit={{ height: 0, opacity: 0 }}
@@ -572,7 +572,7 @@ export const AiSolutions: React.FC = () => {
                            <div className="p-5 pt-0 text-slate-600 dark:text-slate-400 text-xs leading-relaxed border-t border-slate-100 dark:border-white/5 mt-2">
                               {faq.answer}
                            </div>
-                        </motion.div>
+                        </MotionDiv>
                      )}
                   </AnimatePresence>
                </div>

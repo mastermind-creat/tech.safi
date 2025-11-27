@@ -436,7 +436,7 @@ export const Contact: React.FC = () => {
                   </button>
                   <AnimatePresence>
                      {openFaq === idx && (
-                        <motion.div
+                        <MotionDiv
                            initial={{ height: 0, opacity: 0 }}
                            animate={{ height: 'auto', opacity: 1 }}
                            exit={{ height: 0, opacity: 0 }}
@@ -446,7 +446,7 @@ export const Contact: React.FC = () => {
                            <div className="p-4 pt-0 text-slate-600 dark:text-slate-400 text-xs leading-relaxed border-t border-slate-100 dark:border-white/5 mt-1">
                               {faq.answer}
                            </div>
-                        </motion.div>
+                        </MotionDiv>
                      )}
                   </AnimatePresence>
                </div>

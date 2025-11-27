@@ -6,6 +6,7 @@ export const CustomCursor: React.FC = () => {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 });
   const [isHovering, setIsHovering] = useState(false);
   const [isVisible, setIsVisible] = useState(false);
+  const MotionDiv = motion.div as any;
 
   useEffect(() => {
     const mouseMove = (e: MouseEvent) => {
@@ -59,7 +60,7 @@ export const CustomCursor: React.FC = () => {
   return (
     <>
       {/* Main Dot */}
-      <motion.div
+      <MotionDiv
         className="fixed top-0 left-0 w-4 h-4 bg-cyan-500 rounded-full pointer-events-none z-[9999] mix-blend-difference hidden md:block"
         animate={{
           x: mousePosition.x - 8,
@@ -75,7 +76,7 @@ export const CustomCursor: React.FC = () => {
       />
 
       {/* Follower Ring */}
-      <motion.div
+      <MotionDiv
         className="fixed top-0 left-0 w-8 h-8 border border-cyan-500 rounded-full pointer-events-none z-[9998] hidden md:block"
         animate={{
           x: mousePosition.x - 16,

@@ -24,6 +24,8 @@ export const Chatbot: React.FC = () => {
   ]);
   const [inputValue, setInputValue] = useState('');
   const messagesEndRef = useRef<HTMLDivElement>(null);
+  const MotionDiv = motion.div as any;
+  const MotionButton = motion.button as any;
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
@@ -91,7 +93,7 @@ export const Chatbot: React.FC = () => {
       {/* Trigger Button */}
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
+          <MotionButton
             initial={{ scale: 0, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0, opacity: 0 }}
@@ -101,14 +103,14 @@ export const Chatbot: React.FC = () => {
           >
             <MessageCircle size={28} />
             <span className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-[#020617]"></span>
-          </motion.button>
+          </MotionButton>
         )}
       </AnimatePresence>
 
       {/* Chat Window */}
       <AnimatePresence>
         {isOpen && (
-          <motion.div
+          <MotionDiv
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
@@ -141,7 +143,7 @@ export const Chatbot: React.FC = () => {
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-[#020617]/50 scrollbar-thin">
               {messages.map((msg) => (
-                <motion.div
+                <MotionDiv
                   key={msg.id}
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -164,11 +166,11 @@ export const Chatbot: React.FC = () => {
                       {msg.text}
                     </div>
                   </div>
-                </motion.div>
+                </MotionDiv>
               ))}
 
               {isTyping && (
-                <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
+                <MotionDiv initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                   <div className="flex items-end max-w-[85%]">
                     <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center flex-shrink-0 mb-1 mr-2">
                       <Bot size={12} />
@@ -179,7 +181,7 @@ export const Chatbot: React.FC = () => {
                       <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
                     </div>
                   </div>
-                </motion.div>
+                </MotionDiv>
               )}
               <div ref={messagesEndRef} />
             </div>
@@ -206,7 +208,7 @@ export const Chatbot: React.FC = () => {
                 Powered by TechSafi AI • Responds instantly
               </div>
             </div>
-          </motion.div>
+          </MotionDiv>
         )}
       </AnimatePresence>
     </>

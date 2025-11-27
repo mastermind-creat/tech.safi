@@ -7,7 +7,7 @@ import {
   Layers, CreditCard, Banknote, Wrench, Sliders, Users, 
   CheckCircle2, ArrowRight, Code2, Database, ShieldCheck,
   Search, ClipboardList, Rocket, Calendar, DollarSign,
-  Server, Globe, Cpu, Terminal, Shield
+  Server, Globe, Cpu, Terminal, Shield, Zap
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
@@ -260,7 +260,7 @@ export const Services: React.FC = () => {
         </div>
       </div>
 
-      {/* Services Grid */}
+      {/* Services Grid with Micro-Interactions */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mb-24 mt-16">
         <div className="text-center mb-16">
            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">What We <span className="text-blue-500">Offer</span></h2>
@@ -273,12 +273,18 @@ export const Services: React.FC = () => {
               key={idx}
               {...fadeInUp}
               transition={{ delay: idx * 0.05 }}
+              whileHover={{ y: -8 }}
               className="group"
             >
-              <div className="h-full bg-white dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-white/5 p-8 hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300 flex flex-col hover:-translate-y-1 shadow-lg dark:shadow-none hover:shadow-xl dark:hover:shadow-blue-900/10">
-                {/* Icon */}
+              <div className="h-full bg-white dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-white/5 p-8 hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300 flex flex-col shadow-lg dark:shadow-none hover:shadow-xl dark:hover:shadow-blue-900/10">
+                {/* Icon with Animation */}
                 <div className={`w-14 h-14 rounded-xl bg-${service.color}-100 dark:bg-${service.color}-500/10 flex items-center justify-center text-${service.color}-600 dark:text-${service.color}-500 mb-6 group-hover:scale-110 transition-transform duration-300 border border-${service.color}-200 dark:border-${service.color}-500/20`}>
-                  <service.icon size={28} />
+                  <MotionDiv
+                    whileHover={{ rotate: 15, scale: 1.2 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    <service.icon size={28} />
+                  </MotionDiv>
                 </div>
                 
                 {/* Content */}
@@ -287,13 +293,18 @@ export const Services: React.FC = () => {
                   {service.description}
                 </p>
 
-                {/* Features List */}
+                {/* Features List (Expandable Feel) */}
                 <div className="space-y-3 mb-8">
                    {service.features.map((feature, fIdx) => (
-                     <div key={fIdx} className="flex items-start">
+                     <MotionDiv 
+                        key={fIdx} 
+                        className="flex items-start"
+                        initial={{ opacity: 0.8 }}
+                        whileHover={{ x: 5, opacity: 1 }}
+                     >
                         <CheckCircle2 size={16} className={`text-${service.color}-500 mt-0.5 mr-3 flex-shrink-0`} />
                         <span className="text-xs md:text-sm text-slate-500 dark:text-slate-300">{feature}</span>
-                     </div>
+                     </MotionDiv>
                    ))}
                 </div>
 
