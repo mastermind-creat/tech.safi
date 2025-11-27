@@ -6,7 +6,7 @@ import {
   Check, CheckCircle2, HelpCircle, ChevronDown, Plus, Minus, 
   Smartphone, Globe, ShoppingCart, Zap, Server, Shield, 
   CreditCard, Clock, Award, Bot, Brain, Cpu, MessageSquare, 
-  Sparkles, BarChart, Settings, Repeat, Code2
+  Sparkles, BarChart, Settings, Repeat, Code2, Wrench
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 import { Card } from '../components/ui/Card';
@@ -219,6 +219,45 @@ export const Pricing: React.FC = () => {
         "Expert AI consultation"
       ],
       color: "purple"
+    },
+    {
+      icon: Wrench,
+      name: "Website Maintenance",
+      price: "15,000",
+      features: [
+        "Weekly backups & security scans",
+        "Plugin & core software updates",
+        "Uptime monitoring (24/7)",
+        "Speed performance optimization",
+        "Content updates (2 hrs/mo)"
+      ],
+      color: "emerald"
+    },
+    {
+      icon: BarChart,
+      name: "SEO Optimization",
+      price: "25,000",
+      features: [
+        "Keyword research & strategy",
+        "On-page SEO optimization",
+        "Technical SEO audits",
+        "Content recommendations",
+        "Monthly performance reports"
+      ],
+      color: "orange"
+    },
+    {
+      icon: Settings,
+      name: "Custom Services",
+      price: "Custom",
+      features: [
+        "Dedicated development hours",
+        "Priority support SLA",
+        "Strategic consulting",
+        "Custom feature development",
+        "Quarterly business reviews"
+      ],
+      color: "slate"
     }
   ];
 
@@ -572,27 +611,27 @@ export const Pricing: React.FC = () => {
          </div>
 
          <div className="pt-12 border-t border-white/5">
-            <h3 className="text-xl font-bold text-white text-center mb-8">Monthly AI Services</h3>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-3xl mx-auto">
+            <h3 className="text-xl font-bold text-white text-center mb-8">Monthly Services & Support</h3>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                {monthlyServices.map((svc, idx) => (
                   <MotionDiv
                      key={idx}
                      initial={{ opacity: 0, y: 20 }}
                      whileInView={{ opacity: 1, y: 0 }}
                      viewport={{ once: true }}
-                     className="bg-[#0f172a] border border-white/10 rounded-2xl p-6 hover:border-blue-500/30 transition-all flex flex-col items-center text-center"
+                     className="bg-[#0f172a] border border-white/10 rounded-2xl p-6 hover:border-blue-500/30 transition-all flex flex-col items-center text-center group hover:-translate-y-1"
                   >
-                     <div className={`w-10 h-10 rounded-lg bg-${svc.color}-500/10 flex items-center justify-center text-${svc.color}-500 mb-3`}>
+                     <div className={`w-10 h-10 rounded-lg bg-${svc.color}-500/10 flex items-center justify-center text-${svc.color}-500 mb-3 group-hover:scale-110 transition-transform`}>
                         <svc.icon size={20} />
                      </div>
                      <h3 className="text-white font-bold mb-1">{svc.name}</h3>
                      <div className="flex items-end gap-1 mb-4">
                         <span className="text-xs text-slate-400 mb-1">KES</span>
                         <span className="text-2xl font-bold text-white">{svc.price}</span>
-                        <span className="text-[10px] text-slate-500 mb-1">/month</span>
+                        <span className="text-[10px] text-slate-500 mb-1">{svc.price !== 'Custom' ? '/month' : ''}</span>
                      </div>
                      
-                     <ul className="space-y-2 mb-6 w-full text-left pl-4">
+                     <ul className="space-y-2 mb-6 w-full text-left pl-4 flex-grow">
                         {svc.features.map((feat, i) => (
                            <li key={i} className="flex items-start text-[11px] text-slate-300">
                               <CheckCircle2 size={12} className={`text-${svc.color}-500 mr-2 mt-0.5 flex-shrink-0`} />
@@ -603,7 +642,7 @@ export const Pricing: React.FC = () => {
 
                      <Link to="/contact" className="w-full">
                         <Button className={`w-full bg-${svc.color}-600 hover:bg-${svc.color}-700 py-2 h-auto text-xs`}>
-                           Get Started
+                           {svc.price === 'Custom' ? 'Contact Us' : 'Get Started'}
                         </Button>
                      </Link>
                   </MotionDiv>
