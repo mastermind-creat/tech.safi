@@ -4,8 +4,11 @@ import { Link } from 'react-router-dom';
 import { 
   Laptop, Smartphone, Palette, Cloud, BarChart3, Headphones, 
   Layers, CreditCard, Banknote, Wrench, Sliders, Users, 
-  CheckCircle2, ArrowRight, Code2, Database, ShieldCheck
+  CheckCircle2, ArrowRight, Code2, Database, ShieldCheck,
+  Search, ClipboardList, Rocket, Calendar, DollarSign,
+  Server, Globe, Cpu, Terminal, Shield
 } from 'lucide-react';
+import { Button } from '../components/ui/Button';
 
 const fadeInUp = {
   initial: { opacity: 0, y: 20 },
@@ -113,11 +116,85 @@ const servicesList = [
   }
 ];
 
+const processSteps = [
+  {
+    step: "1",
+    icon: Search,
+    title: "Discover",
+    desc: "We begin by understanding your business, goals, and challenges through in-depth discussions and research to define project requirements.",
+    color: "bg-blue-600",
+    shadow: "shadow-blue-500/20"
+  },
+  {
+    step: "2",
+    icon: ClipboardList,
+    title: "Plan",
+    desc: "We create a detailed project plan with clear milestones, deliverables, timelines, and success metrics to ensure alignment.",
+    color: "bg-purple-600",
+    shadow: "shadow-purple-500/20"
+  },
+  {
+    step: "3",
+    icon: Code2,
+    title: "Execute",
+    desc: "Our team works diligently to bring your project to life with agile development, regular updates, and continuous feedback loops.",
+    color: "bg-emerald-600",
+    shadow: "shadow-emerald-500/20"
+  },
+  {
+    step: "4",
+    icon: Rocket,
+    title: "Deliver",
+    desc: "We launch your project successfully and provide ongoing support, maintenance, and optimization to ensure long-term success.",
+    color: "bg-yellow-600",
+    shadow: "shadow-yellow-500/20"
+  }
+];
+
+const techStack = [
+  {
+    category: "Frontend",
+    icon: Globe,
+    color: "text-blue-400",
+    techs: ["React.js", "Vue.js", "Angular", "Next.js", "TypeScript", "Tailwind CSS", "Bootstrap"]
+  },
+  {
+    category: "Backend",
+    icon: Server,
+    color: "text-emerald-400",
+    techs: ["Node.js", "Python/Django", "PHP", "Laravel", "Java/Spring", ".NET Core", "Ruby on Rails"]
+  },
+  {
+    category: "Mobile",
+    icon: Smartphone,
+    color: "text-purple-400",
+    techs: ["React Native", "Flutter", "iOS/Swift", "Android/Kotlin", "Ionic", "Xamarin"]
+  },
+  {
+    category: "Database",
+    icon: Database,
+    color: "text-yellow-400",
+    techs: ["MySQL", "PostgreSQL", "MongoDB", "Redis", "Firebase", "SQL Server"]
+  },
+  {
+    category: "Cloud & DevOps",
+    icon: Cloud,
+    color: "text-cyan-400",
+    techs: ["AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Jenkins", "GitHub Actions"]
+  },
+  {
+    category: "AI & ML",
+    icon: Cpu,
+    color: "text-pink-400",
+    techs: ["TensorFlow", "PyTorch", "OpenAI/GPT", "Scikit-learn", "Keras", "Hugging Face"]
+  }
+];
+
 export const Services: React.FC = () => {
   const MotionDiv = motion.div as any;
 
   return (
-    <div className="bg-[#020617] min-h-screen pb-20 overflow-hidden">
+    <div className="bg-[#020617] min-h-screen pb-0 overflow-hidden">
       {/* Hero Section */}
       <div className="relative pt-32 pb-20 overflow-hidden">
         {/* Background Gradient & Effects */}
@@ -183,7 +260,7 @@ export const Services: React.FC = () => {
       </div>
 
       {/* Services Grid */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mb-24">
         <div className="text-center mb-16">
            <h2 className="text-3xl font-bold text-white mb-4">What We <span className="text-blue-500">Offer</span></h2>
            <p className="text-slate-400 max-w-2xl mx-auto text-sm md:text-base">From concept to deployment, we provide comprehensive technology solutions that help businesses thrive in the digital age.</p>
@@ -230,6 +307,165 @@ export const Services: React.FC = () => {
             </MotionDiv>
           ))}
         </div>
+      </div>
+
+      {/* Our Process Section */}
+      <div className="relative py-24 bg-[#050b1d] border-t border-white/5">
+         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/50 to-transparent"></div>
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv 
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+            >
+              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-[#1e293b] text-blue-400 text-xs font-bold tracking-widest uppercase mb-4 border border-blue-500/20">
+                 <ClipboardList size={12} className="mr-2" /> Our Methodology
+              </div>
+              <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                 Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Process</span>
+              </h2>
+              <p className="text-slate-400 max-w-2xl mx-auto">
+                 We follow a proven methodology to deliver exceptional results and ensure your project's success from start to finish.
+              </p>
+
+              {/* Payment Terms Card */}
+              <div className="mt-8 inline-block">
+                 <div className="bg-[#0f172a] border border-blue-500/20 rounded-xl p-4 flex flex-col items-center shadow-lg shadow-blue-900/10">
+                    <div className="flex items-center text-blue-400 text-sm font-bold mb-2">
+                       <DollarSign size={16} className="mr-1" /> Payment Terms
+                    </div>
+                    <div className="flex gap-4 text-xs">
+                       <div className="flex items-center text-slate-300">
+                          <CheckCircle2 size={12} className="text-green-500 mr-1.5" /> 
+                          <span className="font-bold text-white mr-1">40% upfront fee</span> after agreement
+                       </div>
+                       <div className="flex items-center text-slate-300">
+                          <CheckCircle2 size={12} className="text-green-500 mr-1.5" />
+                          <span className="font-bold text-white mr-1">Remaining 60%</span> on project delivery
+                       </div>
+                    </div>
+                 </div>
+              </div>
+            </MotionDiv>
+
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
+               {/* Connecting Line (Desktop) */}
+               <div className="hidden md:block absolute top-[2.5rem] left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-yellow-500/20 z-0"></div>
+
+               {processSteps.map((step, idx) => (
+                  <MotionDiv
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="relative z-10"
+                  >
+                     <div className="bg-[#1e293b] border border-white/5 rounded-2xl p-6 h-full flex flex-col items-center text-center hover:border-white/10 transition-all hover:-translate-y-1 group">
+                        <div className={`w-16 h-16 rounded-2xl ${step.color} flex items-center justify-center text-white text-xl font-bold mb-6 ${step.shadow} group-hover:scale-110 transition-transform`}>
+                           {idx + 1}
+                        </div>
+                        <div className="mb-4">
+                           <step.icon size={24} className="text-slate-400 mx-auto mb-2" />
+                           <h3 className="text-xl font-bold text-white">{step.title}</h3>
+                        </div>
+                        <p className="text-slate-400 text-sm leading-relaxed">
+                           {step.desc}
+                        </p>
+                     </div>
+                  </MotionDiv>
+               ))}
+            </div>
+
+            <div className="text-center mt-12">
+               <Link to="/contact">
+                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-900/20">
+                     <Rocket size={16} className="mr-2" /> Start Your Project Today <ArrowRight size={16} className="ml-2" />
+                  </Button>
+               </Link>
+            </div>
+         </div>
+      </div>
+
+      {/* Technology Stack Section */}
+      <div className="py-24 bg-[#020617]">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv 
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-16"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500">Technology Stack</span>
+               </h2>
+               <div className="h-1 w-20 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full mx-auto mb-6"></div>
+               <p className="text-slate-400 max-w-2xl mx-auto">
+                  We work with modern technologies and frameworks to build robust, scalable, and future-proof solutions.
+               </p>
+            </MotionDiv>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
+               {techStack.map((stack, idx) => (
+                  <MotionDiv
+                     key={idx}
+                     initial={{ opacity: 0, scale: 0.9 }}
+                     whileInView={{ opacity: 1, scale: 1 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: idx * 0.05 }}
+                     className="flex flex-col items-center"
+                  >
+                     <div className="w-12 h-12 rounded-xl bg-[#1e293b] flex items-center justify-center mb-4 border border-white/5">
+                        <stack.icon size={24} className={stack.color} />
+                     </div>
+                     <h3 className="text-white font-bold text-sm mb-3">{stack.category}</h3>
+                     <ul className="space-y-1.5 text-center">
+                        {stack.techs.map((tech, tIdx) => (
+                           <li key={tIdx} className="text-xs text-slate-500 hover:text-slate-300 transition-colors">
+                              {tech}
+                           </li>
+                        ))}
+                     </ul>
+                  </MotionDiv>
+               ))}
+            </div>
+         </div>
+      </div>
+
+      {/* Bottom CTA Section */}
+      <div className="relative py-20 bg-blue-600 overflow-hidden">
+         {/* Decorative Circles/Background */}
+         <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
+         <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
+         
+         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
+            <MotionDiv
+               initial={{ opacity: 0, scale: 0.9 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               viewport={{ once: true }}
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-6">
+                  Ready to Transform Your Business?
+               </h2>
+               <p className="text-blue-100 text-lg mb-10 max-w-2xl mx-auto">
+                  Let's discuss how our technology solutions can help you achieve your business goals and drive growth.
+               </p>
+               
+               <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                  <Link to="/contact">
+                     <Button className="bg-white text-blue-600 hover:bg-gray-100 border-0 font-bold px-8 py-4 h-auto text-base shadow-xl">
+                        <Calendar size={18} className="mr-2" /> Schedule a Consultation
+                     </Button>
+                  </Link>
+                  <Link to="/pricing">
+                     <Button variant="outline" className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white font-bold px-8 py-4 h-auto text-base">
+                        <DollarSign size={18} className="mr-2" /> View Pricing
+                     </Button>
+                  </Link>
+               </div>
+            </MotionDiv>
+         </div>
       </div>
     </div>
   );
