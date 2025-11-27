@@ -4,7 +4,10 @@ import { Link } from 'react-router-dom';
 import { 
   Brain, Bot, Eye, Zap, Database, Mic, FileText, PenTool, 
   Search, ShieldAlert, BarChart, ArrowRight, CheckCircle2, 
-  Cpu, MessageSquare, Layers, Code2, Server, Globe
+  Cpu, MessageSquare, Layers, Code2, Server, Globe,
+  Plug, Sparkles, ShoppingCart, Briefcase, Settings, 
+  Headphones, Terminal, Atom, LayoutGrid, Flame, Smile, 
+  Share2, Box, Anchor, Activity, Factory, Cloud
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
@@ -95,6 +98,13 @@ export const AiSolutions: React.FC = () => {
       title: "Predictive Analytics",
       description: "Forecast future trends, behaviors, and outcomes using advanced predictive models and machine learning algorithms.",
       subFeatures: ["Sales Forecasting", "Churn Prediction", "Risk Assessment", "Trend Analysis"]
+    },
+    {
+      icon: Zap,
+      color: "emerald",
+      title: "Real-time AI Processing",
+      description: "Process data and make decisions in real-time with low-latency AI systems for instant responses and insights.",
+      subFeatures: ["Real-time Decision Making", "Stream Processing", "Live Data Analysis", "Instant Notifications"]
     }
   ];
 
@@ -155,76 +165,6 @@ export const AiSolutions: React.FC = () => {
         </div>
       </div>
 
-      {/* Approach & Tech Stack Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-          {/* Left: Approach Text */}
-          <MotionDiv
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="space-y-8"
-          >
-            <div>
-              <h2 className="text-3xl md:text-4xl font-bold text-white font-display mb-4">
-                Our Approach to AI Integration
-              </h2>
-              <p className="text-slate-400 leading-relaxed">
-                At TechSafi, we don't just implement AI—we build intelligent systems that become integral to your business operations. Our methodology combines cutting-edge technologies with proven development practices.
-              </p>
-            </div>
-
-            <div className="space-y-6">
-              {[
-                { icon: Brain, title: "AI-First Strategy", desc: "We design solutions with AI at the core, not as an afterthought, ensuring maximum impact and seamless integration." },
-                { icon: Code2, title: "Custom Model Development", desc: "We build tailored AI models specific to your data and business requirements, not one-size-fits-all solutions." },
-                { icon: Layers, title: "Continuous Learning", desc: "Our systems evolve with your business, continuously improving through feedback loops and new data." }
-              ].map((item, idx) => (
-                <div key={idx} className="flex gap-4">
-                  <div className="flex-shrink-0 w-10 h-10 rounded-lg bg-white/5 flex items-center justify-center text-blue-400 border border-white/10">
-                    <item.icon size={20} />
-                  </div>
-                  <div>
-                    <h3 className="text-white font-bold mb-1">{item.title}</h3>
-                    <p className="text-slate-400 text-sm">{item.desc}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </MotionDiv>
-
-          {/* Right: Tech Stack Card */}
-          <MotionDiv
-            initial={{ opacity: 0, x: 30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            className="relative"
-          >
-            <div className="absolute inset-0 bg-gradient-to-br from-blue-600/20 to-purple-600/20 blur-2xl rounded-3xl"></div>
-            <div className="relative bg-gradient-to-br from-blue-600/10 to-purple-900/40 backdrop-blur-xl border border-white/10 rounded-2xl p-8 shadow-2xl">
-              <h3 className="text-xl font-bold text-white mb-6">Technologies We Work With</h3>
-              <div className="grid grid-cols-2 gap-4">
-                {[
-                  { name: "Python & TensorFlow", icon: Cpu },
-                  { name: "OpenAI & GPT", icon: Bot },
-                  { name: "Node.js & React", icon: Globe },
-                  { name: "AWS & Azure AI", icon: Server },
-                  { name: "PyTorch & Keras", icon: Database },
-                  { name: "Data Analytics", icon: BarChart },
-                  { name: "Hugging Face", icon: Brain },
-                  { name: "Speech APIs", icon: Mic }
-                ].map((tech, i) => (
-                  <div key={i} className="flex items-center p-3 rounded-lg bg-white/5 border border-white/5 hover:bg-white/10 transition-colors">
-                    <tech.icon size={16} className="text-white mr-2.5" />
-                    <span className="text-xs font-medium text-white">{tech.name}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </MotionDiv>
-        </div>
-      </div>
-
       {/* Main Feature Grid */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
         <MotionDiv
@@ -274,6 +214,225 @@ export const AiSolutions: React.FC = () => {
             </MotionDiv>
           ))}
         </div>
+      </div>
+
+      {/* Add AI to Existing Website Section */}
+      <div className="bg-[#050b1d] py-24 border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <MotionDiv
+             initial={{ opacity: 0, y: 20 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             className="text-center mb-16"
+           >
+              <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                 Add AI to Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Existing Website</span>
+              </h2>
+              <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+                 Transform your current website or software with AI capabilities without rebuilding from scratch
+              </p>
+           </MotionDiv>
+
+           {/* Integration Cards */}
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
+              {[
+                { icon: Plug, title: "Quick Integration", desc: "Seamlessly add AI features to your existing website with minimal downtime. No rebuild required.", color: "blue" },
+                { icon: MessageSquare, title: "AI Chatbot Widget", desc: "Add an intelligent chatbot to your existing website. Works with WordPress, Shopify, custom sites, and more.", color: "purple" },
+                { icon: Code2, title: "API Integration", desc: "Connect AI services to your existing software through REST APIs. Works with any technology stack.", color: "emerald" },
+                { icon: Sparkles, title: "Smart Features", desc: "Add AI-powered search, recommendations, personalization, and content generation to existing pages.", color: "orange" }
+              ].map((card, idx) => (
+                <MotionDiv
+                   key={idx}
+                   initial={{ opacity: 0, y: 20 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   transition={{ delay: idx * 0.1 }}
+                >
+                   <div className={`h-full bg-[${card.color === 'blue' ? '#0f172a' : '#1e1b4b'}]/30 border border-white/5 rounded-xl p-6 hover:bg-white/5 transition-colors group`}>
+                      <div className={`w-10 h-10 rounded-lg bg-${card.color}-500/10 flex items-center justify-center text-${card.color}-400 mb-4 group-hover:scale-110 transition-transform`}>
+                         <card.icon size={20} />
+                      </div>
+                      <h3 className="text-white font-bold mb-2">{card.title}</h3>
+                      <p className="text-slate-400 text-xs leading-relaxed">{card.desc}</p>
+                   </div>
+                </MotionDiv>
+              ))}
+           </div>
+
+           {/* Use Cases Grid */}
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                { icon: ShoppingCart, title: "E-commerce Sites", items: ["Product recommendation engine", "AI-powered search & filters", "Smart chatbot for customer support", "Price optimization & forecasting"] },
+                { icon: Briefcase, title: "Business Websites", items: ["Lead qualification chatbot", "Content generation for blogs", "Smart contact forms with validation", "Personalized user experience"] },
+                { icon: Settings, title: "Custom Software", items: ["Document processing & OCR", "Predictive analytics dashboards", "Automated workflow optimization", "Real-time data processing"] }
+              ].map((card, idx) => (
+                <MotionDiv
+                   key={idx}
+                   initial={{ opacity: 0, y: 20 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   transition={{ delay: 0.2 + (idx * 0.1) }}
+                   className="bg-[#1e293b]/40 rounded-xl p-6 border border-white/5"
+                >
+                   <div className="flex items-center mb-4">
+                      <div className={`w-8 h-8 rounded bg-${idx === 0 ? 'blue' : idx === 1 ? 'purple' : 'emerald'}-500/10 flex items-center justify-center text-${idx === 0 ? 'blue' : idx === 1 ? 'purple' : 'emerald'}-400 mr-3`}>
+                         <card.icon size={16} />
+                      </div>
+                      <h3 className="text-white font-bold">{card.title}</h3>
+                   </div>
+                   <div className="space-y-2">
+                      {card.items.map((item, i) => (
+                         <div key={i} className="flex items-center text-xs text-slate-400">
+                            <CheckCircle2 size={12} className="text-green-500 mr-2" />
+                            {item}
+                         </div>
+                      ))}
+                   </div>
+                </MotionDiv>
+              ))}
+           </div>
+        </div>
+      </div>
+
+      {/* AI Development Process */}
+      <div className="py-24 bg-[#020617]">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-16"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                  Our AI Development Process
+               </h2>
+               <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
+                  A structured approach to delivering successful AI solutions that drive real business value
+               </p>
+            </MotionDiv>
+
+            <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center relative">
+               {/* Process Steps */}
+               {[
+                 { icon: Search, title: "Discovery", desc: "We analyze your business needs, data availability, and define AI objectives." },
+                 { icon: Database, title: "Data Preparation", desc: "We collect, clean, and prepare your data for model training and validation." },
+                 { icon: Cpu, title: "Model Development", desc: "We design, train, and optimize AI models tailored to your specific use case." },
+                 { icon: Plug, title: "Integration", desc: "We seamlessly integrate the AI solution into your existing systems and workflows." },
+                 { icon: Headphones, title: "Support & Optimization", desc: "We provide ongoing maintenance, monitoring, and continuous improvement." }
+               ].map((step, idx) => (
+                 <MotionDiv
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="relative z-10 flex flex-col items-center"
+                 >
+                    <div className={`w-16 h-16 rounded-full bg-[#1e293b] flex items-center justify-center text-white mb-6 border-2 border-white/5 hover:border-blue-500 transition-colors shadow-lg shadow-blue-900/10`}>
+                       <step.icon size={24} className={`text-${['blue','purple','emerald','orange','red'][idx]}-400`} />
+                    </div>
+                    <h3 className="text-white font-bold text-sm mb-3">{step.title}</h3>
+                    <p className="text-slate-500 text-xs leading-relaxed">{step.desc}</p>
+                 </MotionDiv>
+               ))}
+            </div>
+         </div>
+      </div>
+
+      {/* AI Technology Stack */}
+      <div className="py-20 bg-[#1e293b]/20 border-y border-white/5">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-16"
+            >
+               <h2 className="text-3xl md:text-4xl font-bold text-white font-display mb-4">
+                  Our AI Technology Stack
+               </h2>
+               <p className="text-slate-400 text-sm">
+                  We leverage industry-leading technologies to build robust, scalable AI solutions
+               </p>
+            </MotionDiv>
+
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6">
+               {[
+                 { name: "Python", icon: Terminal, color: "text-blue-400" },
+                 { name: "OpenAI", icon: Bot, color: "text-green-400" },
+                 { name: "Node.js", icon: Globe, color: "text-yellow-400" },
+                 { name: "React", icon: Atom, color: "text-cyan-400" },
+                 { name: "AWS AI", icon: Cloud, color: "text-orange-400" },
+                 { name: "Azure AI", icon: LayoutGrid, color: "text-blue-500" },
+                 { name: "PyTorch", icon: Flame, color: "text-red-400" },
+                 { name: "Hugging Face", icon: Smile, color: "text-yellow-500" },
+                 { name: "TensorFlow", icon: Share2, color: "text-orange-500" },
+                 { name: "Google AI", icon: Search, color: "text-blue-400" },
+                 { name: "Docker", icon: Box, color: "text-blue-500" },
+                 { name: "Kubernetes", icon: Anchor, color: "text-blue-600" }
+               ].map((tech, idx) => (
+                 <MotionDiv
+                    key={idx}
+                    initial={{ opacity: 0, scale: 0.9 }}
+                    whileInView={{ opacity: 1, scale: 1 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="bg-[#0f172a] border border-white/5 rounded-xl p-6 flex flex-col items-center justify-center hover:border-white/20 transition-all hover:-translate-y-1"
+                 >
+                    <tech.icon size={28} className={`${tech.color} mb-3`} />
+                    <span className="text-white text-xs font-bold">{tech.name}</span>
+                 </MotionDiv>
+               ))}
+            </div>
+         </div>
+      </div>
+
+      {/* AI Success Stories */}
+      <div className="py-24 bg-[#020617]">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-16"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                  AI Success Stories
+               </h2>
+               <p className="text-slate-400 text-sm">
+                  Real-world examples of how our AI solutions have transformed businesses
+               </p>
+            </MotionDiv>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+               {[
+                 { icon: ShoppingCart, title: "E-commerce Personalization", desc: "Implemented AI-powered recommendation engine for a retail client, increasing conversion rates by 34% and average order value by 22%.", color: "blue" },
+                 { icon: Activity, title: "Healthcare Diagnostics", desc: "Developed computer vision system for medical imaging analysis, reducing diagnostic time by 65% and improving accuracy by 28%.", color: "purple" },
+                 { icon: Factory, title: "Manufacturing Optimization", desc: "Created predictive maintenance system that reduced equipment downtime by 47% and maintenance costs by 32% for industrial client.", color: "emerald" }
+               ].map((story, idx) => (
+                 <MotionDiv
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className={`bg-[#0f172a] rounded-2xl border border-white/5 p-8 relative overflow-hidden group hover:border-${story.color}-500/30 transition-all`}
+                 >
+                    <div className={`absolute top-0 left-0 w-full h-1 bg-${story.color}-500`}></div>
+                    <div className={`w-12 h-12 rounded-full bg-${story.color}-500/10 flex items-center justify-center text-${story.color}-400 mb-6 group-hover:scale-110 transition-transform`}>
+                       <story.icon size={24} />
+                    </div>
+                    <h3 className="text-xl font-bold text-white mb-4">{story.title}</h3>
+                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                       {story.desc}
+                    </p>
+                    <Link to="/portfolio" className={`flex items-center text-xs font-bold text-${story.color}-400 hover:text-white transition-colors`}>
+                       Read Case Study <ArrowRight size={14} className="ml-1" />
+                    </Link>
+                 </MotionDiv>
+               ))}
+            </div>
+         </div>
       </div>
     </div>
   );
