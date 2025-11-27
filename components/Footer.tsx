@@ -1,3 +1,4 @@
+
 import React from 'react';
 import { NavLink } from 'react-router-dom';
 import { Twitter, Facebook, Instagram, Linkedin, MapPin, Phone, Mail, Clock, Lock, ShieldCheck, Send, Github } from 'lucide-react';
@@ -156,13 +157,13 @@ export const Footer: React.FC = () => {
               <span className="text-blue-500 mr-1">© 2025 TechSafi</span> - All rights reserved. Crafted with <span className="text-red-500 mx-1">❤</span> in Kenya
           </div>
           <div className="flex flex-wrap justify-center gap-6 text-xs font-medium text-slate-500">
-             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+             <NavLink to="/privacy-policy" className="hover:text-white transition-colors">Privacy Policy</NavLink>
              <span className="text-slate-700">|</span>
-             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+             <NavLink to="/terms-of-service" className="hover:text-white transition-colors">Terms of Service</NavLink>
              <span className="text-slate-700">|</span>
-             <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+             <NavLink to="/cookie-policy" className="hover:text-white transition-colors">Cookie Policy</NavLink>
              <span className="text-slate-700">|</span>
-             <a href="#" className="hover:text-white transition-colors">Sitemap</a>
+             <NavLink to="/sitemap" className="hover:text-white transition-colors">Sitemap</NavLink>
           </div>
           <div className="text-[10px] text-slate-600 uppercase tracking-widest hidden md:block">
               Powered by Innovation • Driven by Excellence • Built for the Future

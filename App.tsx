@@ -1,3 +1,4 @@
+
 import React, { useEffect } from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
@@ -10,6 +11,10 @@ import { Careers } from './pages/Careers';
 import { Contact } from './pages/Contact';
 import { AiSolutions } from './pages/AiSolutions';
 import { Blog } from './pages/Blog';
+import { PrivacyPolicy } from './pages/PrivacyPolicy';
+import { TermsOfService } from './pages/TermsOfService';
+import { CookiePolicy } from './pages/CookiePolicy';
+import { Sitemap } from './pages/Sitemap';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -37,6 +42,10 @@ const App: React.FC = () => {
           <Route path="/careers" element={<Careers />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/blog" element={<Blog />} />
+          <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+          <Route path="/terms-of-service" element={<TermsOfService />} />
+          <Route path="/cookie-policy" element={<CookiePolicy />} />
+          <Route path="/sitemap" element={<Sitemap />} />
         </Routes>
       </Layout>
     </Router>
