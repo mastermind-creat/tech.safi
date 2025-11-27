@@ -1,5 +1,5 @@
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   Brain, Bot, Eye, Zap, Database, Mic, FileText, PenTool, 
@@ -7,12 +7,19 @@ import {
   Cpu, MessageSquare, Layers, Code2, Server, Globe,
   Plug, Sparkles, ShoppingCart, Briefcase, Settings, 
   Headphones, Terminal, Atom, LayoutGrid, Flame, Smile, 
-  Share2, Box, Anchor, Activity, Factory, Cloud
+  Share2, Box, Anchor, Activity, Factory, Cloud,
+  Target, MapPin, Shield, Star, GraduationCap, Truck, Home,
+  Plus, Minus, ChevronDown, HelpCircle, Wallet
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 export const AiSolutions: React.FC = () => {
   const MotionDiv = motion.div as any;
+  const [openFaqIndex, setOpenFaqIndex] = useState<number | null>(null);
+
+  const toggleFaq = (index: number) => {
+    setOpenFaqIndex(openFaqIndex === index ? null : index);
+  };
 
   const features = [
     {
@@ -108,8 +115,31 @@ export const AiSolutions: React.FC = () => {
     }
   ];
 
+  const faqs = [
+    {
+      question: "How long does an AI integration project typically take?",
+      answer: "The timeline varies based on complexity. Simple integrations like chatbots can take 2-4 weeks, while complex custom ML models may take 3-6 months. We provide a detailed timeline during the discovery phase."
+    },
+    {
+      question: "Do I need to provide my own data for AI training?",
+      answer: "Ideally, yes. Your specific data yields the best results. However, we can also use synthetic data or pre-trained models to get started if your data is limited, then refine it as you collect more."
+    },
+    {
+      question: "What kind of ROI can I expect from AI implementation?",
+      answer: "ROI comes from efficiency gains, cost reduction, and revenue growth. Our clients typically see 30-60% reduction in operational costs and 20-40% increase in customer engagement within the first year."
+    },
+    {
+      question: "Do you provide ongoing support and maintenance?",
+      answer: "Yes, we offer comprehensive support packages including model monitoring, retraining, performance optimization, and bug fixes to ensure your AI solution remains effective over time."
+    },
+    {
+      question: "How do you ensure data security and privacy?",
+      answer: "Security is our top priority. We implement encryption, secure data pipelines, role-based access control, and comply with data protection regulations (like GDPR/local laws) to keep your data safe."
+    }
+  ];
+
   return (
-    <div className="bg-[#020617] min-h-screen pb-20 overflow-hidden">
+    <div className="bg-[#020617] min-h-screen pb-0 overflow-hidden">
       {/* Hero Section */}
       <div className="relative pt-32 pb-20 overflow-hidden">
         {/* Background Effects */}
@@ -432,6 +462,245 @@ export const AiSolutions: React.FC = () => {
                  </MotionDiv>
                ))}
             </div>
+         </div>
+      </div>
+
+      {/* Why Choose TechSafi Section */}
+      <div className="py-24 bg-[#050b1d] border-t border-white/5">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+           >
+              <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                 Why Choose TechSafi for AI Solutions
+              </h2>
+              <p className="text-slate-400 text-sm md:text-base">
+                 Our unique approach sets us apart in delivering successful AI implementations
+              </p>
+           </MotionDiv>
+
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {[
+                { icon: Target, title: "AI-First Approach", desc: "We design solutions with AI at the core, ensuring maximum impact rather than superficial integration.", color: "blue" },
+                { icon: Layers, title: "Full-Stack Expertise", desc: "Our team combines AI specialists with software engineers to deliver complete, production-ready solutions.", color: "purple" },
+                { icon: MapPin, title: "Local Understanding", desc: "We understand the unique challenges and opportunities in the Kenyan and East African market context.", color: "emerald" },
+                { icon: Shield, title: "Ethical AI Practices", desc: "We prioritize transparency, fairness, and accountability in all our AI implementations.", color: "red" }
+              ].map((card, idx) => (
+                <MotionDiv
+                   key={idx}
+                   initial={{ opacity: 0, y: 20 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   transition={{ delay: idx * 0.1 }}
+                   className="bg-[#0f172a] rounded-2xl p-8 border border-white/5 text-center hover:border-white/10 transition-all hover:-translate-y-1"
+                >
+                   <div className={`w-14 h-14 rounded-full bg-${card.color}-500/10 flex items-center justify-center text-${card.color}-400 mx-auto mb-6`}>
+                      <card.icon size={24} />
+                   </div>
+                   <h3 className="text-lg font-bold text-white mb-3">{card.title}</h3>
+                   <p className="text-slate-400 text-xs leading-relaxed">{card.desc}</p>
+                </MotionDiv>
+              ))}
+           </div>
+        </div>
+      </div>
+
+      {/* Testimonials Section */}
+      <div className="py-24 bg-[#020617]">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+           <MotionDiv
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              className="text-center mb-16"
+           >
+              <h2 className="text-3xl md:text-4xl font-bold text-white font-display mb-4">
+                 What Our Clients Say
+              </h2>
+              <p className="text-slate-400 text-sm">
+                 Don't just take our word for it - hear from businesses we've transformed with AI
+              </p>
+           </MotionDiv>
+
+           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+              {[
+                { name: "James D.", role: "CTO, RetailTech Solutions", quote: "TechSafi's AI recommendation engine transformed our e-commerce platform. Our conversion rates increased by 34% within just three months of implementation.", initial: "JD", color: "blue" },
+                { name: "Sarah M.", role: "Operations Director, HealthPlus", quote: "The AI-powered diagnostic system TechSafi developed has significantly improved our patient outcomes while reducing diagnostic time by over 60%.", initial: "SM", color: "purple" },
+                { name: "Robert K.", role: "CEO, Manufacturing Pro", quote: "TechSafi's predictive maintenance solution has saved us millions in equipment downtime. Their team's expertise in both AI and manufacturing is impressive.", initial: "RK", color: "emerald" }
+              ].map((testimonial, idx) => (
+                <MotionDiv
+                   key={idx}
+                   initial={{ opacity: 0, y: 20 }}
+                   whileInView={{ opacity: 1, y: 0 }}
+                   viewport={{ once: true }}
+                   transition={{ delay: idx * 0.1 }}
+                   className="bg-[#1e293b]/40 rounded-2xl p-8 border border-white/5 relative"
+                >
+                   {/* Quote Icon */}
+                   <div className="absolute top-6 right-6 text-white/5">
+                      <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
+                         <path d="M14.017 21L14.017 18C14.017 16.0547 14.5469 14.3789 15.6074 12.9727C16.668 11.5664 18.2324 10.8633 20.3008 10.8633V6C16.8906 6 14.2812 7.73438 12.4727 11.2031L13.7148 11.9766C13.4336 12.5625 13.293 13.2422 13.293 14.0156C13.293 14.8594 13.5352 15.6328 14.0176 16.3359V21H14.017ZM8.00391 21L8.00391 18C8.00391 16.0547 8.5332 14.3789 9.59375 12.9727C10.6543 11.5664 12.2188 10.8633 14.2871 10.8633V6C10.877 6 8.26758 7.73438 6.45898 11.2031L7.70117 11.9766C7.41992 12.5625 7.2793 13.2422 7.2793 14.0156C7.2793 14.8594 7.52148 15.6328 8.00391 16.3359V21H8.00391ZM3.70703 21L3.70703 18C3.70703 16.0547 4.23633 14.3789 5.29688 12.9727C6.35742 11.5664 7.92188 10.8633 9.99023 10.8633V6C6.58008 6 3.9707 7.73438 2.16211 11.2031L3.4043 11.9766C3.12305 12.5625 2.98242 13.2422 2.98242 14.0156C2.98242 14.8594 3.22461 15.6328 3.70703 16.3359V21H3.70703Z" />
+                      </svg>
+                   </div>
+                   
+                   <div className="flex items-center mb-6">
+                      <div className={`w-12 h-12 rounded-full bg-${testimonial.color}-500 flex items-center justify-center text-white font-bold text-lg mr-4`}>
+                         {testimonial.initial}
+                      </div>
+                      <div>
+                         <div className="text-white font-bold">{testimonial.name}</div>
+                         <div className="text-slate-400 text-xs">{testimonial.role}</div>
+                      </div>
+                   </div>
+                   <p className="text-slate-300 text-sm italic leading-relaxed mb-4">"{testimonial.quote}"</p>
+                   <div className="flex text-yellow-500 gap-1">
+                      {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
+                   </div>
+                </MotionDiv>
+              ))}
+           </div>
+        </div>
+      </div>
+
+      {/* Industry Use Cases Section */}
+      <div className="py-24 bg-[#0f172a]">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-16"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                  Industry Use Cases
+               </h2>
+               <p className="text-slate-400 text-sm">
+                  AI solutions transforming businesses across industries
+               </p>
+            </MotionDiv>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+               {[
+                 { icon: Activity, title: "Healthcare", desc: "Medical diagnosis, patient monitoring, drug discovery, and personalized treatment plans.", color: "blue" },
+                 { icon: ShoppingCart, title: "E-Commerce", desc: "Product recommendations, demand forecasting, dynamic pricing, and customer service automation.", color: "purple" },
+                 { icon: Wallet, title: "Finance", desc: "Fraud detection, risk assessment, algorithmic trading, and credit scoring.", color: "emerald" },
+                 { icon: Factory, title: "Manufacturing", desc: "Predictive maintenance, quality control, supply chain optimization, and process automation.", color: "orange" },
+                 { icon: Truck, title: "Transportation", desc: "Route optimization, autonomous vehicles, traffic prediction, and fleet management.", color: "red" },
+                 { icon: Search, title: "Marketing", desc: "Customer segmentation, campaign optimization, content generation, and sentiment analysis.", color: "pink" },
+                 { icon: GraduationCap, title: "Education", desc: "Personalized learning paths, automated grading, student performance prediction, and adaptive content.", color: "indigo" },
+                 { icon: Truck, title: "Logistics", desc: "Supply chain optimization, demand forecasting, warehouse automation, and delivery route planning.", color: "teal" },
+                 { icon: Home, title: "Real Estate", desc: "Property valuation, market trend analysis, virtual property tours, and intelligent property matching.", color: "orange" }
+               ].map((useCase, idx) => (
+                 <MotionDiv
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.05 }}
+                    className="bg-[#020617] p-6 rounded-xl border border-white/5 hover:border-white/10 transition-colors"
+                 >
+                    <div className={`w-10 h-10 rounded-lg bg-${useCase.color}-500/10 flex items-center justify-center text-${useCase.color}-400 mb-4`}>
+                       <useCase.icon size={20} />
+                    </div>
+                    <h3 className="text-white font-bold mb-2">{useCase.title}</h3>
+                    <p className="text-slate-400 text-xs leading-relaxed">{useCase.desc}</p>
+                 </MotionDiv>
+               ))}
+            </div>
+         </div>
+      </div>
+
+      {/* FAQ Section */}
+      <div className="py-24 bg-[#020617]">
+         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-16"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                  Frequently Asked Questions
+               </h2>
+               <p className="text-slate-400 text-sm">
+                  Get answers to common questions about our AI solutions
+               </p>
+            </MotionDiv>
+
+            <div className="space-y-4">
+               {faqs.map((faq, idx) => (
+                 <MotionDiv
+                    key={idx}
+                    initial={{ opacity: 0, y: 10 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                 >
+                    <div className="bg-[#1e293b]/30 border border-white/5 rounded-xl overflow-hidden">
+                       <button 
+                         onClick={() => toggleFaq(idx)}
+                         className="w-full flex items-center justify-between p-6 text-left focus:outline-none hover:bg-white/5 transition-colors"
+                       >
+                          <span className="text-white font-bold text-sm md:text-base pr-8">{faq.question}</span>
+                          <span className="text-slate-400">
+                             {openFaqIndex === idx ? <Minus size={20} /> : <Plus size={20} />}
+                          </span>
+                       </button>
+                       <AnimatePresence>
+                          {openFaqIndex === idx && (
+                             <motion.div
+                                initial={{ height: 0, opacity: 0 }}
+                                animate={{ height: 'auto', opacity: 1 }}
+                                exit={{ height: 0, opacity: 0 }}
+                                transition={{ duration: 0.3 }}
+                                className="overflow-hidden"
+                             >
+                                <div className="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-white/5 mt-2">
+                                   {faq.answer}
+                                </div>
+                             </motion.div>
+                          )}
+                       </AnimatePresence>
+                    </div>
+                 </MotionDiv>
+               ))}
+            </div>
+         </div>
+      </div>
+
+      {/* Bottom CTA Banner */}
+      <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 py-24 relative overflow-hidden">
+         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
+         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
+         
+         <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
+            <MotionDiv
+               initial={{ opacity: 0, scale: 0.9 }}
+               whileInView={{ opacity: 1, scale: 1 }}
+               viewport={{ once: true }}
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-6">
+                  Ready to Transform Your Business with AI?
+               </h2>
+               <p className="text-blue-100 text-lg md:text-xl font-light mb-10 max-w-3xl mx-auto">
+                  Let's discuss how our AI solutions can drive innovation and growth for your organization.
+               </p>
+               
+               <Link to="/contact">
+                  <button className="bg-white text-blue-700 hover:bg-gray-100 font-bold px-8 py-4 rounded-full shadow-2xl hover:scale-105 transition-all text-base md:text-lg">
+                     Start Your AI Journey
+                  </button>
+               </Link>
+            </MotionDiv>
+         </div>
+         
+         <div className="absolute bottom-4 right-4">
+             <a href="#" className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/40 transition-colors">
+                <ArrowRight size={16} className="-rotate-90" />
+             </a>
          </div>
       </div>
     </div>
