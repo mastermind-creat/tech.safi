@@ -9,6 +9,7 @@ import { Pricing } from './pages/Pricing';
 import { Careers } from './pages/Careers';
 import { Contact } from './pages/Contact';
 import { AiSolutions } from './pages/AiSolutions';
+import { Blog } from './pages/Blog';
 
 // Scroll to top on route change
 const ScrollToTop = () => {
@@ -35,6 +36,7 @@ const App: React.FC = () => {
           <Route path="/pricing" element={<Pricing />} />
           <Route path="/careers" element={<Careers />} />
           <Route path="/contact" element={<Contact />} />
+          <Route path="/blog" element={<Blog />} />
         </Routes>
       </Layout>
     </Router>

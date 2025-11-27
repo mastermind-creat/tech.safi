@@ -18,12 +18,16 @@ export interface Service {
 export interface Project {
   id: string;
   title: string;
-  category: string;
-  image: string;
+  category: string; // e.g., 'E-Commerce', 'Healthcare'
+  type: string; // e.g., 'Web App', 'Mobile App'
+  image: string; // Keep for modal/details, but we use icon/gradients for main card
   description: string;
   technologies: string[];
   client: string;
   year: string;
+  stats: { label: string; value: string; icon: any }; // For the card footer
+  color: string; // For the gradient theme
+  icon: any; // Lucide icon component
 }
 
 export interface TeamMember {
@@ -54,4 +58,19 @@ export interface PricingPlan {
   description: string;
   features: string[];
   recommended?: boolean;
+}
+
+export interface BlogPost {
+  id: string;
+  title: string;
+  excerpt: string;
+  category: string;
+  author: {
+    name: string;
+    avatar: string;
+  };
+  date: string;
+  readTime: string;
+  image: string;
+  tags: string[];
 }
