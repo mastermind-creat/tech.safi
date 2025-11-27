@@ -657,7 +657,7 @@ export const Company: React.FC = () => {
                       {/* Mobile Line/Icon */}
                       <div className="md:hidden flex items-center mb-4 pl-4 border-l-2 border-slate-700">
                         <div className={`w-8 h-8 rounded-full ${milestone.bg} flex items-center justify-center text-white mr-3 shadow-lg`}>
-                           {React.cloneElement(milestone.icon as React.ReactElement, { size: 16 })}
+                           {React.cloneElement(milestone.icon as React.ReactElement<any>, { size: 16 })}
                         </div>
                         <span className="text-sm font-bold text-white opacity-80">{milestone.year}</span>
                       </div>
