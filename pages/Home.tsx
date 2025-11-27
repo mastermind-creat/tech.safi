@@ -4,7 +4,8 @@ import {
   ArrowRight, Brain, Shield, Zap, 
   Clock, DollarSign, Server, Laptop, RefreshCw, 
   BarChart3, Code2, ChevronRight, PlayCircle, Star, 
-  Smartphone, Database, Cloud, Code, Rocket, CheckCircle2, Award, Bot, Globe, Link as LinkIcon, Settings
+  Smartphone, Database, Cloud, Code, Rocket, CheckCircle2, Award, Bot, Globe, Link as LinkIcon, Settings,
+  ShoppingCart, Activity, MessageSquare, Eye, Cpu, Layers, TrendingUp, Users
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -12,10 +13,20 @@ import { Link } from 'react-router-dom';
 import { Typewriter } from '../components/ui/Typewriter';
 
 const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
+  initial: { opacity: 0, y: 30 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.6 }
+  viewport: { once: true, margin: "-100px" },
+  transition: { duration: 0.6, ease: "easeOut" }
+};
+
+const staggerContainer = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: {
+      staggerChildren: 0.2
+    }
+  }
 };
 
 export const Home: React.FC = () => {
@@ -221,7 +232,10 @@ export const Home: React.FC = () => {
           <div className="absolute top-0 right-0 w-1/3 h-full bg-gradient-to-l from-blue-900/5 to-transparent pointer-events-none"></div>
 
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-               <div className="text-center mb-12 md:mb-20">
+               <MotionDiv 
+                  {...fadeInUp}
+                  className="text-center mb-12 md:mb-20"
+                >
                   <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-[10px] font-bold tracking-widest uppercase mb-6">
                       <Bot size={12} className="mr-2" /> AI-Powered Services
                   </div>
@@ -232,7 +246,7 @@ export const Home: React.FC = () => {
                   <p className="text-slate-400 max-w-2xl mx-auto text-lg leading-relaxed">
                       From websites to enterprise systems, we develop custom solutions with intelligent automation. No rebuild required—we seamlessly integrate AI into your existing stack.
                   </p>
-              </div>
+              </MotionDiv>
 
               <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
                   {/* Left: Feature List */}
@@ -247,8 +261,8 @@ export const Home: React.FC = () => {
                           key={idx}
                           initial={{ opacity: 0, x: -20 }}
                           whileInView={{ opacity: 1, x: 0 }}
-                          viewport={{ once: true }}
-                          transition={{ delay: idx * 0.1 }}
+                          viewport={{ once: true, margin: "-50px" }}
+                          transition={{ delay: idx * 0.1, duration: 0.5 }}
                           className="flex gap-5 group"
                         >
                             <div className={`w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-${item.color}-500/10 flex items-center justify-center text-${item.color}-500 flex-shrink-0 border border-${item.color}-500/20 group-hover:bg-${item.color}-500 group-hover:text-white transition-all duration-300 shadow-lg`}>
@@ -264,9 +278,10 @@ export const Home: React.FC = () => {
 
                   {/* Right: Metrics Dashboard */}
                   <MotionDiv 
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
+                    initial={{ opacity: 0, scale: 0.95, x: 20 }}
+                    whileInView={{ opacity: 1, scale: 1, x: 0 }}
                     viewport={{ once: true }}
+                    transition={{ duration: 0.6 }}
                     className="relative"
                   >
                       <div className="absolute inset-0 bg-gradient-to-tr from-blue-500/10 to-purple-500/10 blur-3xl rounded-full"></div>
@@ -293,118 +308,199 @@ export const Home: React.FC = () => {
               </div>
 
                {/* Deliverables Grid */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12 md:mt-20">
+              <MotionDiv 
+                 variants={staggerContainer}
+                 initial="hidden"
+                 whileInView="show"
+                 viewport={{ once: true }}
+                 className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 mt-12 md:mt-20"
+              >
                    {[
                      { icon: Laptop, title: "Custom Development", desc: "Tailored solutions built from scratch" },
                      { icon: Bot, title: "AI Integration", desc: "Chatbots, ML models, & computer vision" },
                      { icon: BarChart3, title: "Predictive Analytics", desc: "Data-driven business insights" },
                      { icon: RefreshCw, title: "Process Automation", desc: "Streamline workflows & reduce tasks" }
                    ].map((card, i) => (
-                     <Card key={i} className="text-center p-6 md:p-8 bg-[#1e293b]/20 hover:bg-[#1e293b]/40 border-white/5 hover:border-blue-500/30 transition-all group">
-                        <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center text-white mx-auto mb-4 md:mb-5 group-hover:bg-blue-600 group-hover:scale-110 transition-all duration-300">
-                            <card.icon size={20} className="md:w-6 md:h-6" />
-                        </div>
-                        <h4 className="font-bold text-white mb-2">{card.title}</h4>
-                        <p className="text-xs text-slate-400 leading-relaxed">{card.desc}</p>
-                     </Card>
+                     <MotionDiv key={i} variants={{ hidden: { opacity: 0, y: 20 }, show: { opacity: 1, y: 0 } }}>
+                         <Card className="text-center p-6 md:p-8 bg-[#1e293b]/20 hover:bg-[#1e293b]/40 border-white/5 hover:border-blue-500/30 transition-all group h-full">
+                            <div className="w-12 h-12 md:w-14 md:h-14 rounded-full bg-white/5 flex items-center justify-center text-white mx-auto mb-4 md:mb-5 group-hover:bg-blue-600 group-hover:scale-110 transition-all duration-300">
+                                <card.icon size={20} className="md:w-6 md:h-6" />
+                            </div>
+                            <h4 className="font-bold text-white mb-2">{card.title}</h4>
+                            <p className="text-xs text-slate-400 leading-relaxed">{card.desc}</p>
+                         </Card>
+                     </MotionDiv>
                    ))}
-              </div>
-
-              <div className="flex flex-col sm:flex-row justify-center mt-12 md:mt-16 gap-4">
-                 <Link to="/contact" className="w-full sm:w-auto">
-                    <Button className="w-full sm:w-auto bg-gradient-to-r from-blue-600 to-purple-600 border-none shadow-lg shadow-blue-900/20 px-8">
-                        Get Your Custom Solution <ArrowRight size={16} className="ml-2" />
-                    </Button>
-                 </Link>
-                 <Link to="/ai-solutions" className="w-full sm:w-auto">
-                    <Button variant="outline" className="w-full sm:w-auto border-white/10 text-white hover:bg-white/5">
-                        <Bot size={16} className="mr-2" /> Explore AI Solutions
-                    </Button>
-                 </Link>
-              </div>
+              </MotionDiv>
           </div>
       </section>
 
-      {/* Gradient CTA Banner */}
-      <section className="w-full bg-gradient-to-r from-violet-600 via-fuchsia-600 to-pink-600 py-12 md:py-16 relative overflow-hidden">
-          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10 mix-blend-overlay"></div>
-          <div className="absolute -left-20 -bottom-20 w-64 h-64 bg-white/20 blur-[80px] rounded-full"></div>
-          
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center justify-between gap-8 md:gap-10 relative z-10">
-              <div className="text-center md:text-left max-w-2xl">
-                  <h2 className="text-2xl md:text-4xl font-bold text-white mb-3 font-display">Already Have a Website?</h2>
-                  <p className="text-white/90 text-base md:text-lg font-light leading-relaxed">Add AI features like chatbots, recommendations, and automation in days—no rebuild needed!</p>
+      {/* Success Stories Section */}
+      <section className="py-20 md:py-24 bg-[#050b1d] relative">
+          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+              <MotionDiv 
+                {...fadeInUp}
+                className="text-center mb-16"
+              >
+                  <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-purple-500/10 border border-purple-500/20 text-purple-400 text-[10px] font-bold tracking-widest uppercase mb-6">
+                      <Award size={12} className="mr-2" /> Featured Projects
+                  </div>
+                  <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+                      Recent <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-400 to-pink-500">Success Stories</span>
+                  </h2>
+                  <p className="text-slate-400 max-w-2xl mx-auto text-lg">
+                      Explore how we've helped businesses transform digitally with custom software solutions
+                  </p>
+              </MotionDiv>
+
+              <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
+                  {/* Card 1 */}
+                  <MotionDiv 
+                     initial={{ opacity: 0, x: -20 }}
+                     whileInView={{ opacity: 1, x: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ duration: 0.5 }}
+                     className="bg-[#0f172a] rounded-2xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all"
+                  >
+                      {/* Image Area */}
+                      <div className="h-48 sm:h-64 bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center relative overflow-hidden p-6">
+                          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
+                          <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white">E-Commerce</div>
+                          <ShoppingCart size={64} className="text-white/20 group-hover:scale-110 transition-transform duration-500" />
+                          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0f172a] to-transparent"></div>
+                      </div>
+                      <div className="p-6 md:p-8 relative">
+                          <h3 className="text-2xl font-bold text-white mb-4">AI-Powered E-Commerce Platform</h3>
+                          <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                              Built a complete e-commerce solution with AI product recommendations, smart semantic search, AI chatbot for customer support, predictive analytics for inventory, and automated content generation for a fashion retailer.
+                          </p>
+                          <div className="flex flex-wrap gap-2 mb-8">
+                              {['React', 'Node.js', 'AI/ML', 'GPT Integration'].map(tag => (
+                                  <span key={tag} className="px-2 py-1 rounded bg-blue-500/10 text-blue-400 text-[10px] font-bold border border-blue-500/10 uppercase">{tag}</span>
+                              ))}
+                          </div>
+                          <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                              <div className="flex items-center text-emerald-400 text-xs font-bold uppercase">
+                                  <TrendingUp size={16} className="mr-2" /> 150% Revenue Increase
+                              </div>
+                              <Link to="/portfolio" className="text-white text-sm font-bold flex items-center hover:text-blue-400 transition-colors">
+                                  View Case Study <ArrowRight size={16} className="ml-2" />
+                              </Link>
+                          </div>
+                      </div>
+                  </MotionDiv>
+
+                  {/* Card 2 */}
+                  <MotionDiv 
+                     initial={{ opacity: 0, x: 20 }}
+                     whileInView={{ opacity: 1, x: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ duration: 0.5, delay: 0.1 }}
+                     className="bg-[#0f172a] rounded-2xl border border-white/5 overflow-hidden group hover:border-white/10 transition-all"
+                  >
+                      {/* Image Area */}
+                      <div className="h-48 sm:h-64 bg-gradient-to-br from-emerald-500 to-teal-700 flex items-center justify-center relative overflow-hidden p-6">
+                          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-20 mix-blend-overlay"></div>
+                          <div className="absolute top-4 right-4 bg-white/10 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold text-white">Healthcare</div>
+                          <Activity size={64} className="text-white/20 group-hover:scale-110 transition-transform duration-500" />
+                          <div className="absolute bottom-0 left-0 right-0 h-24 bg-gradient-to-t from-[#0f172a] to-transparent"></div>
+                      </div>
+                      <div className="p-6 md:p-8 relative">
+                          <h3 className="text-2xl font-bold text-white mb-4">Patient Management System</h3>
+                          <p className="text-slate-400 text-sm leading-relaxed mb-6">
+                              Developed a HIPAA-compliant healthcare platform with AI-powered appointment scheduling, patient records, telemedicine, computer vision for medical imaging, and NLP for document processing.
+                          </p>
+                          <div className="flex flex-wrap gap-2 mb-8">
+                              {['Vue.js', 'Python', 'AI Chatbot', 'Computer Vision'].map(tag => (
+                                  <span key={tag} className="px-2 py-1 rounded bg-emerald-500/10 text-emerald-400 text-[10px] font-bold border border-emerald-500/10 uppercase">{tag}</span>
+                              ))}
+                          </div>
+                          <div className="flex items-center justify-between pt-6 border-t border-white/5">
+                              <div className="flex items-center text-emerald-400 text-xs font-bold uppercase">
+                                  <Users size={16} className="mr-2" /> 10K+ Active Users
+                              </div>
+                              <Link to="/portfolio" className="text-white text-sm font-bold flex items-center hover:text-emerald-400 transition-colors">
+                                  View Case Study <ArrowRight size={16} className="ml-2" />
+                              </Link>
+                          </div>
+                      </div>
+                  </MotionDiv>
               </div>
-              <div className="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-                  <Link to="/services">
-                      <button className="w-full sm:w-auto px-8 py-3 md:py-4 bg-white text-fuchsia-700 font-bold rounded-xl shadow-2xl hover:bg-gray-50 hover:scale-105 transition-all flex items-center justify-center text-sm md:text-base">
-                          <Bot size={20} className="mr-2" /> View AI Services
-                      </button>
+
+              <div className="text-center mt-12">
+                  <Link to="/portfolio">
+                      <Button className="bg-gradient-to-r from-purple-600 to-pink-600 shadow-lg shadow-purple-900/20">
+                          View All Projects <ArrowRight size={16} className="ml-2" />
+                      </Button>
                   </Link>
-                  <Link to="/pricing">
-                      <button className="w-full sm:w-auto px-8 py-3 md:py-4 bg-black/20 text-white font-bold rounded-xl border border-white/20 hover:bg-black/30 hover:scale-105 transition-all flex items-center justify-center backdrop-blur-md text-sm md:text-base">
-                          <Code2 size={20} className="mr-2" /> See Pricing
-                      </button>
-                  </Link>
               </div>
           </div>
       </section>
 
-      {/* Services Overview */}
-      <section className="py-16 md:py-24 bg-[#050b1d]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <MotionDiv {...fadeInUp} className="text-center mb-12 md:mb-16">
-            <h2 className="text-3xl md:text-4xl font-bold text-white font-display mb-4">
-              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Services</span>
-            </h2>
-             <div className="h-1 w-20 bg-gradient-to-r from-blue-500 to-indigo-500 rounded-full mx-auto mb-6"></div>
-            <p className="text-slate-400 max-w-2xl mx-auto text-lg">We deliver end-to-end digital solutions that help businesses innovate, scale, and succeed in today's competitive landscape.</p>
-          </MotionDiv>
-
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
-            <Card className="hover:border-blue-500/50 transition-colors group p-6 md:p-8 bg-[#0f172a]">
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-blue-500/10 flex items-center justify-center text-blue-500 mb-6 md:mb-8 group-hover:bg-blue-500 group-hover:text-white transition-all duration-300">
-                <Brain size={24} className="md:w-7 md:h-7" />
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">AI & Machine Learning</h3>
-              <p className="text-slate-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">Custom algorithms that predict trends, automate tasks, and unlock insights from your data.</p>
-              <Link to="/ai-solutions" className="text-blue-500 group-hover:text-white flex items-center text-sm font-bold transition-colors uppercase tracking-wide">
-                Learn more <ArrowRight size={16} className="ml-2" />
-              </Link>
-            </Card>
-
-            <Card className="hover:border-purple-500/50 transition-colors group p-6 md:p-8 bg-[#0f172a]">
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-purple-500/10 flex items-center justify-center text-purple-500 mb-6 md:mb-8 group-hover:bg-purple-500 group-hover:text-white transition-all duration-300">
-                <Shield size={24} className="md:w-7 md:h-7" />
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Cybersecurity</h3>
-              <p className="text-slate-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">Proactive threat hunting and robust defense architectures to keep your business secure.</p>
-              <Link to="/services" className="text-purple-500 group-hover:text-white flex items-center text-sm font-bold transition-colors uppercase tracking-wide">
-                Learn more <ArrowRight size={16} className="ml-2" />
-              </Link>
-            </Card>
-
-            <Card className="hover:border-pink-500/50 transition-colors group p-6 md:p-8 bg-[#0f172a]">
-              <div className="w-12 h-12 md:w-14 md:h-14 rounded-2xl bg-pink-500/10 flex items-center justify-center text-pink-500 mb-6 md:mb-8 group-hover:bg-pink-500 group-hover:text-white transition-all duration-300">
-                <Zap size={24} className="md:w-7 md:h-7" />
-              </div>
-              <h3 className="text-xl md:text-2xl font-bold text-white mb-3 md:mb-4">Digital Transformation</h3>
-              <p className="text-slate-400 mb-6 md:mb-8 leading-relaxed text-sm md:text-base">Modernize your legacy systems and streamline operations for the digital age.</p>
-              <Link to="/services" className="text-pink-500 group-hover:text-white flex items-center text-sm font-bold transition-colors uppercase tracking-wide">
-                Learn more <ArrowRight size={16} className="ml-2" />
-              </Link>
-            </Card>
-          </div>
+      {/* CTA Gradient Section - Updated */}
+      <section className="w-full bg-gradient-to-r from-blue-700 via-indigo-600 to-cyan-600 py-16 md:py-24 relative overflow-hidden">
+          {/* Decorative Pattern */}
+          <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
+          <div className="absolute -left-20 -bottom-20 w-96 h-96 bg-white/10 blur-[100px] rounded-full"></div>
           
-           <div className="text-center mt-12 md:mt-16">
-               <Link to="/services">
-                 <Button variant="outline" className="border-white/10 text-white hover:bg-white/5 px-8 py-3">
-                    View All Services
-                 </Button>
-               </Link>
-           </div>
-        </div>
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+              <MotionDiv 
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+              >
+                  <h2 className="text-3xl md:text-5xl font-bold text-white mb-6 font-display tracking-tight">Ready to Transform Your Business?</h2>
+                  <p className="text-blue-100 text-lg md:text-xl font-light leading-relaxed mb-10 max-w-3xl mx-auto">
+                      Let's discuss how our innovative solutions can drive growth and create lasting impact for your organization.
+                  </p>
+                  
+                  <div className="flex flex-col sm:flex-row gap-4 justify-center">
+                      <Link to="/contact">
+                          <button className="w-full sm:w-auto px-8 py-4 bg-white text-blue-700 font-bold rounded-lg shadow-2xl hover:bg-gray-50 hover:scale-105 transition-all text-base">
+                              Start Your Project
+                          </button>
+                      </Link>
+                      <Link to="/ai-solutions">
+                          <button className="w-full sm:w-auto px-8 py-4 bg-purple-600 text-white font-bold rounded-lg shadow-xl hover:bg-purple-700 hover:scale-105 transition-all flex items-center justify-center text-base">
+                              <Bot size={20} className="mr-2" /> Explore AI Solutions
+                          </button>
+                      </Link>
+                      <Link to="/pricing">
+                          <button className="w-full sm:w-auto px-8 py-4 bg-transparent border-2 border-white text-white font-bold rounded-lg hover:bg-white/10 transition-all text-base">
+                              View Pricing
+                          </button>
+                      </Link>
+                  </div>
+              </MotionDiv>
+          </div>
       </section>
+
+      {/* Newsletter Section */}
+      <section className="py-20 bg-[#0f172a] border-t border-white/5">
+          <div className="max-w-4xl mx-auto px-4 text-center">
+              <MotionDiv 
+                 {...fadeInUp}
+              >
+                  <h2 className="text-2xl md:text-3xl font-bold text-white mb-4">Stay Updated</h2>
+                  <p className="text-slate-400 mb-8">Subscribe to our newsletter for the latest tech insights, company news, and exclusive offers.</p>
+                  
+                  <form className="flex flex-col sm:flex-row gap-4 max-w-lg mx-auto">
+                      <input 
+                          type="email" 
+                          placeholder="Enter your email" 
+                          className="flex-1 bg-white/5 border border-white/10 rounded-lg px-5 py-3 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-all"
+                      />
+                      <Button className="bg-blue-600 hover:bg-blue-700">Subscribe</Button>
+                  </form>
+                  <p className="text-xs text-slate-500 mt-4">We respect your privacy. Unsubscribe at any time.</p>
+              </MotionDiv>
+          </div>
+      </section>
+
+      {/* Gradient CTA Banner - "Already Have a Website" - Kept as secondary or removed if conflicting. User asked to "add other sections". Assuming this one stays or is moved? 
+          Actually, the screenshot shows the blue section REPLACES the pink/gradient one. I'll remove the pink one to match the "clean" request and avoid redundancy.
+      */}
+      
     </div>
   );
 };

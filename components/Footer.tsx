@@ -1,76 +1,172 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Twitter, Facebook, Instagram, Linkedin, Cloud } from 'lucide-react';
+import { Twitter, Facebook, Instagram, Linkedin, MapPin, Phone, Mail, Clock, Lock, ShieldCheck, Send, Github } from 'lucide-react';
 
 export const Footer: React.FC = () => {
   return (
-    <footer className="bg-[#01040f] border-t border-white/5 pt-16 pb-8">
+    <footer className="bg-[#020617] border-t border-white/5 pt-16 pb-8 text-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-12">
-          {/* Brand */}
-          <div className="space-y-4">
-             <div className="flex items-center space-x-2">
-                <div className="w-8 h-8 rounded bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-xl">
-                  T
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-16">
+          
+          {/* Column 1: Brand & Socials */}
+          <div className="space-y-6">
+             <div className="flex items-center space-x-2 mb-4">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-primary/20">
+                   <img src="https://cdn-icons-png.flaticon.com/512/3208/3208728.png" className="w-6 h-6 invert" alt="Logo" />
                 </div>
-                <span className="text-xl font-bold font-display text-white">
-                  Tech<span className="text-primary">Safi</span>
-                </span>
+                <div className="flex flex-col">
+                    <span className="text-xl font-bold font-display text-white leading-none">
+                    Tech<span className="text-primary">Safi</span>
+                    </span>
+                    <span className="text-[10px] text-slate-500 tracking-widest uppercase mt-1">Innovation & Solutions</span>
+                </div>
              </div>
-             <p className="text-slate-400 leading-relaxed">
-               Pioneering the future of artificial intelligence and digital transformation. We build the systems that power tomorrow.
+             
+             <p className="text-slate-400 leading-relaxed text-sm">
+               Empowering businesses across Kenya and beyond with innovative technology solutions. We transform ideas into digital reality through cutting-edge development and strategic consulting.
              </p>
-             <div className="flex space-x-4">
-               <a href="#" className="text-slate-400 hover:text-primary transition-colors"><Twitter size={20} /></a>
-               <a href="#" className="text-slate-400 hover:text-primary transition-colors"><Facebook size={20} /></a>
-               <a href="#" className="text-slate-400 hover:text-primary transition-colors"><Instagram size={20} /></a>
-               <a href="#" className="text-slate-400 hover:text-primary transition-colors"><Linkedin size={20} /></a>
-               <a href="#" className="text-slate-400 hover:text-primary transition-colors"><Cloud size={20} /></a>
+
+             <div>
+                <h5 className="text-white font-bold text-xs uppercase tracking-wide mb-4 flex items-center">
+                   <span className="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> Connect With Us
+                </h5>
+                <div className="flex space-x-3">
+                    {[Facebook, Twitter, Linkedin, Instagram, Github].map((Icon, i) => (
+                        <a key={i} href="#" className="w-9 h-9 rounded-lg bg-[#1e293b] flex items-center justify-center text-slate-400 hover:bg-primary hover:text-white transition-all duration-300">
+                            <Icon size={16} />
+                        </a>
+                    ))}
+                </div>
+             </div>
+
+             <div className="flex gap-4 pt-4">
+                 <div className="flex items-center text-[10px] text-slate-500 font-medium">
+                     <ShieldCheck size={14} className="text-green-500 mr-1.5" /> SSL Secured
+                 </div>
+                 <div className="flex items-center text-[10px] text-slate-500 font-medium">
+                     <Lock size={14} className="text-yellow-500 mr-1.5" /> ISO Certified
+                 </div>
              </div>
           </div>
 
-          {/* Links */}
+          {/* Column 2: Quick Links */}
           <div>
-            <h4 className="text-white font-bold mb-6 font-display">Company</h4>
+            <h4 className="text-white font-bold text-lg mb-6 pl-3 border-l-2 border-primary">Quick Links</h4>
             <ul className="space-y-3">
-              <li><NavLink to="/company" className="text-slate-400 hover:text-primary transition-colors">About Us</NavLink></li>
-              <li><NavLink to="/careers" className="text-slate-400 hover:text-primary transition-colors">Careers</NavLink></li>
-              <li><NavLink to="/contact" className="text-slate-400 hover:text-primary transition-colors">Contact</NavLink></li>
-              <li><NavLink to="#" className="text-slate-400 hover:text-primary transition-colors">Privacy Policy</NavLink></li>
+              {[
+                  { name: 'Home', path: '/' },
+                  { name: 'About Us', path: '/company' },
+                  { name: 'Services', path: '/services' },
+                  { name: 'Portfolio', path: '/portfolio' },
+                  { name: 'Pricing', path: '/pricing' },
+                  { name: 'Careers', path: '/careers' },
+                  { name: 'Contact', path: '/contact' }
+              ].map((link) => (
+                  <li key={link.name}>
+                      <NavLink 
+                        to={link.path} 
+                        className="text-slate-400 hover:text-primary hover:translate-x-1 transition-all duration-300 flex items-center"
+                      >
+                          <span className="w-1 h-1 rounded-full bg-slate-600 mr-2"></span>
+                          {link.name}
+                      </NavLink>
+                  </li>
+              ))}
             </ul>
           </div>
 
-          {/* Services */}
+          {/* Column 3: Our Services */}
           <div>
-            <h4 className="text-white font-bold mb-6 font-display">Services</h4>
+            <h4 className="text-white font-bold text-lg mb-6 pl-3 border-l-2 border-primary">Our Services</h4>
             <ul className="space-y-3">
-              <li><NavLink to="/services" className="text-slate-400 hover:text-primary transition-colors">AI Development</NavLink></li>
-              <li><NavLink to="/services" className="text-slate-400 hover:text-primary transition-colors">Cloud Solutions</NavLink></li>
-              <li><NavLink to="/services" className="text-slate-400 hover:text-primary transition-colors">Cybersecurity</NavLink></li>
-              <li><NavLink to="/services" className="text-slate-400 hover:text-primary transition-colors">Data Analytics</NavLink></li>
+              {[
+                  'Web Development', 'Mobile Apps', 'UI/UX Design', 'AI Solutions', 
+                  'Cloud Solutions', 'Digital Marketing', 'IT Consulting'
+              ].map((service) => (
+                  <li key={service}>
+                      <NavLink 
+                        to="/services" 
+                        className="text-slate-400 hover:text-primary hover:translate-x-1 transition-all duration-300 flex items-center"
+                      >
+                          <span className="w-1.5 h-1.5 text-primary mr-2">›</span>
+                          {service}
+                      </NavLink>
+                  </li>
+              ))}
             </ul>
           </div>
 
-          {/* Newsletter */}
+          {/* Column 4: Get In Touch */}
           <div>
-             <h4 className="text-white font-bold mb-6 font-display">Stay Updated</h4>
-             <p className="text-slate-400 mb-4 text-sm">Subscribe to our newsletter for the latest AI trends.</p>
-             <form className="space-y-3" onSubmit={(e) => e.preventDefault()}>
-               <input 
-                 type="email" 
-                 placeholder="Enter your email" 
-                 className="w-full bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-white placeholder-slate-500 focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-all"
-               />
-               <button className="w-full bg-primary hover:bg-primary/90 text-white font-medium py-2 rounded-lg transition-colors">
-                 Subscribe
-               </button>
-             </form>
+             <h4 className="text-white font-bold text-lg mb-6 pl-3 border-l-2 border-primary">Get In Touch</h4>
+             <ul className="space-y-5">
+                 <li className="flex items-start">
+                     <div className="w-8 h-8 rounded bg-blue-500/10 flex items-center justify-center text-blue-500 mr-3 mt-1 flex-shrink-0">
+                         <MapPin size={16} />
+                     </div>
+                     <div>
+                         <span className="block text-xs text-slate-500 mb-0.5">Location</span>
+                         <span className="text-slate-300 font-medium">Nairobi, Kenya</span>
+                     </div>
+                 </li>
+                 <li className="flex items-start">
+                     <div className="w-8 h-8 rounded bg-green-500/10 flex items-center justify-center text-green-500 mr-3 mt-1 flex-shrink-0">
+                         <Phone size={16} />
+                     </div>
+                     <div>
+                         <span className="block text-xs text-slate-500 mb-0.5">Call Us</span>
+                         <span className="text-slate-300 font-medium block">+254 751 380 948</span>
+                         <span className="text-slate-400 text-xs">+254 110 046 523</span>
+                     </div>
+                 </li>
+                 <li className="flex items-start">
+                     <div className="w-8 h-8 rounded bg-purple-500/10 flex items-center justify-center text-purple-500 mr-3 mt-1 flex-shrink-0">
+                         <Mail size={16} />
+                     </div>
+                     <div>
+                         <span className="block text-xs text-slate-500 mb-0.5">Email Us</span>
+                         <span className="text-slate-300 font-medium">info@techsafi.com</span>
+                     </div>
+                 </li>
+                 <li className="flex items-start">
+                     <div className="w-8 h-8 rounded bg-yellow-500/10 flex items-center justify-center text-yellow-500 mr-3 mt-1 flex-shrink-0">
+                         <Clock size={16} />
+                     </div>
+                     <div>
+                         <span className="block text-xs text-slate-500 mb-0.5">Working Hours</span>
+                         <span className="text-slate-300 font-medium block">Mon - Fri: 8AM - 6PM</span>
+                         <span className="text-slate-400 text-xs">Sat: 9AM - 2PM</span>
+                     </div>
+                 </li>
+             </ul>
+
+             <div className="mt-8">
+                 <NavLink to="/contact">
+                     <button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 text-white font-bold py-3 px-4 rounded-lg shadow-lg shadow-blue-900/20 transition-all flex items-center justify-center">
+                         <Send size={16} className="mr-2" /> Send Message
+                     </button>
+                 </NavLink>
+             </div>
           </div>
         </div>
 
-        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center">
-          <p className="text-slate-500 text-sm">© {new Date().getFullYear()} TechSafi. All rights reserved.</p>
-          <p className="text-slate-500 text-sm mt-2 md:mt-0">Designed for the Future.</p>
+        {/* Bottom Bar */}
+        <div className="border-t border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-4">
+          <div className="flex items-center text-slate-500 text-xs">
+              <span className="text-blue-500 mr-1">© 2025 TechSafi</span> - All rights reserved. Crafted with <span className="text-red-500 mx-1">❤</span> in Kenya
+          </div>
+          <div className="flex flex-wrap justify-center gap-6 text-xs font-medium text-slate-500">
+             <a href="#" className="hover:text-white transition-colors">Privacy Policy</a>
+             <span className="text-slate-700">|</span>
+             <a href="#" className="hover:text-white transition-colors">Terms of Service</a>
+             <span className="text-slate-700">|</span>
+             <a href="#" className="hover:text-white transition-colors">Cookie Policy</a>
+             <span className="text-slate-700">|</span>
+             <a href="#" className="hover:text-white transition-colors">Sitemap</a>
+          </div>
+          <div className="text-[10px] text-slate-600 uppercase tracking-widest hidden md:block">
+              Powered by Innovation • Driven by Excellence • Built for the Future
+          </div>
         </div>
       </div>
     </footer>
