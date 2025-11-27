@@ -1,21 +1,37 @@
 import { 
   Home, Building2, Briefcase, Layers, Cpu, CreditCard, Users, Mail,
   Code, Shield, Brain, Zap, Globe, Smartphone, Server, ShoppingCart, Activity,
-  PieChart, Utensils, Newspaper, Clock, Bot
+  PieChart, Utensils, Newspaper, Clock, Bot, LayoutGrid
 } from 'lucide-react';
 import { NavItem, Service, Project, TeamMember, JobPosition, PricingPlan, BlogPost } from './types';
 import React from 'react';
 
 export const NAV_ITEMS: NavItem[] = [
   { label: 'Home', path: '/', icon: <Home size={18} />, category: 'main' },
-  { label: 'Company', path: '/company', icon: <Building2 size={18} />, category: 'company' },
-  { label: 'Portfolio', path: '/portfolio', icon: <Briefcase size={18} />, category: 'main' },
-  { label: 'Services', path: '/services', icon: <Layers size={18} />, category: 'services' },
-  { label: 'AI Solutions', path: '/ai-solutions', icon: <Brain size={18} />, category: 'services' },
+  { 
+    label: 'Company', 
+    path: '/company', 
+    icon: <Building2 size={18} />, 
+    category: 'company',
+    children: [
+      { label: 'About Us', path: '/company', icon: <Building2 size={16} /> },
+      { label: 'Portfolio', path: '/portfolio', icon: <Briefcase size={16} /> },
+      { label: 'Careers', path: '/careers', icon: <Users size={16} /> }
+    ]
+  },
+  { 
+    label: 'Services', 
+    path: '/services', 
+    icon: <Layers size={18} />, 
+    category: 'services',
+    children: [
+      { label: 'All Services', path: '/services', icon: <LayoutGrid size={16} /> },
+      { label: 'AI Solutions', path: '/ai-solutions', icon: <Brain size={16} /> }
+    ]
+  },
   { label: 'Pricing', path: '/pricing', icon: <CreditCard size={18} />, category: 'main' },
   { label: 'Blog', path: '/blog', icon: <Newspaper size={18} />, category: 'main' },
-  { label: 'Careers', path: '/careers', icon: <Users size={18} />, category: 'company' },
-  { label: 'Contact Us', path: '/contact', icon: <Mail size={18} />, category: 'main' },
+  { label: 'Contact', path: '/contact', icon: <Mail size={18} />, category: 'main' },
 ];
 
 export const PROJECTS: Project[] = [
@@ -152,7 +168,6 @@ export const BLOG_POSTS: BlogPost[] = [
   }
 ];
 
-// Placeholder for missing exports if any
 export const SERVICES = [];
 export const TEAM = [];
 export const JOBS = [];

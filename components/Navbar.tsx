@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronRight, Zap } from 'lucide-react';
+import { Menu, X, ChevronRight, ChevronDown, Zap } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_ITEMS } from '../constants';
 
 export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const location = useLocation();
 
   useEffect(() => {
@@ -20,9 +21,18 @@ export const Navbar: React.FC = () => {
   // Close mobile menu on route change
   useEffect(() => {
     setIsOpen(false);
+    setActiveDropdown(null);
   }, [location]);
 
   const MotionDiv = motion.div as any;
+
+  const isPathActive = (path: string, children?: any[]) => {
+    if (location.pathname === path) return true;
+    if (children) {
+      return children.some(child => location.pathname === child.path);
+    }
+    return false;
+  };
 
   return (
     <>
@@ -44,30 +54,80 @@ export const Navbar: React.FC = () => {
 
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-1">
-            {NAV_ITEMS.map((item) => (
-              <NavLink
-                key={item.path}
-                to={item.path}
-                className={({ isActive }: any) =>
-                  `px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 relative group ${
-                    isActive ? 'text-white' : 'text-slate-400 hover:text-white'
-                  }`
-                }
-              >
-                {({ isActive }: any) => (
-                  <>
-                    <span className="relative z-10">{item.label}</span>
-                    {isActive && (
-                      <MotionDiv
-                        layoutId="navbar-indicator"
-                        className="absolute inset-0 rounded-md bg-white/10 z-0"
-                        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
-                      />
-                    )}
-                  </>
-                )}
-              </NavLink>
-            ))}
+            {NAV_ITEMS.map((item) => {
+              const isActive = isPathActive(item.path, item.children);
+              
+              return (
+                <div 
+                  key={item.label} 
+                  className="relative"
+                  onMouseEnter={() => item.children && setActiveDropdown(item.label)}
+                  onMouseLeave={() => item.children && setActiveDropdown(null)}
+                >
+                  {item.children ? (
+                    <div className="group px-3 py-2 cursor-pointer">
+                      <div className={`flex items-center text-sm font-medium transition-all duration-200 ${isActive ? 'text-white' : 'text-slate-400 group-hover:text-white'}`}>
+                        <span className="relative z-10">{item.label}</span>
+                        <ChevronDown size={14} className={`ml-1 transition-transform duration-300 ${activeDropdown === item.label ? 'rotate-180' : ''}`} />
+                      </div>
+                      
+                      <AnimatePresence>
+                        {activeDropdown === item.label && (
+                          <MotionDiv
+                            initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                            animate={{ opacity: 1, y: 0, scale: 1 }}
+                            exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute top-full left-0 mt-2 w-56 p-2 rounded-xl glass-panel shadow-2xl border border-white/10 bg-[#0f172a]/90 backdrop-blur-xl"
+                          >
+                            <div className="flex flex-col space-y-1">
+                              {item.children.map((child) => (
+                                <NavLink
+                                  key={child.path}
+                                  to={child.path}
+                                  className={({ isActive: isChildActive }: any) =>
+                                    `flex items-center px-3 py-2.5 rounded-lg text-sm transition-all ${
+                                      isChildActive 
+                                        ? 'bg-primary/10 text-primary' 
+                                        : 'text-slate-400 hover:text-white hover:bg-white/5'
+                                    }`
+                                  }
+                                >
+                                  {child.icon && <span className={`mr-3 ${location.pathname === child.path ? 'text-primary' : ''}`}>{React.cloneElement(child.icon as any, { size: 16 })}</span>}
+                                  {child.label}
+                                </NavLink>
+                              ))}
+                            </div>
+                          </MotionDiv>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  ) : (
+                    <NavLink
+                      to={item.path}
+                      className={({ isActive }: any) =>
+                        `px-3 py-2 rounded-md text-sm font-medium transition-all duration-200 relative group ${
+                          isActive ? 'text-white' : 'text-slate-400 hover:text-white'
+                        }`
+                      }
+                    >
+                      {({ isActive }: any) => (
+                        <>
+                          <span className="relative z-10">{item.label}</span>
+                          {isActive && (
+                            <MotionDiv
+                              layoutId="navbar-indicator"
+                              className="absolute inset-0 rounded-md bg-white/10 z-0"
+                              transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                            />
+                          )}
+                        </>
+                      )}
+                    </NavLink>
+                  )}
+                </div>
+              );
+            })}
           </div>
 
           {/* CTA & Mobile Toggle */}
@@ -117,62 +177,48 @@ export const Navbar: React.FC = () => {
               </div>
 
               <div className="flex-1 overflow-y-auto p-6 space-y-6">
-                {/* Main Links */}
-                <div className="space-y-2">
-                  <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Main</h4>
-                  {NAV_ITEMS.filter(i => i.category === 'main').map(item => (
-                    <NavLink
-                      key={item.path}
-                      to={item.path}
-                      className={({ isActive }: any) =>
-                        `flex items-center space-x-3 p-3 rounded-xl transition-all ${
-                          isActive ? 'bg-gradient-to-r from-primary/20 to-transparent text-white border-l-2 border-primary' : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                        }`
-                      }
-                    >
-                      <span className={location.pathname === item.path ? 'text-primary' : ''}>{item.icon}</span>
-                      <span className="font-medium">{item.label}</span>
-                    </NavLink>
-                  ))}
-                </div>
-
-                {/* Services Links */}
-                <div className="space-y-2">
-                  <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Services</h4>
-                  {NAV_ITEMS.filter(i => i.category === 'services').map(item => (
-                    <NavLink
-                      key={item.path}
-                      to={item.path}
-                      className={({ isActive }: any) =>
-                        `flex items-center space-x-3 p-3 rounded-xl transition-all ${
-                          isActive ? 'bg-gradient-to-r from-primary/20 to-transparent text-white border-l-2 border-primary' : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                        }`
-                      }
-                    >
-                       <span className={location.pathname === item.path ? 'text-primary' : ''}>{item.icon}</span>
-                      <span className="font-medium">{item.label}</span>
-                    </NavLink>
-                  ))}
-                </div>
-
-                {/* Company Links */}
-                <div className="space-y-2">
-                   <h4 className="text-xs font-semibold text-slate-500 uppercase tracking-wider mb-3">Company</h4>
-                   {NAV_ITEMS.filter(i => i.category === 'company').map(item => (
-                    <NavLink
-                      key={item.path}
-                      to={item.path}
-                      className={({ isActive }: any) =>
-                        `flex items-center space-x-3 p-3 rounded-xl transition-all ${
-                          isActive ? 'bg-gradient-to-r from-primary/20 to-transparent text-white border-l-2 border-primary' : 'text-slate-400 hover:bg-white/5 hover:text-white'
-                        }`
-                      }
-                    >
-                       <span className={location.pathname === item.path ? 'text-primary' : ''}>{item.icon}</span>
-                      <span className="font-medium">{item.label}</span>
-                    </NavLink>
-                  ))}
-                </div>
+                {NAV_ITEMS.map((item) => (
+                  <div key={item.label} className="space-y-2">
+                    {item.children ? (
+                      <>
+                        <div className="flex items-center space-x-3 p-3 text-slate-300 font-semibold rounded-xl bg-white/5">
+                          <span className="text-primary">{item.icon}</span>
+                          <span>{item.label}</span>
+                        </div>
+                        <div className="pl-4 space-y-1 border-l border-white/10 ml-6">
+                          {item.children.map((child) => (
+                            <NavLink
+                              key={child.path}
+                              to={child.path}
+                              className={({ isActive }: any) =>
+                                `flex items-center space-x-3 p-3 rounded-lg transition-all ${
+                                  isActive ? 'text-white' : 'text-slate-400 hover:text-white'
+                                }`
+                              }
+                            >
+                              <span>{child.icon && React.cloneElement(child.icon as any, { size: 16 })}</span>
+                              <span className="text-sm font-medium">{child.label}</span>
+                            </NavLink>
+                          ))}
+                        </div>
+                      </>
+                    ) : (
+                      <NavLink
+                        to={item.path}
+                        className={({ isActive }: any) =>
+                          `flex items-center space-x-3 p-3 rounded-xl transition-all ${
+                            isActive 
+                              ? 'bg-gradient-to-r from-primary/20 to-transparent text-white border-l-2 border-primary' 
+                              : 'text-slate-400 hover:bg-white/5 hover:text-white'
+                          }`
+                        }
+                      >
+                        <span className={location.pathname === item.path ? 'text-primary' : ''}>{item.icon}</span>
+                        <span className="font-medium">{item.label}</span>
+                      </NavLink>
+                    )}
+                  </div>
+                ))}
               </div>
 
               <div className="p-6 border-t border-white/5">

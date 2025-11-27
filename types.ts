@@ -5,6 +5,7 @@ export interface NavItem {
   path: string;
   icon?: ReactNode;
   category?: 'main' | 'company' | 'services';
+  children?: NavItem[];
 }
 
 export interface Service {
