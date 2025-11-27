@@ -20,6 +20,26 @@ export const Pricing: React.FC = () => {
     setOpenFaq(openFaq === index ? null : index);
   };
 
+  // Helper to calculate discount
+  const getDisplayPrice = (priceStr: string) => {
+    if (priceStr === 'Custom') return priceStr;
+    
+    // Remove commas and '+' for parsing
+    const cleanStr = priceStr.replace(/,/g, '').replace(/\+/g, '');
+    const numericValue = parseInt(cleanStr, 10);
+    
+    if (isNaN(numericValue)) return priceStr;
+
+    if (billingCycle === 'annual') {
+      // Apply 20% discount for Retainer/Annual
+      const discounted = Math.round(numericValue * 0.8);
+      return discounted.toLocaleString() + (priceStr.includes('+') ? '+' : '');
+    }
+    
+    // Return original if Monthly/One-time
+    return priceStr;
+  };
+
   const webPackages = [
     {
       name: "Portfolio Website",
@@ -404,8 +424,8 @@ export const Pricing: React.FC = () => {
                         <p className="text-slate-400 text-xs mb-6">{pkg.desc}</p>
                         <div className="flex items-end justify-center gap-1">
                            <span className="text-sm text-slate-400 mb-1.5">KES</span>
-                           <span className="text-4xl font-bold text-white">{pkg.price}</span>
-                           <span className="text-[10px] text-slate-500 mb-1.5">one-time</span>
+                           <span className="text-4xl font-bold text-white">{getDisplayPrice(pkg.price)}</span>
+                           <span className="text-[10px] text-slate-500 mb-1.5">{billingCycle === 'annual' ? 'discounted' : 'one-time'}</span>
                         </div>
                      </div>
 
@@ -466,8 +486,8 @@ export const Pricing: React.FC = () => {
                         <p className="text-slate-400 text-xs mb-6">{pkg.desc}</p>
                         <div className="flex items-end justify-center gap-1">
                            <span className="text-sm text-slate-400 mb-1.5">KES</span>
-                           <span className="text-4xl font-bold text-white">{pkg.price}</span>
-                           <span className="text-[10px] text-slate-500 mb-1.5">one-time</span>
+                           <span className="text-4xl font-bold text-white">{getDisplayPrice(pkg.price)}</span>
+                           <span className="text-[10px] text-slate-500 mb-1.5">{billingCycle === 'annual' ? 'discounted' : 'one-time'}</span>
                         </div>
                      </div>
 
@@ -536,8 +556,8 @@ export const Pricing: React.FC = () => {
                            <p className="text-slate-400 text-[10px] mb-4">{pkg.desc}</p>
                            <div className="flex items-end justify-center gap-1">
                               <span className="text-xs text-slate-400 mb-1.5">KES</span>
-                              <span className="text-3xl font-bold text-white">{pkg.price}</span>
-                              <span className="text-[10px] text-slate-500 mb-1.5">one-time</span>
+                              <span className="text-3xl font-bold text-white">{getDisplayPrice(pkg.price)}</span>
+                              <span className="text-[10px] text-slate-500 mb-1.5">{billingCycle === 'annual' ? 'discounted' : 'one-time'}</span>
                            </div>
                         </div>
 
@@ -583,8 +603,8 @@ export const Pricing: React.FC = () => {
                         <p className="text-slate-400 text-[10px] mb-4">{pkg.desc}</p>
                         <div className="flex items-end justify-center gap-1">
                            <span className="text-xs text-slate-400 mb-1.5">KES</span>
-                           <span className="text-3xl font-bold text-white">{pkg.price}</span>
-                           <span className="text-[10px] text-slate-500 mb-1.5">{pkg.sub || "one-time"}</span>
+                           <span className="text-3xl font-bold text-white">{getDisplayPrice(pkg.price)}</span>
+                           <span className="text-[10px] text-slate-500 mb-1.5">{pkg.sub || (billingCycle === 'annual' ? 'discounted' : 'one-time')}</span>
                         </div>
                      </div>
 
@@ -627,7 +647,7 @@ export const Pricing: React.FC = () => {
                      <h3 className="text-white font-bold mb-1">{svc.name}</h3>
                      <div className="flex items-end gap-1 mb-4">
                         <span className="text-xs text-slate-400 mb-1">KES</span>
-                        <span className="text-2xl font-bold text-white">{svc.price}</span>
+                        <span className="text-2xl font-bold text-white">{getDisplayPrice(svc.price)}</span>
                         <span className="text-[10px] text-slate-500 mb-1">{svc.price !== 'Custom' ? '/month' : ''}</span>
                      </div>
                      
