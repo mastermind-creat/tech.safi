@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Download, X } from 'lucide-react';
@@ -50,14 +51,14 @@ export const InstallPrompt: React.FC = () => {
           <div className="relative group">
             <Button 
               onClick={handleInstallClick}
-              className="bg-emerald-500 hover:bg-emerald-600 shadow-lg shadow-emerald-500/20 rounded-full px-6 py-3 flex items-center gap-2 font-bold"
+              className="bg-emerald-500 hover:bg-emerald-600 text-white shadow-lg shadow-emerald-500/20 rounded-full px-6 py-3 flex items-center gap-2 font-bold"
             >
               <Download size={18} />
               Install App
             </Button>
             <button 
               onClick={handleDismiss}
-              className="absolute -top-2 -right-2 bg-[#1e293b] text-slate-400 hover:text-white rounded-full p-1 border border-white/10 shadow-md"
+              className="absolute -top-2 -right-2 bg-slate-200 dark:bg-[#1e293b] text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white rounded-full p-1 border border-slate-300 dark:border-white/10 shadow-md transition-colors"
               aria-label="Dismiss"
             >
               <X size={12} />

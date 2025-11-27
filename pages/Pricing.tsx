@@ -301,12 +301,12 @@ export const Pricing: React.FC = () => {
   ];
 
   return (
-    <div className="bg-[#020617] min-h-screen pb-0">
+    <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-0 transition-colors duration-300">
       
       {/* Hero Section */}
-      <div className="relative pt-32 pb-24 overflow-hidden">
+      <div className="relative pt-32 pb-24 overflow-hidden bg-slate-900 dark:bg-[#020617]">
         {/* Background */}
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-[#020617] to-[#020617]"></div>
+        <div className="absolute inset-0 bg-gradient-to-b from-purple-900/20 via-[#020617] to-transparent dark:to-[#020617]"></div>
         <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-r from-blue-600/10 via-purple-600/10 to-pink-600/10 blur-[100px] pointer-events-none"></div>
         
         {/* Decorative Grid */}
@@ -316,7 +316,7 @@ export const Pricing: React.FC = () => {
           <MotionDiv
              initial={{ opacity: 0, y: -20 }}
              animate={{ opacity: 1, y: 0 }}
-             className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/5 border border-white/10 backdrop-blur-md text-xs font-bold tracking-widest uppercase mb-6 text-purple-300"
+             className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/10 border border-white/20 backdrop-blur-md text-xs font-bold tracking-widest uppercase mb-6 text-purple-300"
           >
              <CreditCard size={12} className="mr-2" /> Transparent Pricing
           </MotionDiv>
@@ -388,16 +388,16 @@ export const Pricing: React.FC = () => {
       </div>
 
       {/* Web Development Packages */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24 mt-16">
          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             className="text-center mb-16"
          >
-            <h2 className="text-3xl font-bold text-white mb-2">Web Development <span className="text-purple-500">Packages</span></h2>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Web Development <span className="text-purple-500">Packages</span></h2>
             <div className="h-1 w-16 bg-purple-500 rounded-full mx-auto mb-6"></div>
-            <p className="text-slate-400 text-sm max-w-2xl mx-auto">
+            <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl mx-auto">
                From simple portfolios to complex web applications, we have the perfect solution for your needs.
             </p>
          </MotionDiv>
@@ -412,7 +412,7 @@ export const Pricing: React.FC = () => {
                   transition={{ delay: idx * 0.1 }}
                   className={`relative ${pkg.recommended ? 'md:-mt-8 md:mb-8 z-10' : ''}`}
                >
-                  <div className={`h-full bg-[#0f172a] rounded-2xl border ${pkg.recommended ? 'border-purple-500 shadow-2xl shadow-purple-900/20' : 'border-white/10'} p-8 flex flex-col relative overflow-hidden group hover:border-purple-500/50 transition-colors duration-300`}>
+                  <div className={`h-full bg-white dark:bg-[#0f172a] rounded-2xl border ${pkg.recommended ? 'border-purple-500 shadow-2xl shadow-purple-500/10 dark:shadow-purple-900/20' : 'border-slate-200 dark:border-white/10'} p-8 flex flex-col relative overflow-hidden group hover:border-purple-500/50 transition-colors duration-300 shadow-lg`}>
                      {pkg.recommended && (
                         <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-purple-600 to-blue-600 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-b-lg shadow-lg">
                            Most Popular
@@ -420,18 +420,18 @@ export const Pricing: React.FC = () => {
                      )}
                      
                      <div className="text-center mb-8 pt-4">
-                        <h3 className="text-xl font-bold text-white mb-2">{pkg.name}</h3>
-                        <p className="text-slate-400 text-xs mb-6">{pkg.desc}</p>
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{pkg.name}</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-xs mb-6">{pkg.desc}</p>
                         <div className="flex items-end justify-center gap-1">
-                           <span className="text-sm text-slate-400 mb-1.5">KES</span>
-                           <span className="text-4xl font-bold text-white">{getDisplayPrice(pkg.price)}</span>
-                           <span className="text-[10px] text-slate-500 mb-1.5">{billingCycle === 'annual' ? 'discounted' : 'one-time'}</span>
+                           <span className="text-sm text-slate-500 dark:text-slate-400 mb-1.5">KES</span>
+                           <span className="text-4xl font-bold text-slate-900 dark:text-white">{getDisplayPrice(pkg.price)}</span>
+                           <span className="text-[10px] text-slate-500 dark:text-slate-500 mb-1.5">{billingCycle === 'annual' ? 'discounted' : 'one-time'}</span>
                         </div>
                      </div>
 
                      <div className="mb-8">
                         <Link to="/contact">
-                           <Button className={`w-full ${pkg.recommended ? 'bg-blue-600 hover:bg-blue-700' : 'bg-white/10 hover:bg-white/20 border-0 text-white'}`}>
+                           <Button className={`w-full ${pkg.recommended ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 border-0 text-slate-900 dark:text-white'}`}>
                               Get Started
                            </Button>
                         </Link>
@@ -441,8 +441,8 @@ export const Pricing: React.FC = () => {
                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2">What's Included</p>
                         {pkg.features.map((feature, i) => (
                            <div key={i} className="flex items-start">
-                              <CheckCircle2 size={14} className={`mt-0.5 mr-3 flex-shrink-0 ${pkg.recommended ? 'text-blue-400' : 'text-emerald-500'}`} />
-                              <span className="text-slate-300 text-xs">{feature}</span>
+                              <CheckCircle2 size={14} className={`mt-0.5 mr-3 flex-shrink-0 ${pkg.recommended ? 'text-blue-500 dark:text-blue-400' : 'text-emerald-500'}`} />
+                              <span className="text-slate-600 dark:text-slate-300 text-xs">{feature}</span>
                            </div>
                         ))}
                      </div>
@@ -453,7 +453,7 @@ export const Pricing: React.FC = () => {
       </div>
 
       {/* Mobile App Development Section */}
-      <div className="bg-[#0f172a] py-24 mb-24 border-t border-white/5 relative overflow-hidden">
+      <div className="bg-slate-100 dark:bg-[#0f172a] py-24 mb-24 border-t border-slate-200 dark:border-white/5 relative overflow-hidden">
          {/* Background Glow */}
          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[400px] bg-blue-600/5 rounded-full blur-[100px] pointer-events-none"></div>
 
@@ -464,9 +464,9 @@ export const Pricing: React.FC = () => {
                viewport={{ once: true }}
                className="text-center mb-16"
             >
-               <h2 className="text-3xl font-bold text-white mb-2">Mobile App <span className="text-blue-500">Development</span></h2>
+               <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">Mobile App <span className="text-blue-500">Development</span></h2>
                <div className="h-1 w-16 bg-blue-500 rounded-full mx-auto mb-6"></div>
-               <p className="text-slate-400 text-sm">
+               <p className="text-slate-600 dark:text-slate-400 text-sm">
                   Native and cross-platform mobile applications for iOS and Android.
                </p>
             </MotionDiv>
@@ -479,21 +479,21 @@ export const Pricing: React.FC = () => {
                      whileInView={{ opacity: 1, y: 0 }}
                      viewport={{ once: true }}
                      transition={{ delay: idx * 0.1 }}
-                     className="bg-[#020617] border border-white/10 rounded-2xl p-8 hover:border-blue-500/30 transition-all duration-300 group"
+                     className="bg-white dark:bg-[#020617] border border-slate-200 dark:border-white/10 rounded-2xl p-8 hover:border-blue-500/30 transition-all duration-300 group shadow-lg"
                   >
                      <div className="text-center mb-8">
-                        <h3 className="text-xl font-bold text-white mb-2">{pkg.name}</h3>
-                        <p className="text-slate-400 text-xs mb-6">{pkg.desc}</p>
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">{pkg.name}</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-xs mb-6">{pkg.desc}</p>
                         <div className="flex items-end justify-center gap-1">
-                           <span className="text-sm text-slate-400 mb-1.5">KES</span>
-                           <span className="text-4xl font-bold text-white">{getDisplayPrice(pkg.price)}</span>
+                           <span className="text-sm text-slate-500 dark:text-slate-400 mb-1.5">KES</span>
+                           <span className="text-4xl font-bold text-slate-900 dark:text-white">{getDisplayPrice(pkg.price)}</span>
                            <span className="text-[10px] text-slate-500 mb-1.5">{billingCycle === 'annual' ? 'discounted' : 'one-time'}</span>
                         </div>
                      </div>
 
                      <div className="mb-8">
                         <Link to="/contact">
-                           <Button className={`w-full ${idx === 1 ? 'bg-blue-600 hover:bg-blue-700' : 'bg-white/10 hover:bg-white/20 border-0 text-white'}`}>
+                           <Button className={`w-full ${idx === 1 ? 'bg-blue-600 hover:bg-blue-700 text-white' : 'bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 border-0 text-slate-900 dark:text-white'}`}>
                               Get Quote
                            </Button>
                         </Link>
@@ -504,7 +504,7 @@ export const Pricing: React.FC = () => {
                         {pkg.features.map((feature, i) => (
                            <div key={i} className="flex items-start">
                               <Check size={14} className="text-blue-500 mt-0.5 mr-3 flex-shrink-0" />
-                              <span className="text-slate-300 text-xs">{feature}</span>
+                              <span className="text-slate-600 dark:text-slate-300 text-xs">{feature}</span>
                            </div>
                         ))}
                      </div>
@@ -522,15 +522,15 @@ export const Pricing: React.FC = () => {
             viewport={{ once: true }}
             className="text-center mb-16"
          >
-            <h2 className="text-3xl font-bold text-white mb-2">AI Integration <span className="text-indigo-500">Services</span></h2>
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-2">AI Integration <span className="text-indigo-500">Services</span></h2>
             <div className="h-1 w-16 bg-indigo-500 rounded-full mx-auto mb-6"></div>
-            <p className="text-slate-400 text-sm max-w-2xl mx-auto">
+            <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl mx-auto">
                Add intelligent features to your existing website or build AI-powered applications from scratch.
             </p>
          </MotionDiv>
 
          <div className="mb-12">
-            <h3 className="text-xl font-bold text-white text-center mb-8">Add AI to Your Existing Website</h3>
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white text-center mb-8">Add AI to Your Existing Website</h3>
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-start">
                {aiAddons.map((pkg, idx) => (
                   <MotionDiv
@@ -541,7 +541,7 @@ export const Pricing: React.FC = () => {
                      transition={{ delay: idx * 0.1 }}
                      className={`relative ${pkg.recommended ? 'md:-mt-4 md:mb-4 z-10' : ''}`}
                   >
-                     <div className={`h-full bg-[#0f172a] rounded-2xl border ${pkg.recommended ? 'border-purple-500 shadow-xl shadow-purple-900/10' : 'border-white/10'} p-8 flex flex-col relative overflow-hidden group hover:border-${pkg.color}-500/50 transition-colors duration-300`}>
+                     <div className={`h-full bg-white dark:bg-[#0f172a] rounded-2xl border ${pkg.recommended ? 'border-purple-500 shadow-xl shadow-purple-500/10 dark:shadow-purple-900/10' : 'border-slate-200 dark:border-white/10'} p-8 flex flex-col relative overflow-hidden group hover:border-${pkg.color}-500/50 transition-colors duration-300 shadow-lg dark:shadow-none`}>
                         {pkg.recommended && (
                            <div className="absolute top-0 left-1/2 transform -translate-x-1/2 bg-purple-600 text-white text-[10px] font-bold uppercase tracking-widest px-4 py-1 rounded-b-lg shadow-lg">
                               Popular
@@ -549,21 +549,21 @@ export const Pricing: React.FC = () => {
                         )}
                         
                         <div className="text-center mb-8 pt-4">
-                           <div className={`w-12 h-12 rounded-xl bg-${pkg.color}-500/10 flex items-center justify-center text-${pkg.color}-500 mx-auto mb-4 border border-${pkg.color}-500/20`}>
+                           <div className={`w-12 h-12 rounded-xl bg-${pkg.color}-100 dark:bg-${pkg.color}-500/10 flex items-center justify-center text-${pkg.color}-500 mx-auto mb-4 border border-${pkg.color}-200 dark:border-${pkg.color}-500/20`}>
                               <pkg.icon size={24} />
                            </div>
-                           <h3 className="text-lg font-bold text-white mb-1">{pkg.name}</h3>
-                           <p className="text-slate-400 text-[10px] mb-4">{pkg.desc}</p>
+                           <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{pkg.name}</h3>
+                           <p className="text-slate-500 dark:text-slate-400 text-[10px] mb-4">{pkg.desc}</p>
                            <div className="flex items-end justify-center gap-1">
-                              <span className="text-xs text-slate-400 mb-1.5">KES</span>
-                              <span className="text-3xl font-bold text-white">{getDisplayPrice(pkg.price)}</span>
+                              <span className="text-xs text-slate-500 dark:text-slate-400 mb-1.5">KES</span>
+                              <span className="text-3xl font-bold text-slate-900 dark:text-white">{getDisplayPrice(pkg.price)}</span>
                               <span className="text-[10px] text-slate-500 mb-1.5">{billingCycle === 'annual' ? 'discounted' : 'one-time'}</span>
                            </div>
                         </div>
 
                         <div className="mb-6">
                            <Link to="/contact">
-                              <Button className={`w-full ${pkg.recommended ? 'bg-purple-600 hover:bg-purple-700' : 'bg-white/10 hover:bg-white/20 border-0 text-white'}`}>
+                              <Button className={`w-full ${pkg.recommended ? 'bg-purple-600 hover:bg-purple-700 text-white' : 'bg-slate-100 dark:bg-white/10 hover:bg-slate-200 dark:hover:bg-white/20 border-0 text-slate-900 dark:text-white'}`}>
                                  Get Started
                               </Button>
                            </Link>
@@ -573,8 +573,8 @@ export const Pricing: React.FC = () => {
                            <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 text-center">What's Included</p>
                            {pkg.features.map((feature, i) => (
                               <div key={i} className="flex items-start">
-                                 <Check size={12} className={`mt-0.5 mr-2 flex-shrink-0 text-${pkg.color}-400`} />
-                                 <span className="text-slate-300 text-[11px]">{feature}</span>
+                                 <Check size={12} className={`mt-0.5 mr-2 flex-shrink-0 text-${pkg.color}-500 dark:text-${pkg.color}-400`} />
+                                 <span className="text-slate-600 dark:text-slate-300 text-[11px]">{feature}</span>
                               </div>
                            ))}
                         </div>
@@ -584,8 +584,8 @@ export const Pricing: React.FC = () => {
             </div>
          </div>
 
-         <div className="mb-12 pt-12 border-t border-white/5">
-            <h3 className="text-xl font-bold text-white text-center mb-8">Full AI Integration Projects</h3>
+         <div className="mb-12 pt-12 border-t border-slate-200 dark:border-white/5">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white text-center mb-8">Full AI Integration Projects</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
                {aiProjects.map((pkg, idx) => (
                   <MotionDiv
@@ -593,24 +593,24 @@ export const Pricing: React.FC = () => {
                      initial={{ opacity: 0, scale: 0.95 }}
                      whileInView={{ opacity: 1, scale: 1 }}
                      viewport={{ once: true }}
-                     className="bg-[#0f172a] border border-white/10 rounded-2xl p-8 hover:border-white/20 transition-all"
+                     className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-2xl p-8 hover:border-slate-300 dark:hover:border-white/20 transition-all shadow-lg dark:shadow-none"
                   >
                      <div className="text-center mb-6">
-                        <div className={`w-12 h-12 rounded-xl bg-${pkg.color}-500/10 flex items-center justify-center text-${pkg.color}-500 mx-auto mb-4 border border-${pkg.color}-500/20`}>
+                        <div className={`w-12 h-12 rounded-xl bg-${pkg.color}-100 dark:bg-${pkg.color}-500/10 flex items-center justify-center text-${pkg.color}-500 mx-auto mb-4 border border-${pkg.color}-200 dark:border-${pkg.color}-500/20`}>
                            <pkg.icon size={24} />
                         </div>
-                        <h3 className="text-lg font-bold text-white mb-1">{pkg.name}</h3>
-                        <p className="text-slate-400 text-[10px] mb-4">{pkg.desc}</p>
+                        <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-1">{pkg.name}</h3>
+                        <p className="text-slate-500 dark:text-slate-400 text-[10px] mb-4">{pkg.desc}</p>
                         <div className="flex items-end justify-center gap-1">
-                           <span className="text-xs text-slate-400 mb-1.5">KES</span>
-                           <span className="text-3xl font-bold text-white">{getDisplayPrice(pkg.price)}</span>
+                           <span className="text-xs text-slate-500 dark:text-slate-400 mb-1.5">KES</span>
+                           <span className="text-3xl font-bold text-slate-900 dark:text-white">{getDisplayPrice(pkg.price)}</span>
                            <span className="text-[10px] text-slate-500 mb-1.5">{pkg.sub || (billingCycle === 'annual' ? 'discounted' : 'one-time')}</span>
                         </div>
                      </div>
 
                      <div className="mb-6">
                         <Link to="/contact">
-                           <Button className={`w-full bg-${pkg.color === 'emerald' ? 'green' : 'pink'}-600 hover:bg-${pkg.color === 'emerald' ? 'green' : 'pink'}-700`}>
+                           <Button className={`w-full bg-${pkg.color === 'emerald' ? 'green' : 'pink'}-600 hover:bg-${pkg.color === 'emerald' ? 'green' : 'pink'}-700 text-white`}>
                               Get Quote
                            </Button>
                         </Link>
@@ -620,8 +620,8 @@ export const Pricing: React.FC = () => {
                         <p className="text-[10px] font-bold text-slate-500 uppercase tracking-wider mb-2 text-center">Features</p>
                         {pkg.features.map((feature, i) => (
                            <div key={i} className="flex items-start">
-                              <Check size={12} className={`mt-0.5 mr-2 flex-shrink-0 text-${pkg.color === 'emerald' ? 'green' : 'pink'}-400`} />
-                              <span className="text-slate-300 text-[11px]">{feature}</span>
+                              <Check size={12} className={`mt-0.5 mr-2 flex-shrink-0 text-${pkg.color === 'emerald' ? 'green' : 'pink'}-500 dark:text-${pkg.color === 'emerald' ? 'green' : 'pink'}-400`} />
+                              <span className="text-slate-600 dark:text-slate-300 text-[11px]">{feature}</span>
                            </div>
                         ))}
                      </div>
@@ -630,8 +630,8 @@ export const Pricing: React.FC = () => {
             </div>
          </div>
 
-         <div className="pt-12 border-t border-white/5">
-            <h3 className="text-xl font-bold text-white text-center mb-8">Monthly Services & Support</h3>
+         <div className="pt-12 border-t border-slate-200 dark:border-white/5">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-white text-center mb-8">Monthly Services & Support</h3>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto">
                {monthlyServices.map((svc, idx) => (
                   <MotionDiv
@@ -639,21 +639,21 @@ export const Pricing: React.FC = () => {
                      initial={{ opacity: 0, y: 20 }}
                      whileInView={{ opacity: 1, y: 0 }}
                      viewport={{ once: true }}
-                     className="bg-[#0f172a] border border-white/10 rounded-2xl p-6 hover:border-blue-500/30 transition-all flex flex-col items-center text-center group hover:-translate-y-1"
+                     className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-2xl p-6 hover:border-blue-500/30 transition-all flex flex-col items-center text-center group hover:-translate-y-1 shadow-lg dark:shadow-none"
                   >
-                     <div className={`w-10 h-10 rounded-lg bg-${svc.color}-500/10 flex items-center justify-center text-${svc.color}-500 mb-3 group-hover:scale-110 transition-transform`}>
+                     <div className={`w-10 h-10 rounded-lg bg-${svc.color}-100 dark:bg-${svc.color}-500/10 flex items-center justify-center text-${svc.color}-500 mb-3 group-hover:scale-110 transition-transform`}>
                         <svc.icon size={20} />
                      </div>
-                     <h3 className="text-white font-bold mb-1">{svc.name}</h3>
+                     <h3 className="text-slate-900 dark:text-white font-bold mb-1">{svc.name}</h3>
                      <div className="flex items-end gap-1 mb-4">
-                        <span className="text-xs text-slate-400 mb-1">KES</span>
-                        <span className="text-2xl font-bold text-white">{getDisplayPrice(svc.price)}</span>
+                        <span className="text-xs text-slate-500 dark:text-slate-400 mb-1">KES</span>
+                        <span className="text-2xl font-bold text-slate-900 dark:text-white">{getDisplayPrice(svc.price)}</span>
                         <span className="text-[10px] text-slate-500 mb-1">{svc.price !== 'Custom' ? '/month' : ''}</span>
                      </div>
                      
                      <ul className="space-y-2 mb-6 w-full text-left pl-4 flex-grow">
                         {svc.features.map((feat, i) => (
-                           <li key={i} className="flex items-start text-[11px] text-slate-300">
+                           <li key={i} className="flex items-start text-[11px] text-slate-600 dark:text-slate-300">
                               <CheckCircle2 size={12} className={`text-${svc.color}-500 mr-2 mt-0.5 flex-shrink-0`} />
                               {feat}
                            </li>
@@ -661,7 +661,7 @@ export const Pricing: React.FC = () => {
                      </ul>
 
                      <Link to="/contact" className="w-full">
-                        <Button className={`w-full bg-${svc.color}-600 hover:bg-${svc.color}-700 py-2 h-auto text-xs`}>
+                        <Button className={`w-full bg-${svc.color}-600 hover:bg-${svc.color}-700 py-2 h-auto text-xs text-white`}>
                            {svc.price === 'Custom' ? 'Contact Us' : 'Get Started'}
                         </Button>
                      </Link>
@@ -679,8 +679,8 @@ export const Pricing: React.FC = () => {
             viewport={{ once: true }}
             className="text-center mb-12"
          >
-            <h2 className="text-2xl font-bold text-white mb-4">Frequently Asked Questions</h2>
-            <p className="text-slate-400 text-sm">Have questions about our pricing? We have answers.</p>
+            <h2 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">Frequently Asked Questions</h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">Have questions about our pricing? We have answers.</p>
          </MotionDiv>
 
          <div className="space-y-4">
@@ -692,18 +692,18 @@ export const Pricing: React.FC = () => {
                   viewport={{ once: true }}
                   transition={{ delay: idx * 0.1 }}
                >
-                  <div className="bg-[#1e293b]/30 border border-white/5 rounded-xl overflow-hidden">
+                  <div className="bg-white dark:bg-[#1e293b]/30 border border-slate-200 dark:border-white/5 rounded-xl overflow-hidden shadow-sm dark:shadow-none">
                      <button 
                        onClick={() => toggleFaq(idx)}
-                       className="w-full flex items-center justify-between p-5 text-left focus:outline-none hover:bg-white/5 transition-colors"
+                       className="w-full flex items-center justify-between p-5 text-left focus:outline-none hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
                      >
-                        <span className="text-white font-bold text-sm pr-8">{faq.question}</span>
+                        <span className="text-slate-900 dark:text-white font-bold text-sm pr-8">{faq.question}</span>
                         <span className="text-slate-400">
                            {openFaq === idx ? <Minus size={18} /> : <Plus size={18} />}
                         </span>
                      </button>
                      {openFaq === idx && (
-                        <div className="p-5 pt-0 text-slate-400 text-xs leading-relaxed border-t border-white/5 mt-2">
+                        <div className="p-5 pt-0 text-slate-600 dark:text-slate-400 text-xs leading-relaxed border-t border-slate-100 dark:border-white/5 mt-2">
                            {faq.answer}
                         </div>
                      )}

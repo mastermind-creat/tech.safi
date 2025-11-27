@@ -54,7 +54,7 @@ export const Sitemap: React.FC = () => {
   ];
 
   return (
-    <div className="bg-[#020617] min-h-screen pb-20 pt-32">
+    <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-20 pt-32 transition-colors duration-300">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         
         {/* Header */}
@@ -63,13 +63,13 @@ export const Sitemap: React.FC = () => {
           animate={{ opacity: 1, y: 0 }}
           className="text-center mb-16"
         >
-          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-400 text-xs font-bold tracking-widest uppercase mb-6">
+          <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-cyan-100 dark:bg-cyan-500/10 border border-cyan-200 dark:border-cyan-500/20 text-cyan-600 dark:text-cyan-400 text-xs font-bold tracking-widest uppercase mb-6">
              <Map size={12} className="mr-2" /> Navigation
           </div>
-          <h1 className="text-4xl md:text-5xl font-bold font-display text-white mb-6">
+          <h1 className="text-4xl md:text-5xl font-bold font-display text-slate-900 dark:text-white mb-6">
             Site <span className="text-cyan-500">Map</span>
           </h1>
-          <p className="text-slate-400 text-sm">
+          <p className="text-slate-600 dark:text-slate-400 text-sm">
             An overview of the content available on our website.
           </p>
         </MotionDiv>
@@ -82,20 +82,20 @@ export const Sitemap: React.FC = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: idx * 0.1 }}
-              className="bg-[#1e293b]/30 border border-white/5 rounded-2xl p-8 hover:border-white/10 transition-colors"
+              className="bg-white dark:bg-[#1e293b]/30 border border-slate-200 dark:border-white/5 rounded-2xl p-8 hover:border-slate-300 dark:hover:border-white/10 transition-all shadow-lg dark:shadow-none"
             >
-              <div className={`w-12 h-12 rounded-xl bg-${section.color}-500/10 flex items-center justify-center text-${section.color}-500 mb-6 border border-${section.color}-500/20`}>
+              <div className={`w-12 h-12 rounded-xl bg-${section.color}-100 dark:bg-${section.color}-500/10 flex items-center justify-center text-${section.color}-600 dark:text-${section.color}-500 mb-6 border border-${section.color}-200 dark:border-${section.color}-500/20`}>
                 <section.icon size={24} />
               </div>
-              <h2 className="text-xl font-bold text-white mb-6">{section.title}</h2>
+              <h2 className="text-xl font-bold text-slate-900 dark:text-white mb-6">{section.title}</h2>
               <ul className="space-y-4">
                 {section.links.map((link, lIdx) => (
                   <li key={lIdx}>
                     <Link 
                       to={link.path}
-                      className="flex items-center text-slate-400 hover:text-white hover:translate-x-1 transition-all text-sm group"
+                      className="flex items-center text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:translate-x-1 transition-all text-sm group"
                     >
-                      <ChevronRight size={14} className={`mr-2 text-${section.color}-500 group-hover:text-white transition-colors`} />
+                      <ChevronRight size={14} className={`mr-2 text-${section.color}-500 group-hover:text-slate-900 dark:group-hover:text-white transition-colors`} />
                       {link.name}
                     </Link>
                   </li>

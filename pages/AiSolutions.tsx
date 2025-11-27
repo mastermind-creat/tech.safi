@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
@@ -9,7 +10,7 @@ import {
   Headphones, Terminal, Atom, LayoutGrid, Flame, Smile, 
   Share2, Box, Anchor, Activity, Factory, Cloud,
   Target, MapPin, Shield, Star, GraduationCap, Truck, Home,
-  Plus, Minus, ChevronDown, HelpCircle, Wallet
+  Plus, Minus, ChevronDown, HelpCircle, Wallet, Users
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
@@ -139,18 +140,18 @@ export const AiSolutions: React.FC = () => {
   ];
 
   return (
-    <div className="bg-[#020617] min-h-screen pb-0 overflow-hidden">
+    <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-0 overflow-hidden transition-colors duration-300">
       {/* Hero Section */}
-      <div className="relative pt-32 pb-20 overflow-hidden">
+      <div className="relative pt-32 pb-20 overflow-hidden bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
         {/* Background Effects */}
-        <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-br from-blue-900/20 via-purple-900/10 to-[#020617] z-0 pointer-events-none"></div>
-        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
+        <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-br from-blue-100/40 via-purple-100/40 to-transparent dark:from-blue-900/20 dark:via-purple-900/10 dark:to-transparent z-0 pointer-events-none"></div>
+        <div className="absolute top-[-100px] left-1/2 -translate-x-1/2 w-[800px] h-[500px] bg-blue-600/5 dark:bg-blue-600/10 blur-[120px] rounded-full pointer-events-none"></div>
         
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
           <MotionDiv
              initial={{ opacity: 0, y: -20 }}
              animate={{ opacity: 1, y: 0 }}
-             className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-500/10 border border-blue-500/20 text-blue-400 text-xs font-bold tracking-widest uppercase mb-6"
+             className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-100 border border-blue-200 dark:bg-blue-500/10 dark:border-blue-500/20 text-blue-600 dark:text-blue-400 text-xs font-bold tracking-widest uppercase mb-6"
           >
              <Brain size={12} className="mr-2" /> Artificial Intelligence
           </MotionDiv>
@@ -160,8 +161,8 @@ export const AiSolutions: React.FC = () => {
              animate={{ opacity: 1, scale: 1 }}
              transition={{ duration: 0.5, delay: 0.1 }}
           >
-            <h1 className="text-4xl md:text-6xl font-bold text-white font-display mb-6 tracking-tight">
-              Custom Software with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">AI Integration</span>
+            <h1 className="text-4xl md:text-6xl font-bold text-slate-900 dark:text-white font-display mb-6 tracking-tight">
+              Custom Software with <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-purple-500">AI Integration</span>
             </h1>
           </MotionDiv>
           
@@ -170,7 +171,7 @@ export const AiSolutions: React.FC = () => {
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.5, delay: 0.2 }}
           >
-            <p className="text-lg md:text-xl text-slate-300 max-w-3xl mx-auto leading-relaxed mb-10">
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-3xl mx-auto leading-relaxed mb-10">
               We build custom websites, software, and systems integrated with AI automation for your business. From chatbots to predictive analytics, we deliver intelligent solutions tailored to your needs.
             </p>
           </MotionDiv>
@@ -182,12 +183,12 @@ export const AiSolutions: React.FC = () => {
              className="flex flex-col sm:flex-row justify-center gap-4"
           >
             <Link to="/contact">
-              <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto px-8 py-3">
+              <Button className="bg-blue-600 hover:bg-blue-700 w-full sm:w-auto px-8 py-3 text-white">
                 Get Started
               </Button>
             </Link>
             <Link to="/portfolio">
-              <Button variant="outline" className="border-white/10 text-white hover:bg-white/5 w-full sm:w-auto px-8 py-3">
+              <Button variant="outline" className="border-slate-300 text-slate-700 hover:bg-slate-100 dark:border-white/20 dark:text-white dark:hover:bg-white/5 w-full sm:w-auto px-8 py-3">
                 Explore Solutions
               </Button>
             </Link>
@@ -203,10 +204,10 @@ export const AiSolutions: React.FC = () => {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
+          <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
             AI Features We Build Into Your Software
           </h2>
-          <p className="text-slate-400 text-sm md:text-base">
+          <p className="text-slate-600 dark:text-slate-400 text-sm md:text-base">
             Custom AI integrations designed specifically for your business requirements
           </p>
         </MotionDiv>
@@ -221,20 +222,20 @@ export const AiSolutions: React.FC = () => {
               transition={{ delay: idx * 0.05 }}
               className="group"
             >
-              <div className="h-full bg-[#1e293b]/40 rounded-2xl border border-white/5 p-8 hover:border-white/10 hover:bg-[#1e293b]/60 transition-all duration-300">
+              <div className="h-full bg-white dark:bg-[#1e293b]/40 rounded-2xl border border-slate-200 dark:border-white/5 p-8 hover:border-slate-300 dark:hover:border-white/10 dark:hover:bg-[#1e293b]/60 transition-all duration-300 shadow-lg dark:shadow-none">
                 {/* Icon */}
-                <div className={`w-12 h-12 rounded-xl bg-${feature.color}-500/10 flex items-center justify-center text-${feature.color}-500 mb-6 border border-${feature.color}-500/20 group-hover:scale-110 transition-transform duration-300`}>
+                <div className={`w-12 h-12 rounded-xl bg-${feature.color}-100 dark:bg-${feature.color}-500/10 flex items-center justify-center text-${feature.color}-600 dark:text-${feature.color}-500 mb-6 border border-${feature.color}-200 dark:border-${feature.color}-500/20 group-hover:scale-110 transition-transform duration-300`}>
                   <feature.icon size={24} />
                 </div>
                 
-                <h3 className="text-xl font-bold text-white mb-3">{feature.title}</h3>
-                <p className="text-slate-400 text-sm leading-relaxed mb-6 border-b border-white/5 pb-6">
+                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{feature.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 border-b border-slate-100 dark:border-white/5 pb-6">
                   {feature.description}
                 </p>
 
                 <div className="space-y-2">
                   {feature.subFeatures.map((sub, sIdx) => (
-                    <div key={sIdx} className="flex items-center text-xs text-slate-300">
+                    <div key={sIdx} className="flex items-center text-xs text-slate-500 dark:text-slate-300">
                       <CheckCircle2 size={12} className={`text-${feature.color}-500 mr-2`} />
                       {sub}
                     </div>
@@ -247,7 +248,7 @@ export const AiSolutions: React.FC = () => {
       </div>
 
       {/* Add AI to Existing Website Section */}
-      <div className="bg-[#050b1d] py-24 border-t border-white/5">
+      <div className="bg-slate-100 dark:bg-[#050b1d] py-24 border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <MotionDiv
              initial={{ opacity: 0, y: 20 }}
@@ -255,10 +256,10 @@ export const AiSolutions: React.FC = () => {
              viewport={{ once: true }}
              className="text-center mb-16"
            >
-              <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
-                 Add AI to Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-indigo-500">Existing Website</span>
+              <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
+                 Add AI to Your <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500">Existing Website</span>
               </h2>
-              <p className="text-slate-400 text-lg max-w-2xl mx-auto">
+              <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">
                  Transform your current website or software with AI capabilities without rebuilding from scratch
               </p>
            </MotionDiv>
@@ -278,12 +279,12 @@ export const AiSolutions: React.FC = () => {
                    viewport={{ once: true }}
                    transition={{ delay: idx * 0.1 }}
                 >
-                   <div className={`h-full bg-[${card.color === 'blue' ? '#0f172a' : '#1e1b4b'}]/30 border border-white/5 rounded-xl p-6 hover:bg-white/5 transition-colors group`}>
-                      <div className={`w-10 h-10 rounded-lg bg-${card.color}-500/10 flex items-center justify-center text-${card.color}-400 mb-4 group-hover:scale-110 transition-transform`}>
+                   <div className={`h-full bg-white dark:bg-[${card.color === 'blue' ? '#0f172a' : '#1e1b4b'}]/30 border border-slate-200 dark:border-white/5 rounded-xl p-6 hover:bg-slate-50 dark:hover:bg-white/5 transition-colors group shadow-md dark:shadow-none`}>
+                      <div className={`w-10 h-10 rounded-lg bg-${card.color}-100 dark:bg-${card.color}-500/10 flex items-center justify-center text-${card.color}-500 dark:text-${card.color}-400 mb-4 group-hover:scale-110 transition-transform`}>
                          <card.icon size={20} />
                       </div>
-                      <h3 className="text-white font-bold mb-2">{card.title}</h3>
-                      <p className="text-slate-400 text-xs leading-relaxed">{card.desc}</p>
+                      <h3 className="text-slate-900 dark:text-white font-bold mb-2">{card.title}</h3>
+                      <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">{card.desc}</p>
                    </div>
                 </MotionDiv>
               ))}
@@ -302,18 +303,18 @@ export const AiSolutions: React.FC = () => {
                    whileInView={{ opacity: 1, y: 0 }}
                    viewport={{ once: true }}
                    transition={{ delay: 0.2 + (idx * 0.1) }}
-                   className="bg-[#1e293b]/40 rounded-xl p-6 border border-white/5"
+                   className="bg-white dark:bg-[#1e293b]/40 rounded-xl p-6 border border-slate-200 dark:border-white/5 shadow-md dark:shadow-none"
                 >
                    <div className="flex items-center mb-4">
-                      <div className={`w-8 h-8 rounded bg-${idx === 0 ? 'blue' : idx === 1 ? 'purple' : 'emerald'}-500/10 flex items-center justify-center text-${idx === 0 ? 'blue' : idx === 1 ? 'purple' : 'emerald'}-400 mr-3`}>
+                      <div className={`w-8 h-8 rounded bg-${idx === 0 ? 'blue' : idx === 1 ? 'purple' : 'emerald'}-100 dark:bg-${idx === 0 ? 'blue' : idx === 1 ? 'purple' : 'emerald'}-500/10 flex items-center justify-center text-${idx === 0 ? 'blue' : idx === 1 ? 'purple' : 'emerald'}-500 dark:text-${idx === 0 ? 'blue' : idx === 1 ? 'purple' : 'emerald'}-400 mr-3`}>
                          <card.icon size={16} />
                       </div>
-                      <h3 className="text-white font-bold">{card.title}</h3>
+                      <h3 className="text-slate-900 dark:text-white font-bold text-sm">{card.title}</h3>
                    </div>
                    <div className="space-y-2">
                       {card.items.map((item, i) => (
-                         <div key={i} className="flex items-center text-xs text-slate-400">
-                            <CheckCircle2 size={12} className="text-green-500 mr-2" />
+                         <div key={i} className="flex items-start text-xs text-slate-500 dark:text-slate-300">
+                            <CheckCircle2 size={12} className="text-blue-500 mr-2 mt-0.5" />
                             {item}
                          </div>
                       ))}
@@ -324,101 +325,131 @@ export const AiSolutions: React.FC = () => {
         </div>
       </div>
 
-      {/* AI Development Process */}
-      <div className="py-24 bg-[#020617]">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <MotionDiv
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               className="text-center mb-16"
-            >
-               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
-                  Our AI Development Process
-               </h2>
-               <p className="text-slate-400 text-sm md:text-base max-w-2xl mx-auto">
-                  A structured approach to delivering successful AI solutions that drive real business value
-               </p>
-            </MotionDiv>
+      {/* Process Section */}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-24">
+         <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+         >
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Our AI Development <span className="text-purple-500">Process</span></h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm max-w-2xl mx-auto">
+               A structured approach to delivering successful AI solutions that drive real business value
+            </p>
+         </MotionDiv>
 
-            <div className="grid grid-cols-2 md:grid-cols-5 gap-8 text-center relative">
-               {/* Process Steps */}
-               {[
-                 { icon: Search, title: "Discovery", desc: "We analyze your business needs, data availability, and define AI objectives." },
-                 { icon: Database, title: "Data Preparation", desc: "We collect, clean, and prepare your data for model training and validation." },
-                 { icon: Cpu, title: "Model Development", desc: "We design, train, and optimize AI models tailored to your specific use case." },
-                 { icon: Plug, title: "Integration", desc: "We seamlessly integrate the AI solution into your existing systems and workflows." },
-                 { icon: Headphones, title: "Support & Optimization", desc: "We provide ongoing maintenance, monitoring, and continuous improvement." }
-               ].map((step, idx) => (
-                 <MotionDiv
-                    key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="relative z-10 flex flex-col items-center"
-                 >
-                    <div className={`w-16 h-16 rounded-full bg-[#1e293b] flex items-center justify-center text-white mb-6 border-2 border-white/5 hover:border-blue-500 transition-colors shadow-lg shadow-blue-900/10`}>
-                       <step.icon size={24} className={`text-${['blue','purple','emerald','orange','red'][idx]}-400`} />
-                    </div>
-                    <h3 className="text-white font-bold text-sm mb-3">{step.title}</h3>
-                    <p className="text-slate-500 text-xs leading-relaxed">{step.desc}</p>
-                 </MotionDiv>
-               ))}
-            </div>
+         <div className="flex flex-wrap justify-center gap-8 md:gap-12 relative">
+            <div className="hidden md:block absolute top-8 left-20 right-20 h-0.5 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-emerald-500/20 z-0"></div>
+            
+            {[
+              { step: "Discovery", desc: "We analyze your business needs, data availability, and define AI objectives.", icon: Search, color: "blue" },
+              { step: "Data Preparation", desc: "We collect, clean, and prepare your data for model training and validation.", icon: Database, color: "purple" },
+              { step: "Model Development", desc: "We design, train, and optimize AI models tailored to your specific use case.", icon: Settings, color: "emerald" },
+              { step: "Integration", desc: "We seamlessly integrate the AI solution into your existing systems and workflows.", icon: Plug, color: "orange" },
+              { step: "Support & Optimization", desc: "We provide ongoing maintenance, monitoring, and continuous improvement.", icon: Headphones, color: "red" }
+            ].map((item, idx) => (
+               <MotionDiv
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="w-full md:w-48 text-center relative z-10"
+               >
+                  <div className={`w-16 h-16 rounded-full bg-${item.color}-100 dark:bg-[#1e293b] border-4 border-white dark:border-[#020617] flex items-center justify-center text-${item.color}-500 mx-auto mb-6 shadow-lg`}>
+                     <item.icon size={24} />
+                  </div>
+                  <h3 className="text-slate-900 dark:text-white font-bold text-sm mb-2">{item.step}</h3>
+                  <p className="text-slate-500 dark:text-slate-400 text-[10px] leading-relaxed px-2">{item.desc}</p>
+               </MotionDiv>
+            ))}
          </div>
       </div>
 
-      {/* AI Technology Stack */}
-      <div className="py-20 bg-[#1e293b]/20 border-y border-white/5">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* Tech Stack */}
+      <div className="bg-slate-100 dark:bg-[#050b1d] py-24 border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
             <MotionDiv
                initial={{ opacity: 0, y: 20 }}
                whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
-               className="text-center mb-16"
+               className="mb-12"
             >
-               <h2 className="text-3xl md:text-4xl font-bold text-white font-display mb-4">
-                  Our AI Technology Stack
-               </h2>
-               <p className="text-slate-400 text-sm">
-                  We leverage industry-leading technologies to build robust, scalable AI solutions
-               </p>
+               <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Our AI Technology Stack</h2>
+               <p className="text-slate-600 dark:text-slate-400 text-sm">We leverage industry-leading technologies to build robust, scalable AI solutions</p>
             </MotionDiv>
 
-            <div className="grid grid-cols-3 md:grid-cols-6 gap-4 md:gap-6">
+            <div className="grid grid-cols-3 md:grid-cols-6 gap-4">
                {[
-                 { name: "Python", icon: Terminal, color: "text-blue-400" },
-                 { name: "OpenAI", icon: Bot, color: "text-green-400" },
-                 { name: "Node.js", icon: Globe, color: "text-yellow-400" },
-                 { name: "React", icon: Atom, color: "text-cyan-400" },
-                 { name: "AWS AI", icon: Cloud, color: "text-orange-400" },
-                 { name: "Azure AI", icon: LayoutGrid, color: "text-blue-500" },
-                 { name: "PyTorch", icon: Flame, color: "text-red-400" },
-                 { name: "Hugging Face", icon: Smile, color: "text-yellow-500" },
-                 { name: "TensorFlow", icon: Share2, color: "text-orange-500" },
-                 { name: "Google AI", icon: Search, color: "text-blue-400" },
+                 { name: "Python", icon: Terminal, color: "text-blue-500" },
+                 { name: "OpenAI", icon: Bot, color: "text-green-500" },
+                 { name: "Node.js", icon: Code2, color: "text-yellow-500" },
+                 { name: "React", icon: Atom, color: "text-cyan-500" },
+                 { name: "AWS AI", icon: Cloud, color: "text-orange-500" },
+                 { name: "Azure AI", icon: LayoutGrid, color: "text-blue-600" },
+                 { name: "PyTorch", icon: Flame, color: "text-red-500" },
+                 { name: "Hugging Face", icon: Smile, color: "text-yellow-400" },
+                 { name: "TensorFlow", icon: Share2, color: "text-orange-600" },
+                 { name: "Google AI", icon: Globe, color: "text-blue-400" },
                  { name: "Docker", icon: Box, color: "text-blue-500" },
-                 { name: "Kubernetes", icon: Anchor, color: "text-blue-600" }
+                 { name: "Kubernetes", icon: Anchor, color: "text-blue-700" }
                ].map((tech, idx) => (
-                 <MotionDiv
-                    key={idx}
-                    initial={{ opacity: 0, scale: 0.9 }}
-                    whileInView={{ opacity: 1, scale: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.05 }}
-                    className="bg-[#0f172a] border border-white/5 rounded-xl p-6 flex flex-col items-center justify-center hover:border-white/20 transition-all hover:-translate-y-1"
-                 >
-                    <tech.icon size={28} className={`${tech.color} mb-3`} />
-                    <span className="text-white text-xs font-bold">{tech.name}</span>
-                 </MotionDiv>
+                  <MotionDiv
+                     key={idx}
+                     initial={{ opacity: 0, scale: 0.8 }}
+                     whileInView={{ opacity: 1, scale: 1 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: idx * 0.05 }}
+                     className="bg-white dark:bg-[#1e293b] p-4 rounded-xl flex flex-col items-center justify-center hover:bg-slate-50 dark:hover:bg-[#2d3b4e] transition-colors border border-slate-200 dark:border-white/5 shadow-sm dark:shadow-none"
+                  >
+                     <tech.icon size={24} className={`mb-2 ${tech.color}`} />
+                     <span className="text-[10px] font-bold text-slate-600 dark:text-slate-300">{tech.name}</span>
+                  </MotionDiv>
                ))}
             </div>
          </div>
       </div>
 
-      {/* AI Success Stories */}
-      <div className="py-24 bg-[#020617]">
+      {/* Why Choose Us */}
+      <div className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+         <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+         >
+            <h2 className="text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">Why Choose TechSafi for AI Solutions</h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">Our unique approach sets us apart in delivering successful AI implementations</p>
+         </MotionDiv>
+
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[
+              { title: "AI-First Approach", desc: "We design solutions with AI at the core, not as an afterthought, ensuring maximum impact rather than superficial integration.", icon: Target, color: "blue" },
+              { title: "Full-Stack Expertise", desc: "Our team combines AI specialists with software engineers to deliver complete, production-ready solutions.", icon: Users, color: "purple" },
+              { title: "Local Understanding", desc: "We understand the unique opportunities in the Kenyan and East African market context.", icon: MapPin, color: "emerald" },
+              { title: "Ethical AI Practices", desc: "We prioritize transparency, fairness, and accountability in all our AI implementations.", icon: Shield, color: "red" }
+            ].map((item, idx) => (
+               <MotionDiv
+                  key={idx}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
+                  className="bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 p-8 rounded-2xl text-center hover:border-slate-300 dark:hover:border-white/20 transition-all shadow-lg dark:shadow-none"
+               >
+                  <div className={`w-14 h-14 mx-auto rounded-full bg-${item.color}-100 dark:bg-${item.color}-500/10 flex items-center justify-center text-${item.color}-600 dark:text-${item.color}-500 mb-6`}>
+                     <item.icon size={24} />
+                  </div>
+                  <h3 className="text-slate-900 dark:text-white font-bold mb-3">{item.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">{item.desc}</p>
+               </MotionDiv>
+            ))}
+         </div>
+      </div>
+
+      {/* Testimonials */}
+      <div className="bg-slate-100 dark:bg-[#050b1d] py-24 border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv
                initial={{ opacity: 0, y: 20 }}
@@ -426,147 +457,131 @@ export const AiSolutions: React.FC = () => {
                viewport={{ once: true }}
                className="text-center mb-16"
             >
-               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
-                  AI Success Stories
-               </h2>
-               <p className="text-slate-400 text-sm">
-                  Real-world examples of how our AI solutions have transformed businesses
-               </p>
+               <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">What Our Clients Say</h2>
+               <p className="text-slate-600 dark:text-slate-400 text-sm">Don't just take our word for it - hear from businesses we've transformed with AI</p>
             </MotionDiv>
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                {[
-                 { icon: ShoppingCart, title: "E-commerce Personalization", desc: "Implemented AI-powered recommendation engine for a retail client, increasing conversion rates by 34% and average order value by 22%.", color: "blue" },
-                 { icon: Activity, title: "Healthcare Diagnostics", desc: "Developed computer vision system for medical imaging analysis, reducing diagnostic time by 65% and improving accuracy by 28%.", color: "purple" },
-                 { icon: Factory, title: "Manufacturing Optimization", desc: "Created predictive maintenance system that reduced equipment downtime by 47% and maintenance costs by 32% for industrial client.", color: "emerald" }
-               ].map((story, idx) => (
-                 <MotionDiv
-                    key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className={`bg-[#0f172a] rounded-2xl border border-white/5 p-8 relative overflow-hidden group hover:border-${story.color}-500/30 transition-all`}
-                 >
-                    <div className={`absolute top-0 left-0 w-full h-1 bg-${story.color}-500`}></div>
-                    <div className={`w-12 h-12 rounded-full bg-${story.color}-500/10 flex items-center justify-center text-${story.color}-400 mb-6 group-hover:scale-110 transition-transform`}>
-                       <story.icon size={24} />
-                    </div>
-                    <h3 className="text-xl font-bold text-white mb-4">{story.title}</h3>
-                    <p className="text-slate-400 text-sm leading-relaxed mb-6">
-                       {story.desc}
-                    </p>
-                    <Link to="/portfolio" className={`flex items-center text-xs font-bold text-${story.color}-400 hover:text-white transition-colors`}>
-                       Read Case Study <ArrowRight size={14} className="ml-1" />
-                    </Link>
-                 </MotionDiv>
+                 { name: "James D.", role: "CTO, RetailTech Solutions", text: "TechSafi's AI recommendation engine transformed our e-commerce platform. Our conversion rates increased by 34% within just three months of implementation.", bg: "blue" },
+                 { name: "Sarah M.", role: "Operations Director, HealthPlus", text: "The AI-powered diagnostic system TechSafi developed has significantly improved our patient outcomes while reducing diagnostic time by over 60%.", bg: "purple" },
+                 { name: "Robert K.", role: "CEO, Manufacturing Pro", text: "TechSafi's predictive maintenance solution has saved us millions in equipment downtime. Their team's expertise in both AI and manufacturing is impressive.", bg: "emerald" }
+               ].map((testimonial, idx) => (
+                  <MotionDiv
+                     key={idx}
+                     initial={{ opacity: 0, scale: 0.95 }}
+                     whileInView={{ opacity: 1, scale: 1 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: idx * 0.1 }}
+                     className="bg-white dark:bg-[#1e293b]/40 p-8 rounded-2xl border border-slate-200 dark:border-white/5 relative shadow-lg dark:shadow-none"
+                  >
+                     <div className="flex items-center mb-6">
+                        <div className={`w-10 h-10 rounded-full bg-${testimonial.bg}-600 flex items-center justify-center text-white font-bold text-sm mr-3`}>
+                           {testimonial.name.charAt(0)}
+                        </div>
+                        <div>
+                           <h4 className="text-slate-900 dark:text-white font-bold text-sm">{testimonial.name}</h4>
+                           <span className="text-slate-500 dark:text-slate-400 text-[10px]">{testimonial.role}</span>
+                        </div>
+                     </div>
+                     <p className="text-slate-600 dark:text-slate-300 text-xs italic leading-relaxed">"{testimonial.text}"</p>
+                     <div className="flex mt-4 text-yellow-500">
+                        {[...Array(5)].map((_, i) => <Star key={i} size={12} fill="currentColor" />)}
+                     </div>
+                  </MotionDiv>
                ))}
             </div>
          </div>
       </div>
 
-      {/* Why Choose TechSafi Section */}
-      <div className="py-24 bg-[#050b1d] border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <MotionDiv
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-           >
-              <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
-                 Why Choose TechSafi for AI Solutions
-              </h2>
-              <p className="text-slate-400 text-sm md:text-base">
-                 Our unique approach sets us apart in delivering successful AI implementations
-              </p>
-           </MotionDiv>
+      {/* Use Cases */}
+      <div className="py-24 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+         <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+         >
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Industry Use Cases</h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">AI solutions transforming businesses across industries</p>
+         </MotionDiv>
 
-           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {[
-                { icon: Target, title: "AI-First Approach", desc: "We design solutions with AI at the core, ensuring maximum impact rather than superficial integration.", color: "blue" },
-                { icon: Layers, title: "Full-Stack Expertise", desc: "Our team combines AI specialists with software engineers to deliver complete, production-ready solutions.", color: "purple" },
-                { icon: MapPin, title: "Local Understanding", desc: "We understand the unique challenges and opportunities in the Kenyan and East African market context.", color: "emerald" },
-                { icon: Shield, title: "Ethical AI Practices", desc: "We prioritize transparency, fairness, and accountability in all our AI implementations.", color: "red" }
-              ].map((card, idx) => (
-                <MotionDiv
-                   key={idx}
-                   initial={{ opacity: 0, y: 20 }}
-                   whileInView={{ opacity: 1, y: 0 }}
-                   viewport={{ once: true }}
-                   transition={{ delay: idx * 0.1 }}
-                   className="bg-[#0f172a] rounded-2xl p-8 border border-white/5 text-center hover:border-white/10 transition-all hover:-translate-y-1"
-                >
-                   <div className={`w-14 h-14 rounded-full bg-${card.color}-500/10 flex items-center justify-center text-${card.color}-400 mx-auto mb-6`}>
-                      <card.icon size={24} />
-                   </div>
-                   <h3 className="text-lg font-bold text-white mb-3">{card.title}</h3>
-                   <p className="text-slate-400 text-xs leading-relaxed">{card.desc}</p>
-                </MotionDiv>
-              ))}
-           </div>
-        </div>
+         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {[
+              { icon: Activity, title: "Healthcare", desc: "Medical diagnosis, patient monitoring, drug discovery, and personalized treatment plans.", color: "blue" },
+              { icon: ShoppingCart, title: "E-Commerce", desc: "Product recommendations, demand forecasting, dynamic pricing, and customer service automation.", color: "purple" },
+              { icon: Factory, title: "Finance", desc: "Fraud detection, risk assessment, algorithmic trading, and credit scoring.", color: "emerald" },
+              { icon: Factory, title: "Manufacturing", desc: "Predictive maintenance, quality control, supply chain optimization, and process automation.", color: "orange" },
+              { icon: Truck, title: "Transportation", desc: "Route optimization, autonomous vehicles, traffic prediction, and fleet management.", color: "red" },
+              { icon: Megaphone, title: "Marketing", desc: "Customer segmentation, campaign optimization, content generation, and sentiment analysis.", color: "pink" },
+              { icon: GraduationCap, title: "Education", desc: "Personalized learning paths, automated grading, student performance prediction, and adaptive content.", color: "indigo" },
+              { icon: Truck, title: "Logistics", desc: "Supply chain optimization, demand forecasting, warehouse automation, and delivery route planning.", color: "teal" },
+              { icon: Home, title: "Real Estate", desc: "Property valuation, market trend analysis, virtual property tours, and intelligent property matching.", color: "orange" }
+            ].map((useCase, idx) => (
+               <MotionDiv
+                  key={idx}
+                  initial={{ opacity: 0, scale: 0.95 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.05 }}
+                  className="bg-white dark:bg-[#1e293b]/30 p-6 rounded-xl border border-slate-200 dark:border-white/5 hover:bg-slate-50 dark:hover:bg-[#1e293b]/50 transition-all shadow-sm dark:shadow-none"
+               >
+                  <div className={`text-${useCase.color}-500 mb-4`}>
+                     {useCase.title === 'Marketing' ? <Zap size={24} /> : <useCase.icon size={24} />}
+                  </div>
+                  <h3 className="text-slate-900 dark:text-white font-bold mb-2">{useCase.title}</h3>
+                  <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed">{useCase.desc}</p>
+               </MotionDiv>
+            ))}
+         </div>
       </div>
 
-      {/* Testimonials Section */}
-      <div className="py-24 bg-[#020617]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <MotionDiv
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-center mb-16"
-           >
-              <h2 className="text-3xl md:text-4xl font-bold text-white font-display mb-4">
-                 What Our Clients Say
-              </h2>
-              <p className="text-slate-400 text-sm">
-                 Don't just take our word for it - hear from businesses we've transformed with AI
-              </p>
-           </MotionDiv>
+      {/* FAQ */}
+      <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 pb-24">
+         <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-12"
+         >
+            <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">Frequently Asked Questions</h2>
+            <p className="text-slate-600 dark:text-slate-400 text-sm">Get answers to common questions about our AI solutions</p>
+         </MotionDiv>
 
-           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-              {[
-                { name: "James D.", role: "CTO, RetailTech Solutions", quote: "TechSafi's AI recommendation engine transformed our e-commerce platform. Our conversion rates increased by 34% within just three months of implementation.", initial: "JD", color: "blue" },
-                { name: "Sarah M.", role: "Operations Director, HealthPlus", quote: "The AI-powered diagnostic system TechSafi developed has significantly improved our patient outcomes while reducing diagnostic time by over 60%.", initial: "SM", color: "purple" },
-                { name: "Robert K.", role: "CEO, Manufacturing Pro", quote: "TechSafi's predictive maintenance solution has saved us millions in equipment downtime. Their team's expertise in both AI and manufacturing is impressive.", initial: "RK", color: "emerald" }
-              ].map((testimonial, idx) => (
-                <MotionDiv
-                   key={idx}
-                   initial={{ opacity: 0, y: 20 }}
-                   whileInView={{ opacity: 1, y: 0 }}
-                   viewport={{ once: true }}
-                   transition={{ delay: idx * 0.1 }}
-                   className="bg-[#1e293b]/40 rounded-2xl p-8 border border-white/5 relative"
-                >
-                   {/* Quote Icon */}
-                   <div className="absolute top-6 right-6 text-white/5">
-                      <svg width="40" height="40" viewBox="0 0 24 24" fill="currentColor">
-                         <path d="M14.017 21L14.017 18C14.017 16.0547 14.5469 14.3789 15.6074 12.9727C16.668 11.5664 18.2324 10.8633 20.3008 10.8633V6C16.8906 6 14.2812 7.73438 12.4727 11.2031L13.7148 11.9766C13.4336 12.5625 13.293 13.2422 13.293 14.0156C13.293 14.8594 13.5352 15.6328 14.0176 16.3359V21H14.017ZM8.00391 21L8.00391 18C8.00391 16.0547 8.5332 14.3789 9.59375 12.9727C10.6543 11.5664 12.2188 10.8633 14.2871 10.8633V6C10.877 6 8.26758 7.73438 6.45898 11.2031L7.70117 11.9766C7.41992 12.5625 7.2793 13.2422 7.2793 14.0156C7.2793 14.8594 7.52148 15.6328 8.00391 16.3359V21H8.00391ZM3.70703 21L3.70703 18C3.70703 16.0547 4.23633 14.3789 5.29688 12.9727C6.35742 11.5664 7.92188 10.8633 9.99023 10.8633V6C6.58008 6 3.9707 7.73438 2.16211 11.2031L3.4043 11.9766C3.12305 12.5625 2.98242 13.2422 2.98242 14.0156C2.98242 14.8594 3.22461 15.6328 3.70703 16.3359V21H3.70703Z" />
-                      </svg>
-                   </div>
-                   
-                   <div className="flex items-center mb-6">
-                      <div className={`w-12 h-12 rounded-full bg-${testimonial.color}-500 flex items-center justify-center text-white font-bold text-lg mr-4`}>
-                         {testimonial.initial}
-                      </div>
-                      <div>
-                         <div className="text-white font-bold">{testimonial.name}</div>
-                         <div className="text-slate-400 text-xs">{testimonial.role}</div>
-                      </div>
-                   </div>
-                   <p className="text-slate-300 text-sm italic leading-relaxed mb-4">"{testimonial.quote}"</p>
-                   <div className="flex text-yellow-500 gap-1">
-                      {[1, 2, 3, 4, 5].map(i => <Star key={i} size={14} fill="currentColor" />)}
-                   </div>
-                </MotionDiv>
-              ))}
-           </div>
-        </div>
+         <div className="space-y-4">
+            {faqs.map((faq, idx) => (
+               <div key={idx} className="bg-white dark:bg-[#1e293b]/30 border border-slate-200 dark:border-white/5 rounded-xl overflow-hidden shadow-sm dark:shadow-none">
+                  <button 
+                    onClick={() => toggleFaq(idx)}
+                    className="w-full flex items-center justify-between p-5 text-left focus:outline-none hover:bg-slate-50 dark:hover:bg-white/5 transition-colors"
+                  >
+                     <span className="text-slate-900 dark:text-white font-bold text-sm pr-8">{faq.question}</span>
+                     <span className="text-slate-400">
+                        {openFaqIndex === idx ? <ChevronDown size={20} className="rotate-180 transition-transform" /> : <ChevronDown size={20} className="transition-transform" />}
+                     </span>
+                  </button>
+                  <AnimatePresence>
+                     {openFaqIndex === idx && (
+                        <motion.div
+                           initial={{ height: 0, opacity: 0 }}
+                           animate={{ height: 'auto', opacity: 1 }}
+                           exit={{ height: 0, opacity: 0 }}
+                           transition={{ duration: 0.3 }}
+                           className="overflow-hidden"
+                        >
+                           <div className="p-5 pt-0 text-slate-600 dark:text-slate-400 text-xs leading-relaxed border-t border-slate-100 dark:border-white/5 mt-2">
+                              {faq.answer}
+                           </div>
+                        </motion.div>
+                     )}
+                  </AnimatePresence>
+               </div>
+            ))}
+         </div>
       </div>
 
-      {/* Industry Use Cases Section */}
-      <div className="py-24 bg-[#0f172a]">
+      {/* Success Stories */}
+      <div className="py-24 bg-slate-100 dark:bg-[#050b1d] border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv
                initial={{ opacity: 0, y: 20 }}
@@ -574,135 +589,73 @@ export const AiSolutions: React.FC = () => {
                viewport={{ once: true }}
                className="text-center mb-16"
             >
-               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
-                  Industry Use Cases
-               </h2>
-               <p className="text-slate-400 text-sm">
-                  AI solutions transforming businesses across industries
-               </p>
+               <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">AI Success Stories</h2>
+               <p className="text-slate-600 dark:text-slate-400 text-sm">Real-world examples of how our AI solutions have transformed businesses</p>
             </MotionDiv>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                {[
-                 { icon: Activity, title: "Healthcare", desc: "Medical diagnosis, patient monitoring, drug discovery, and personalized treatment plans.", color: "blue" },
-                 { icon: ShoppingCart, title: "E-Commerce", desc: "Product recommendations, demand forecasting, dynamic pricing, and customer service automation.", color: "purple" },
-                 { icon: Wallet, title: "Finance", desc: "Fraud detection, risk assessment, algorithmic trading, and credit scoring.", color: "emerald" },
-                 { icon: Factory, title: "Manufacturing", desc: "Predictive maintenance, quality control, supply chain optimization, and process automation.", color: "orange" },
-                 { icon: Truck, title: "Transportation", desc: "Route optimization, autonomous vehicles, traffic prediction, and fleet management.", color: "red" },
-                 { icon: Search, title: "Marketing", desc: "Customer segmentation, campaign optimization, content generation, and sentiment analysis.", color: "pink" },
-                 { icon: GraduationCap, title: "Education", desc: "Personalized learning paths, automated grading, student performance prediction, and adaptive content.", color: "indigo" },
-                 { icon: Truck, title: "Logistics", desc: "Supply chain optimization, demand forecasting, warehouse automation, and delivery route planning.", color: "teal" },
-                 { icon: Home, title: "Real Estate", desc: "Property valuation, market trend analysis, virtual property tours, and intelligent property matching.", color: "orange" }
-               ].map((useCase, idx) => (
-                 <MotionDiv
-                    key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.05 }}
-                    className="bg-[#020617] p-6 rounded-xl border border-white/5 hover:border-white/10 transition-colors"
-                 >
-                    <div className={`w-10 h-10 rounded-lg bg-${useCase.color}-500/10 flex items-center justify-center text-${useCase.color}-400 mb-4`}>
-                       <useCase.icon size={20} />
-                    </div>
-                    <h3 className="text-white font-bold mb-2">{useCase.title}</h3>
-                    <p className="text-slate-400 text-xs leading-relaxed">{useCase.desc}</p>
-                 </MotionDiv>
+                 { title: "E-commerce Personalization", desc: "Implemented AI-powered recommendation engine for a retail client, increasing conversion rates by 34% and average order value by 22%.", icon: ShoppingCart, color: "blue" },
+                 { title: "Healthcare Diagnostics", desc: "Developed computer vision system for medical imaging analysis, reducing diagnostic time by 65% and improving accuracy by 28%.", icon: Activity, color: "purple" },
+                 { title: "Manufacturing Optimization", desc: "Created predictive maintenance system that reduced equipment downtime by 47% and maintenance costs by 32% for industrial client.", icon: Factory, color: "emerald" }
+               ].map((story, idx) => (
+                  <MotionDiv
+                     key={idx}
+                     initial={{ opacity: 0, y: 20 }}
+                     whileInView={{ opacity: 1, y: 0 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: idx * 0.1 }}
+                     className="bg-white dark:bg-[#1e293b]/40 rounded-2xl p-8 border border-slate-200 dark:border-white/5 hover:border-slate-300 dark:hover:border-white/20 transition-all shadow-lg dark:shadow-none"
+                  >
+                     <div className={`w-12 h-12 rounded-full bg-${story.color}-100 dark:bg-${story.color}-500/20 flex items-center justify-center text-${story.color}-600 dark:text-${story.color}-400 mb-6`}>
+                        <story.icon size={24} />
+                     </div>
+                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-4">{story.title}</h3>
+                     <p className="text-slate-600 dark:text-slate-400 text-xs leading-relaxed mb-6">{story.desc}</p>
+                     <Link to="/portfolio" className={`text-${story.color}-600 dark:text-${story.color}-400 text-xs font-bold flex items-center hover:underline`}>
+                        Read Case Study <ArrowRight size={12} className="ml-1" />
+                     </Link>
+                  </MotionDiv>
                ))}
             </div>
          </div>
       </div>
 
-      {/* FAQ Section */}
-      <div className="py-24 bg-[#020617]">
-         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
-            <MotionDiv
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               className="text-center mb-16"
-            >
-               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-4">
-                  Frequently Asked Questions
-               </h2>
-               <p className="text-slate-400 text-sm">
-                  Get answers to common questions about our AI solutions
-               </p>
-            </MotionDiv>
-
-            <div className="space-y-4">
-               {faqs.map((faq, idx) => (
-                 <MotionDiv
-                    key={idx}
-                    initial={{ opacity: 0, y: 10 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                 >
-                    <div className="bg-[#1e293b]/30 border border-white/5 rounded-xl overflow-hidden">
-                       <button 
-                         onClick={() => toggleFaq(idx)}
-                         className="w-full flex items-center justify-between p-6 text-left focus:outline-none hover:bg-white/5 transition-colors"
-                       >
-                          <span className="text-white font-bold text-sm md:text-base pr-8">{faq.question}</span>
-                          <span className="text-slate-400">
-                             {openFaqIndex === idx ? <Minus size={20} /> : <Plus size={20} />}
-                          </span>
-                       </button>
-                       <AnimatePresence>
-                          {openFaqIndex === idx && (
-                             <motion.div
-                                initial={{ height: 0, opacity: 0 }}
-                                animate={{ height: 'auto', opacity: 1 }}
-                                exit={{ height: 0, opacity: 0 }}
-                                transition={{ duration: 0.3 }}
-                                className="overflow-hidden"
-                             >
-                                <div className="p-6 pt-0 text-slate-400 text-sm leading-relaxed border-t border-white/5 mt-2">
-                                   {faq.answer}
-                                </div>
-                             </motion.div>
-                          )}
-                       </AnimatePresence>
-                    </div>
-                 </MotionDiv>
-               ))}
-            </div>
+      {/* Bottom CTA */}
+      <div className="bg-gradient-to-r from-blue-600 to-purple-600 py-20 text-center relative overflow-hidden">
+         <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-10"></div>
+         <div className="max-w-4xl mx-auto px-4 relative z-10">
+            <h2 className="text-3xl md:text-5xl font-bold text-white mb-6">Ready to Transform Your Business with AI?</h2>
+            <p className="text-blue-100 text-sm md:text-base mb-10 max-w-2xl mx-auto">
+               Let's discuss how our AI solutions can drive innovation and growth for your organization.
+            </p>
+            <Link to="/contact">
+               <Button className="bg-white text-blue-600 hover:bg-gray-100 font-bold px-8 py-4 shadow-xl">
+                  Schedule AI Consultation
+               </Button>
+            </Link>
          </div>
       </div>
 
-      {/* Bottom CTA Banner */}
-      <div className="bg-gradient-to-r from-blue-700 via-indigo-600 to-purple-600 py-24 relative overflow-hidden">
-         <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-10 mix-blend-overlay"></div>
-         <div className="absolute top-0 right-0 w-96 h-96 bg-white/10 blur-[100px] rounded-full translate-x-1/2 -translate-y-1/2"></div>
-         
-         <div className="max-w-5xl mx-auto px-4 text-center relative z-10">
-            <MotionDiv
-               initial={{ opacity: 0, scale: 0.9 }}
-               whileInView={{ opacity: 1, scale: 1 }}
-               viewport={{ once: true }}
-            >
-               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-6">
-                  Ready to Transform Your Business with AI?
-               </h2>
-               <p className="text-blue-100 text-lg md:text-xl font-light mb-10 max-w-3xl mx-auto">
-                  Let's discuss how our AI solutions can drive innovation and growth for your organization.
-               </p>
-               
-               <Link to="/contact">
-                  <button className="bg-white text-blue-700 hover:bg-gray-100 font-bold px-8 py-4 rounded-full shadow-2xl hover:scale-105 transition-all text-base md:text-lg">
-                     Start Your AI Journey
-                  </button>
-               </Link>
-            </MotionDiv>
-         </div>
-         
-         <div className="absolute bottom-4 right-4">
-             <a href="#" className="w-8 h-8 rounded-full bg-white/20 flex items-center justify-center text-white hover:bg-white/40 transition-colors">
-                <ArrowRight size={16} className="-rotate-90" />
-             </a>
-         </div>
-      </div>
     </div>
   );
 };
+
+// Helper component for Marketing Icon
+const Megaphone = ({ size, className }: { size?: number, className?: string }) => (
+  <svg 
+    xmlns="http://www.w3.org/2000/svg" 
+    width={size} 
+    height={size} 
+    viewBox="0 0 24 24" 
+    fill="none" 
+    stroke="currentColor" 
+    strokeWidth="2" 
+    strokeLinecap="round" 
+    strokeLinejoin="round" 
+    className={className}
+  >
+    <path d="m3 11 18-5v12L3 14v-3z"/>
+    <path d="M11.6 16.8a3 3 0 1 1-5.8-1.6"/>
+  </svg>
+);
