@@ -1,18 +1,25 @@
 import React, { useState } from 'react';
-import { motion } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   Users, Globe, Heart, Rocket, Briefcase, GraduationCap, 
   Lightbulb, TrendingUp, Handshake, Trophy, Sprout, 
   ArrowRight, CheckCircle2, Send, Sparkles,
   Wallet, Palmtree, Home, Dumbbell, Baby, Utensils,
-  Info, Bell, CheckSquare, Square
+  Info, Bell, Laptop, FileText, MessageCircle, Phone, 
+  ChevronDown, Plus, Minus, Star, Award
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
+import { Card } from '../components/ui/Card';
 
 export const Careers: React.FC = () => {
   const MotionDiv = motion.div as any;
   const [agreedToNotice, setAgreedToNotice] = useState(false);
+  const [openCompFaq, setOpenCompFaq] = useState<number | null>(null);
+
+  const toggleCompFaq = (index: number) => {
+    setOpenCompFaq(openCompFaq === index ? null : index);
+  };
 
   const cultureValues = [
     {
@@ -122,6 +129,25 @@ export const Careers: React.FC = () => {
       title: "Food & Snacks",
       desc: "Catered lunches, stocked kitchens, and team dinners.",
       color: "indigo"
+    }
+  ];
+
+  const compFaqs = [
+    {
+      question: "How does the commission structure work?",
+      answer: "Our commission structure is transparent and generous. You earn a percentage of the revenue from every client project you secure. This applies to both one-time projects and recurring contracts, providing you with potential for steady income as you build your client portfolio."
+    },
+    {
+      question: "When will fixed salaries be introduced?",
+      answer: "We plan to introduce base salaries once the company reaches specific revenue milestones. Early team members who have demonstrated commitment and results will be prioritized for these salaried positions."
+    },
+    {
+      question: "What other benefits do I get besides commissions?",
+      answer: "Beyond financial rewards, you get invaluable hands-on experience building a startup, mentorship from founders, networking opportunities, and a flexible remote working environment. You also get first dibs on leadership roles as we scale."
+    },
+    {
+      question: "Is this suitable for someone currently unemployed?",
+      answer: "Yes, this role is ideal for skilled individuals who are currently looking for work and want to stay active, build their portfolio, and earn money based on performance while looking for or building towards a permanent role with us."
     }
   ];
 
@@ -520,6 +546,290 @@ export const Careers: React.FC = () => {
                    Or <Link to="/contact" className="text-blue-400 underline">send us a message</Link> describing your skills.
                 </p>
              </MotionDiv>
+         </div>
+      </div>
+
+      {/* Internship & Industrial Attachment Section */}
+      <div className="bg-[#0f172a] py-24 mb-24">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-16"
+            >
+               <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-600 text-white text-[10px] font-bold tracking-widest uppercase mb-6">
+                  <GraduationCap size={12} className="mr-2" /> For Students
+               </div>
+               <h2 className="text-3xl md:text-4xl font-bold text-white mb-4">
+                  Internship & Industrial <span className="text-blue-500">Attachment</span>
+               </h2>
+               <p className="text-slate-400 text-sm max-w-2xl mx-auto">
+                  Launch your tech career with TechSafi! We offer comprehensive internship and industrial attachment programs designed to give students real-world experience in cutting-edge technology projects.
+               </p>
+            </MotionDiv>
+
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+               {[
+                 { title: "Hands-On Experience", icon: Laptop, desc: "Work on real projects alongside experienced developers. Gain practical skills in web development, mobile apps, AI solutions, and cloud technologies.", color: "blue" },
+                 { title: "Mentorship Program", icon: Users, desc: "Get paired with experienced mentors who will guide you through your learning journey and help you develop both technical and professional skills.", color: "purple" },
+                 { title: "Career Development", icon: Award, desc: "Receive certificates, recommendation letters, and potential job offers for outstanding performers. Build your portfolio with real-world projects.", color: "pink" }
+               ].map((item, idx) => (
+                 <MotionDiv
+                    key={idx}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: idx * 0.1 }}
+                    className="bg-[#1e293b]/40 border border-white/5 rounded-xl p-8 hover:border-white/10 transition-all"
+                 >
+                    <div className={`w-12 h-12 rounded-lg bg-${item.color}-500 flex items-center justify-center text-white mb-6 shadow-lg`}>
+                       <item.icon size={24} />
+                    </div>
+                    <h3 className="text-lg font-bold text-white mb-3">{item.title}</h3>
+                    <p className="text-slate-400 text-xs leading-relaxed">{item.desc}</p>
+                 </MotionDiv>
+               ))}
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* Internship Program Card */}
+                <MotionDiv
+                   initial={{ opacity: 0, x: -20 }}
+                   whileInView={{ opacity: 1, x: 0 }}
+                   viewport={{ once: true }}
+                   className="bg-[#1e293b]/40 border border-blue-500/30 rounded-2xl overflow-hidden"
+                >
+                   <div className="bg-blue-600 p-4 flex items-center">
+                      <GraduationCap size={20} className="text-white mr-3" />
+                      <div>
+                         <h3 className="text-white font-bold">Internship Program</h3>
+                         <span className="text-blue-100 text-xs">3-6 Months Duration</span>
+                      </div>
+                   </div>
+                   <div className="p-8">
+                      <h4 className="text-green-400 text-xs font-bold uppercase mb-4 flex items-center">
+                         <CheckCircle2 size={12} className="mr-2" /> What You'll Get:
+                      </h4>
+                      <ul className="space-y-3 mb-8">
+                         {[
+                           "Monthly stipend for your contributions",
+                           "Flexible working hours (part-time/full-time)",
+                           "Remote or hybrid work options",
+                           "Access to learning resources and tools",
+                           "Certificate of completion",
+                           "Potential for full-time employment"
+                         ].map((item, i) => (
+                            <li key={i} className="text-slate-300 text-xs flex items-start">
+                               <span className="text-blue-500 mr-2">›</span> {item}
+                            </li>
+                         ))}
+                      </ul>
+                      <div className="bg-blue-900/20 border border-blue-500/20 rounded-lg p-3 text-[10px] text-blue-200">
+                         <span className="font-bold">Requirements:</span> Currently enrolled in university/college pursuing IT, Computer Science, Software Engineering, or related field.
+                      </div>
+                   </div>
+                </MotionDiv>
+
+                {/* Industrial Attachment Card */}
+                <MotionDiv
+                   initial={{ opacity: 0, x: 20 }}
+                   whileInView={{ opacity: 1, x: 0 }}
+                   viewport={{ once: true }}
+                   className="bg-[#1e293b]/40 border border-purple-500/30 rounded-2xl overflow-hidden"
+                >
+                   <div className="bg-purple-600 p-4 flex items-center">
+                      <Briefcase size={20} className="text-white mr-3" />
+                      <div>
+                         <h3 className="text-white font-bold">Industrial Attachment</h3>
+                         <span className="text-purple-100 text-xs">3-6 Months Duration</span>
+                      </div>
+                   </div>
+                   <div className="p-8">
+                      <h4 className="text-green-400 text-xs font-bold uppercase mb-4 flex items-center">
+                         <CheckCircle2 size={12} className="mr-2" /> What You'll Get:
+                      </h4>
+                      <ul className="space-y-3 mb-8">
+                         {[
+                           "Structured training program",
+                           "Dedicated supervisor and mentor",
+                           "Weekly progress reviews and feedback",
+                           "Official attachment letter for your institution",
+                           "Final assessment report and recommendation",
+                           "Portfolio-worthy project experience"
+                         ].map((item, i) => (
+                            <li key={i} className="text-slate-300 text-xs flex items-start">
+                               <span className="text-purple-500 mr-2">›</span> {item}
+                            </li>
+                         ))}
+                      </ul>
+                      <div className="bg-purple-900/20 border border-purple-500/20 rounded-lg p-3 text-[10px] text-purple-200">
+                         <span className="font-bold">Requirements:</span> Students required to complete industrial attachment as part of their academic program.
+                      </div>
+                   </div>
+                </MotionDiv>
+            </div>
+
+            {/* How to Apply */}
+            <div className="mt-16 bg-[#1e293b]/30 rounded-3xl p-8 md:p-12 border border-white/5">
+                <h3 className="text-2xl font-bold text-white text-center mb-12">How to <span className="text-blue-500">Apply</span></h3>
+                
+                <div className="grid grid-cols-1 md:grid-cols-4 gap-8 relative">
+                   <div className="hidden md:block absolute top-8 left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-blue-500/30 via-purple-500/30 to-green-500/30"></div>
+                   
+                   {[
+                     { step: 1, title: "Prepare Documents", desc: "CV, cover letter, transcripts, and recommendation letter", icon: FileText, color: "blue" },
+                     { step: 2, title: "Submit Application", desc: "Send via email or contact form with subject \"Internship/Attachment\"", icon: Send, color: "purple" },
+                     { step: 3, title: "Interview", desc: "Virtual or in-person interview with our team", icon: MessageCircle, color: "pink" },
+                     { step: 4, title: "Start Learning", desc: "Begin your journey with onboarding and orientation", icon: Rocket, color: "green" }
+                   ].map((item, idx) => (
+                      <div key={idx} className="relative z-10 flex flex-col items-center text-center">
+                         <div className={`w-16 h-16 rounded-full bg-${item.color}-500 flex items-center justify-center text-white font-bold text-xl mb-6 shadow-lg shadow-${item.color}-500/20`}>
+                            {item.step}
+                         </div>
+                         <h4 className="text-white font-bold text-sm mb-2">{item.title}</h4>
+                         <p className="text-slate-400 text-[10px] leading-relaxed">{item.desc}</p>
+                      </div>
+                   ))}
+                </div>
+
+                <div className="flex flex-col sm:flex-row justify-center gap-4 mt-12">
+                   <Link to="/contact">
+                      <Button className="bg-blue-600 hover:bg-blue-700">
+                         <Send size={16} className="mr-2" /> Apply for Internship
+                      </Button>
+                   </Link>
+                   <Link to="/contact">
+                      <Button className="bg-purple-600 hover:bg-purple-700">
+                         <Briefcase size={16} className="mr-2" /> Apply for Attachment
+                      </Button>
+                   </Link>
+                </div>
+                
+                <div className="text-center mt-8 pt-8 border-t border-white/5">
+                   <p className="text-xs text-slate-400">
+                      <span className="text-blue-400 font-bold mr-1">For Inquiries:</span> internships@techsafi.com
+                   </p>
+                   <p className="text-xs text-slate-400 mt-2">
+                      <span className="text-blue-400 font-bold mr-1">Call us:</span> +254 751 380 948 | +254 110 046 523
+                   </p>
+                </div>
+            </div>
+         </div>
+      </div>
+
+      {/* Compensation FAQ */}
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+         <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+         >
+            <h2 className="text-3xl font-bold text-white mb-2">Compensation <span className="text-blue-500">FAQ</span></h2>
+            <div className="h-1 w-16 bg-blue-500 rounded-full mx-auto mb-6"></div>
+            <p className="text-slate-400 text-sm">
+               Common questions about our compensation model and growth opportunities
+            </p>
+         </MotionDiv>
+
+         <div className="space-y-4 mb-12">
+            {compFaqs.map((faq, idx) => (
+               <div key={idx} className="bg-[#1e293b]/30 border border-white/5 rounded-xl overflow-hidden">
+                  <button 
+                    onClick={() => toggleCompFaq(idx)}
+                    className="w-full flex items-center justify-between p-5 text-left focus:outline-none hover:bg-white/5 transition-colors"
+                  >
+                     <span className="text-white font-bold text-sm pr-8">{faq.question}</span>
+                     <span className="text-slate-400">
+                        {openCompFaq === idx ? <ChevronDown size={20} className="rotate-180 transition-transform" /> : <ChevronDown size={20} className="transition-transform" />}
+                     </span>
+                  </button>
+                  <AnimatePresence>
+                     {openCompFaq === idx && (
+                        <motion.div
+                           initial={{ height: 0, opacity: 0 }}
+                           animate={{ height: 'auto', opacity: 1 }}
+                           exit={{ height: 0, opacity: 0 }}
+                           transition={{ duration: 0.3 }}
+                           className="overflow-hidden"
+                        >
+                           <div className="p-5 pt-0 text-slate-400 text-xs leading-relaxed border-t border-white/5 mt-2">
+                              {faq.answer}
+                           </div>
+                        </motion.div>
+                     )}
+                  </AnimatePresence>
+               </div>
+            ))}
+         </div>
+
+         <div className="bg-blue-900/10 border border-blue-500/20 rounded-xl p-6">
+            <div className="flex items-start">
+               <Lightbulb size={20} className="text-blue-400 mt-0.5 mr-3 flex-shrink-0" />
+               <div>
+                  <h4 className="text-white font-bold text-sm mb-2">What makes this opportunity special?</h4>
+                  <p className="text-blue-100/70 text-xs leading-relaxed">
+                     You're not just joining a company—you're helping build one. Early team members will have a significant impact on TechSafi's culture, processes, and success. When we reach profitability, those who were here from the beginning will be rewarded accordingly.
+                  </p>
+               </div>
+            </div>
+         </div>
+      </div>
+
+      {/* Growth Roadmap */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+         <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+         >
+            <h2 className="text-3xl font-bold text-white mb-2">Our Growth <span className="text-purple-500">Roadmap</span></h2>
+            <p className="text-slate-400 text-sm">
+               See where we're heading and how you can be part of our journey
+            </p>
+         </MotionDiv>
+
+         <div className="relative">
+            {/* Timeline Line */}
+            <div className="absolute left-8 md:left-1/2 top-0 bottom-0 w-0.5 bg-gradient-to-b from-blue-500 to-purple-500"></div>
+
+            <div className="space-y-12">
+               {/* Phase 1 */}
+               <div className="flex flex-col md:flex-row items-center relative">
+                  <div className="absolute left-8 md:left-1/2 transform -translate-x-1/2 w-16 h-16 rounded-full bg-blue-600 flex items-center justify-center border-4 border-[#020617] z-10">
+                     <Sprout size={24} className="text-white" />
+                  </div>
+                  
+                  <div className="ml-24 md:ml-0 md:w-1/2 md:pr-12 md:text-right">
+                     <div className="bg-[#1e293b]/40 border border-blue-500/30 p-6 rounded-xl relative">
+                        <div className="absolute top-6 -right-3 w-6 h-6 bg-[#1e293b] border-l border-t border-blue-500/30 transform rotate-45 hidden md:block"></div>
+                        <div className="absolute top-6 -left-3 w-6 h-6 bg-[#1e293b] border-r border-b border-blue-500/30 transform rotate-45 md:hidden"></div>
+                        
+                        <div className="flex items-center md:justify-end mb-2">
+                           <span className="bg-blue-600 text-white text-[10px] font-bold px-2 py-1 rounded mr-2 md:mr-0 md:ml-2">Current Phase</span>
+                           <h3 className="text-white font-bold">Foundation Building</h3>
+                        </div>
+                        <p className="text-slate-400 text-xs mb-4">We're currently here!</p>
+                        <ul className="space-y-2">
+                           {[
+                             "Building client base and brand recognition",
+                             "Commission-based compensation model",
+                             "Establishing core team and culture",
+                             "Developing MVP products and services"
+                           ].map((item, i) => (
+                              <li key={i} className="text-slate-300 text-xs flex items-center md:justify-end">
+                                 <span className="md:order-2">{item}</span>
+                                 <CheckCircle2 size={12} className="text-blue-500 mr-2 md:mr-0 md:ml-2 flex-shrink-0" />
+                              </li>
+                           ))}
+                        </ul>
+                     </div>
+                  </div>
+                  <div className="md:w-1/2"></div>
+               </div>
+            </div>
          </div>
       </div>
 
