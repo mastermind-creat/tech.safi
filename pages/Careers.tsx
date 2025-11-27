@@ -1,15 +1,18 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   Users, Globe, Heart, Rocket, Briefcase, GraduationCap, 
   Lightbulb, TrendingUp, Handshake, Trophy, Sprout, 
-  ArrowRight, CheckCircle2, Send, Sparkles
+  ArrowRight, CheckCircle2, Send, Sparkles,
+  Wallet, Palmtree, Home, Dumbbell, Baby, Utensils,
+  Info, Bell, CheckSquare, Square
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
 export const Careers: React.FC = () => {
   const MotionDiv = motion.div as any;
+  const [agreedToNotice, setAgreedToNotice] = useState(false);
 
   const cultureValues = [
     {
@@ -67,6 +70,57 @@ export const Careers: React.FC = () => {
       icon: Briefcase,
       title: "Real Experience",
       desc: "Build a portfolio with real-world projects. Gain experience that makes you more valuable in the job market, whether you stay with us or move on.",
+      color: "indigo"
+    }
+  ];
+
+  const employeeBenefits = [
+    {
+      icon: Heart,
+      title: "Health & Wellness",
+      desc: "Comprehensive medical, dental, and vision insurance for you and your family.",
+      color: "blue"
+    },
+    {
+      icon: Wallet,
+      title: "Financial Security",
+      desc: "401(k) with company matching and financial planning resources.",
+      color: "yellow"
+    },
+    {
+      icon: Palmtree,
+      title: "Time Off",
+      desc: "Generous paid time off, holidays, and flexible work arrangements.",
+      color: "green"
+    },
+    {
+      icon: Home,
+      title: "Remote Work",
+      desc: "Flexible work-from-home options and co-working space allowances.",
+      color: "purple"
+    },
+    {
+      icon: GraduationCap,
+      title: "Learning & Development",
+      desc: "Annual learning budget and access to online courses and conferences.",
+      color: "blue"
+    },
+    {
+      icon: Dumbbell,
+      title: "Wellness Programs",
+      desc: "Gym memberships, wellness challenges, and mental health support.",
+      color: "red"
+    },
+    {
+      icon: Baby,
+      title: "Family Benefits",
+      desc: "Parental leave, childcare assistance, and family planning support.",
+      color: "pink"
+    },
+    {
+      icon: Utensils,
+      title: "Food & Snacks",
+      desc: "Catered lunches, stocked kitchens, and team dinners.",
       color: "indigo"
     }
   ];
@@ -280,7 +334,7 @@ export const Careers: React.FC = () => {
       </div>
 
       {/* Why Join TechSafi Section */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
          <MotionDiv
             initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
@@ -313,6 +367,159 @@ export const Careers: React.FC = () => {
                   </p>
                </MotionDiv>
             ))}
+         </div>
+      </div>
+
+      {/* Employee Benefits Section */}
+      <div className="bg-[#0f172a] py-24 mb-24">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+             <MotionDiv
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                className="text-center mb-16"
+             >
+                <h2 className="text-3xl font-bold text-white mb-2">Employee <span className="text-indigo-400">Benefits</span></h2>
+                <div className="h-1 w-16 bg-indigo-500 rounded-full mx-auto mb-6"></div>
+                <p className="text-slate-400 text-sm max-w-2xl mx-auto">
+                   We offer competitive benefits to support you and your family's health, wealth, and well-being.
+                </p>
+             </MotionDiv>
+
+             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                 {employeeBenefits.map((benefit, idx) => (
+                    <MotionDiv
+                       key={idx}
+                       initial={{ opacity: 0, scale: 0.95 }}
+                       whileInView={{ opacity: 1, scale: 1 }}
+                       viewport={{ once: true }}
+                       transition={{ delay: idx * 0.05 }}
+                       className="bg-[#1e293b]/40 rounded-2xl p-6 border border-white/5 hover:bg-[#1e293b]/60 transition-all duration-300"
+                    >
+                        <div className={`w-10 h-10 rounded-lg bg-${benefit.color}-500 flex items-center justify-center text-white mb-4 shadow-lg`}>
+                           <benefit.icon size={20} />
+                        </div>
+                        <h3 className="text-white font-bold mb-2 text-sm">{benefit.title}</h3>
+                        <p className="text-slate-400 text-xs leading-relaxed">{benefit.desc}</p>
+                    </MotionDiv>
+                 ))}
+             </div>
+         </div>
+      </div>
+
+      {/* Current Openings Section */}
+      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mb-24">
+         <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="text-center mb-16"
+         >
+            <h2 className="text-3xl font-bold text-white mb-2">Current <span className="text-blue-500">Openings</span></h2>
+            <div className="h-1 w-16 bg-blue-500 rounded-full mx-auto mb-6"></div>
+            <p className="text-slate-400 text-sm">
+               We're always looking for talented individuals to join our team. Check back regularly for new opportunities.
+            </p>
+         </MotionDiv>
+
+         {/* Limited Opening Alert */}
+         <MotionDiv
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            className="bg-[#1e293b]/50 border border-white/10 rounded-2xl p-8 md:p-12 text-center mb-12 relative overflow-hidden"
+         >
+             <div className="relative z-10">
+                <div className="w-16 h-16 rounded-full bg-white/5 flex items-center justify-center mx-auto mb-6">
+                   <Info size={32} className="text-slate-400" />
+                </div>
+                <h3 className="text-xl font-bold text-white mb-4">Limited Openings — Marketing Role Available</h3>
+                <p className="text-slate-400 text-xs md:text-sm leading-relaxed max-w-2xl mx-auto mb-8">
+                   While we don't have broad hiring across every team right now, we are actively recruiting for a Marketing Specialist focused on growth. If you're a marketer interested in supporting our expansion, please <span className="text-blue-400 underline cursor-pointer">go to the Marketing Specialist card below</span> and click Apply — you will need to confirm the Growth Phase Notification before submitting. For general resumes or future consideration, you can still send us your details.
+                </p>
+                <div className="flex flex-col sm:flex-row justify-center gap-4">
+                   <Button className="bg-blue-600 hover:bg-blue-700">
+                      <Briefcase size={16} className="mr-2" /> Go to Marketing Role
+                   </Button>
+                   <Link to="/contact">
+                     <Button variant="outline" className="border-white/10 bg-white text-slate-900 hover:bg-slate-200">
+                        <Send size={16} className="mr-2" /> Send General Resume
+                     </Button>
+                   </Link>
+                </div>
+             </div>
+         </MotionDiv>
+
+         {/* Job Details & Subscription Split */}
+         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+             {/* Marketing Role Card */}
+             <MotionDiv
+                initial={{ opacity: 0, x: -20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-[#1e293b]/40 border border-white/5 rounded-2xl p-8"
+             >
+                <h3 className="text-lg font-bold text-white mb-4">Marketing Specialist — Growth</h3>
+                <p className="text-slate-400 text-xs mb-6 leading-relaxed">
+                   We're inviting experienced growth marketers to support our expansion. Due to our ongoing growth phase, you must read and comply with the <span className="text-blue-400 underline cursor-pointer">Growth Phase Notification</span> before applying.
+                </p>
+                <div className="space-y-3 mb-6">
+                   {[
+                     "3+ years in growth or performance marketing",
+                     "Hands-on experience with acquisition funnels and analytics",
+                     "Comfortable in fast-moving, startup-like environments"
+                   ].map((req, i) => (
+                      <div key={i} className="flex items-start">
+                         <CheckCircle2 size={14} className="text-blue-500 mt-0.5 mr-2 flex-shrink-0" />
+                         <span className="text-slate-300 text-xs">{req}</span>
+                      </div>
+                   ))}
+                </div>
+                
+                <div className="bg-[#0f172a] rounded-lg p-3 mb-6 flex items-start cursor-pointer" onClick={() => setAgreedToNotice(!agreedToNotice)}>
+                   <div className={`w-4 h-4 rounded border mt-0.5 mr-3 flex items-center justify-center transition-colors ${agreedToNotice ? 'bg-blue-500 border-blue-500' : 'border-slate-500'}`}>
+                      {agreedToNotice && <CheckCircle2 size={12} className="text-white" />}
+                   </div>
+                   <span className="text-xs text-slate-400 select-none">
+                      I confirm I've read and accept the <span className="text-blue-400 underline">Growth Phase Notification</span>.
+                   </span>
+                </div>
+
+                <Button 
+                   className={`w-full ${agreedToNotice ? 'bg-blue-600 hover:bg-blue-700' : 'bg-slate-700 cursor-not-allowed opacity-50'}`}
+                   disabled={!agreedToNotice}
+                >
+                   <Send size={16} className="mr-2" /> Apply via Contact Form
+                </Button>
+                <p className="text-[10px] text-slate-500 mt-3 text-center">Only apply if you're genuinely interested and meet the Growth Phase requirements.</p>
+             </MotionDiv>
+
+             {/* Stay Updated Card */}
+             <MotionDiv
+                initial={{ opacity: 0, x: 20 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true }}
+                className="bg-[#1e293b]/40 border border-white/5 rounded-2xl p-8 flex flex-col justify-center"
+             >
+                <h3 className="text-lg font-bold text-white mb-2">Stay Updated</h3>
+                <p className="text-slate-400 text-xs mb-6">
+                   Want to be the first to know about new openings or share general interest?
+                </p>
+                
+                <input 
+                   type="email" 
+                   placeholder="Enter your email" 
+                   className="w-full bg-[#0f172a] border border-white/10 rounded-lg px-4 py-3 text-white text-sm placeholder-slate-600 focus:outline-none focus:border-blue-500 transition-all mb-4"
+                />
+                
+                <Button className="w-full bg-blue-600 hover:bg-blue-700 mb-4">
+                   Notify Me About New Jobs
+                </Button>
+                
+                <p className="text-xs text-slate-500 text-center">
+                   Or <Link to="/contact" className="text-blue-400 underline">send us a message</Link> describing your skills.
+                </p>
+             </MotionDiv>
          </div>
       </div>
 
