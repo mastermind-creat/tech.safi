@@ -1,51 +1,129 @@
 
 import React, { useState, useEffect, useRef } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence, animate, useMotionValue, useSpring } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence, useMotionValue, useSpring, useMotionTemplate, animate } from 'framer-motion';
 import { 
   ArrowRight, Brain, Shield, 
   Clock, Server, Globe, Smartphone, 
   Code2, Rocket, Bot, 
   Layout, Cloud, ChevronRight, Star, ChevronLeft, Quote,
   Check, Zap, Database, CreditCard, Lock, Monitor, Laptop, Repeat,
-  ShoppingCart, MessageSquare, Home as HomeIcon, Layers, Eye, Activity, Search
+  ShoppingCart, MessageSquare, Home as HomeIcon, Search, Terminal,
+  Activity, Layers, BarChart3, Wifi
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Typewriter } from '../components/ui/Typewriter';
 import { PROJECTS } from '../constants';
 
-// --- ANIMATION VARIANTS ---
-const fadeInUp = {
-  hidden: { opacity: 0, y: 60 },
-  visible: { 
-    opacity: 1, 
-    y: 0,
-    transition: { duration: 0.8, ease: [0.22, 1, 0.36, 1] }
-  }
-};
+// --- ANIMATION COMPONENTS ---
 
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-      delayChildren: 0.1
+// 1. Star Field Background
+const StarField = () => {
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+
+  useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let width = window.innerWidth;
+    let height = window.innerHeight;
+    canvas.width = width;
+    canvas.height = height;
+
+    const stars: { x: number; y: number; z: number; size: number }[] = [];
+    const numStars = 200;
+    const speed = 0.5;
+
+    for (let i = 0; i < numStars; i++) {
+      stars.push({
+        x: Math.random() * width - width / 2,
+        y: Math.random() * height - height / 2,
+        z: Math.random() * width,
+        size: Math.random() * 2
+      });
     }
-  }
+
+    const animate = () => {
+      ctx.fillStyle = '#00000000'; // Transparent clear
+      ctx.clearRect(0, 0, width, height);
+      
+      // Update and draw stars
+      ctx.fillStyle = '#ffffff';
+      stars.forEach(star => {
+        star.z -= speed;
+        if (star.z <= 0) {
+          star.z = width;
+          star.x = Math.random() * width - width / 2;
+          star.y = Math.random() * height - height / 2;
+        }
+
+        const x = (star.x / star.z) * width + width / 2;
+        const y = (star.y / star.z) * height + height / 2;
+        const s = (1 - star.z / width) * star.size * 2;
+
+        if (x >= 0 && x <= width && y >= 0 && y <= height) {
+          ctx.globalAlpha = 1 - star.z / width;
+          ctx.beginPath();
+          ctx.arc(x, y, s, 0, Math.PI * 2);
+          ctx.fill();
+        }
+      });
+
+      requestAnimationFrame(animate);
+    };
+
+    animate();
+
+    const handleResize = () => {
+      width = window.innerWidth;
+      height = window.innerHeight;
+      canvas.width = width;
+      canvas.height = height;
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return <canvas ref={canvasRef} className="absolute inset-0 z-0 opacity-40 pointer-events-none" />;
 };
 
-const scaleIn = {
-  hidden: { opacity: 0, scale: 0.8 },
-  visible: { 
-    opacity: 1, 
-    scale: 1,
-    transition: { duration: 0.6, ease: "backOut" }
+// 2. Magic Card (Spotlight Effect)
+const MagicCard: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className = "" }) => {
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  function handleMouseMove({ currentTarget, clientX, clientY }: React.MouseEvent) {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
   }
+
+  return (
+    <div 
+      className={`group relative border border-slate-200 dark:border-white/10 overflow-hidden rounded-xl bg-white dark:bg-[#0f172a] ${className}`}
+      onMouseMove={handleMouseMove}
+    >
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-xl opacity-0 transition duration-300 group-hover:opacity-100"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              rgba(59, 130, 246, 0.15),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      <div className="relative h-full">{children}</div>
+    </div>
+  );
 };
 
-// --- COMPONENTS ---
-
+// 3. Counter
 const Counter = ({ value }: { value: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
   
@@ -61,7 +139,7 @@ const Counter = ({ value }: { value: number }) => {
   return <>{displayValue.toLocaleString()}</>;
 };
 
-// 3D Tilt Card Component
+// 4. Tilt Card
 const TiltCard: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -119,8 +197,6 @@ const TiltCard: React.FC<{ children: React.ReactNode, className?: string }> = ({
 export const Home: React.FC = () => {
   const navigate = useNavigate();
   const { scrollY } = useScroll();
-  const y1 = useTransform(scrollY, [0, 500], [0, 200]);
-  const y2 = useTransform(scrollY, [0, 500], [0, -150]);
   const [greeting, setGreeting] = useState('');
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
 
@@ -130,7 +206,6 @@ export const Home: React.FC = () => {
   const [urgency, setUrgency] = useState<'standard' | 'fast' | 'rush'>('standard');
 
   const MotionDiv = motion.div as any;
-  const MotionButton = motion.button as any;
 
   useEffect(() => {
     const hour = new Date().getHours();
@@ -206,18 +281,13 @@ I'd like to discuss this project further.`;
       {/* --- HERO SECTION --- */}
       <section className="relative min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-20 overflow-hidden">
           
-          {/* Animated Background Mesh */}
+          {/* Star Field Background */}
+          <StarField />
+          
+          {/* Dynamic Gradient Blobs */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none">
-             <div className="absolute top-[-50%] left-[-50%] w-[200%] h-[200%] bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-blue-500/10 via-transparent to-transparent animate-pulse-slow"></div>
-             <MotionDiv 
-               style={{ y: y1, x: -100 }}
-               className="absolute top-[10%] left-[20%] w-[500px] h-[500px] bg-cyan-400/20 dark:bg-cyan-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen"
-             />
-             <MotionDiv 
-               style={{ y: y2, x: 100 }}
-               className="absolute bottom-[10%] right-[20%] w-[600px] h-[600px] bg-purple-400/20 dark:bg-purple-600/20 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen"
-             />
-             <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/cubes.png')] opacity-[0.05] dark:opacity-[0.03]"></div>
+             <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-purple-500/20 dark:bg-purple-600/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow"></div>
+             <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-cyan-500/20 dark:bg-cyan-600/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow"></div>
           </div>
 
           <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
@@ -226,9 +296,9 @@ I'd like to discuss this project further.`;
                initial={{ opacity: 0, y: -20 }} 
                animate={{ opacity: 1, y: 0 }} 
                transition={{ duration: 0.6 }}
-               className="inline-flex items-center px-4 py-2 rounded-full bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm dark:shadow-lg group cursor-default"
+               className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm dark:shadow-lg group cursor-default hover:border-cyan-500/30 transition-colors"
              >
-               <span className="mr-2 text-lg">👋</span>
+               <span className="mr-2 text-lg animate-wave">👋</span>
                <span className="text-sm font-medium tracking-wide text-slate-700 dark:text-cyan-100">
                  {greeting}, welcome to TechSafi
                </span>
@@ -240,11 +310,11 @@ I'd like to discuss this project further.`;
                animate={{ opacity: 1, scale: 1 }} 
                transition={{ duration: 0.8, delay: 0.1 }}
              >
-                <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-display text-slate-900 dark:text-white leading-[1.1] tracking-tight">
+                <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold font-display text-slate-900 dark:text-white leading-[1.1] tracking-tight drop-shadow-xl">
                   Building Intelligent <br className="hidden md:block" />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-500 dark:to-purple-600">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-500 dark:to-purple-500">
                     <Typewriter 
-                      words={['Digital Solutions', 'AI Systems', 'Future Tech']} 
+                      words={['Digital Solutions', 'AI Ecosystems', 'Future Tech']} 
                       cursorClassName="text-cyan-500"
                       typingSpeed={80}
                       deletingSpeed={50}
@@ -261,7 +331,7 @@ I'd like to discuss this project further.`;
                transition={{ duration: 0.8, delay: 0.2 }}
                className="max-w-2xl mx-auto"
              >
-                <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 font-light leading-relaxed">
+                <p className="text-lg md:text-2xl text-slate-600 dark:text-slate-400 font-light leading-relaxed">
                    Empowering businesses with AI-enhanced software, custom mobile apps, and intelligent automation tailored for the modern digital era.
                 </p>
              </MotionDiv>
@@ -271,38 +341,38 @@ I'd like to discuss this project further.`;
                initial={{ opacity: 0, y: 20 }}
                animate={{ opacity: 1, y: 0 }}
                transition={{ duration: 0.8, delay: 0.3 }}
-               className="flex flex-col sm:flex-row items-center justify-center gap-4 pt-4"
+               className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8"
              >
                 <Link to="/contact" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-500 hover:to-blue-500 shadow-lg shadow-cyan-500/20 border-0 text-white font-bold py-4 px-8 text-lg rounded-xl transform hover:-translate-y-1 transition-transform duration-300">
+                  <Button size="lg" className="w-full sm:w-auto bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200 border-0 font-bold py-4 px-10 text-lg rounded-full shadow-[0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all transform hover:scale-105">
                     Start Your Project
                   </Button>
                 </Link>
                 <Link to="/services" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto border-slate-300 dark:border-white/10 text-slate-700 dark:text-white hover:bg-slate-100 dark:hover:bg-white/5 hover:border-slate-400 dark:hover:border-white/30 backdrop-blur-md py-4 px-8 text-lg rounded-xl group">
-                    Explore Services <ArrowRight className="ml-2 w-5 h-5 group-hover:translate-x-1 transition-transform" />
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto border-slate-300 dark:border-white/20 text-slate-700 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium py-4 px-10 text-lg rounded-full backdrop-blur-md">
+                    Explore Services <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
              </MotionDiv>
           </div>
 
-          {/* Floating Elements / Stats */}
+          {/* Floating Stats */}
           <MotionDiv 
              initial={{ opacity: 0, y: 40 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.8, delay: 0.5 }}
              className="absolute bottom-10 left-0 right-0 hidden md:flex justify-center"
           >
-             <div className="flex divide-x divide-slate-200 dark:divide-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl px-8 py-4 shadow-xl dark:shadow-2xl">
+             <div className="flex divide-x divide-slate-200 dark:divide-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl px-10 py-5 shadow-2xl">
                {[
                  { label: "Projects Delivered", value: "50+" },
                  { label: "Client Satisfaction", value: "98%" },
                  { label: "Years Innovation", value: "5+" },
                  { label: "Countries Served", value: "3+" }
                ].map((stat, i) => (
-                 <div key={i} className="px-8 text-center">
-                   <div className="text-2xl font-bold text-slate-800 dark:text-white mb-1">{stat.value}</div>
-                   <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-medium">{stat.label}</div>
+                 <div key={i} className="px-10 text-center">
+                   <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stat.value}</div>
+                   <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold">{stat.label}</div>
                  </div>
                ))}
              </div>
@@ -310,12 +380,12 @@ I'd like to discuss this project further.`;
       </section>
 
       {/* --- INFINITE CLIENT MARQUEE --- */}
-      <section className="py-10 bg-white dark:bg-[#050b1d] border-b border-slate-200 dark:border-white/5 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
-           <p className="text-center text-sm font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Trusted By Industry Leaders</p>
+      <section className="py-12 bg-white dark:bg-[#050b1d] border-b border-slate-200 dark:border-white/5 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-8">
+           <p className="text-center text-xs font-bold uppercase tracking-[0.2em] text-slate-400 dark:text-slate-500">Trusted By Industry Leaders</p>
         </div>
         <div className="relative flex overflow-x-hidden group">
-           <div className="animate-marquee whitespace-nowrap flex items-center space-x-16 hover:[animation-play-state:paused]">
+           <div className="animate-marquee whitespace-nowrap flex items-center space-x-20">
               {[...Array(2)].map((_, i) => (
                  <React.Fragment key={i}>
                     {[
@@ -328,8 +398,8 @@ I'd like to discuss this project further.`;
                       { name: "Uber", icon: Smartphone },
                       { name: "Netflix", icon: Repeat }
                     ].map((brand, idx) => (
-                       <div key={idx} className="flex items-center space-x-2 text-slate-400 dark:text-slate-600 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer mx-8">
-                          <brand.icon size={28} />
+                       <div key={idx} className="flex items-center space-x-3 text-slate-400 dark:text-slate-600 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer opacity-70 hover:opacity-100">
+                          <brand.icon size={24} />
                           <span className="text-xl font-bold font-display">{brand.name}</span>
                        </div>
                     ))}
@@ -338,7 +408,7 @@ I'd like to discuss this project further.`;
            </div>
            
            {/* Clone for seamless loop */}
-           <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex items-center space-x-16 hover:[animation-play-state:paused]">
+           <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex items-center space-x-20">
               {[...Array(2)].map((_, i) => (
                  <React.Fragment key={i}>
                     {[
@@ -351,8 +421,8 @@ I'd like to discuss this project further.`;
                       { name: "Uber", icon: Smartphone },
                       { name: "Netflix", icon: Repeat }
                     ].map((brand, idx) => (
-                       <div key={idx} className="flex items-center space-x-2 text-slate-400 dark:text-slate-600 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer mx-8">
-                          <brand.icon size={28} />
+                       <div key={idx} className="flex items-center space-x-3 text-slate-400 dark:text-slate-600 hover:text-slate-900 dark:hover:text-white transition-colors cursor-pointer opacity-70 hover:opacity-100">
+                          <brand.icon size={24} />
                           <span className="text-xl font-bold font-display">{brand.name}</span>
                        </div>
                     ))}
@@ -361,8 +431,8 @@ I'd like to discuss this project further.`;
            </div>
            
            {/* Fade Masks */}
-           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white dark:from-[#050b1d] to-transparent pointer-events-none"></div>
-           <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white dark:from-[#050b1d] to-transparent pointer-events-none"></div>
+           <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-white dark:from-[#050b1d] to-transparent pointer-events-none"></div>
+           <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-white dark:from-[#050b1d] to-transparent pointer-events-none"></div>
         </div>
         <style>{`
           @keyframes marquee {
@@ -374,10 +444,10 @@ I'd like to discuss this project further.`;
             100% { transform: translateX(0); }
           }
           .animate-marquee {
-            animation: marquee 40s linear infinite;
+            animation: marquee 60s linear infinite;
           }
           .animate-marquee2 {
-            animation: marquee2 40s linear infinite;
+            animation: marquee2 60s linear infinite;
           }
         `}</style>
       </section>
@@ -386,11 +456,10 @@ I'd like to discuss this project further.`;
       <section className="py-24 relative z-10 bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
            <MotionDiv 
-             variants={fadeInUp}
-             initial="hidden"
-             whileInView="visible"
-             viewport={{ once: true, margin: "-100px" }}
-             className="text-center mb-16"
+             initial={{ opacity: 0, y: 30 }}
+             whileInView={{ opacity: 1, y: 0 }}
+             viewport={{ once: true }}
+             className="text-center mb-20"
            >
               <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-6">
                  Intelligent <span className="text-cyan-500 dark:text-cyan-400">Services</span>
@@ -400,13 +469,7 @@ I'd like to discuss this project further.`;
               </p>
            </MotionDiv>
 
-           <MotionDiv 
-             variants={staggerContainer}
-             initial="hidden"
-             whileInView="visible"
-             viewport={{ once: true, margin: "-50px" }}
-             className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
-           >
+           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {[
                 { icon: Globe, title: "Web Development", desc: "High-performance websites and web apps built with React and Modern Tech.", color: "cyan" },
                 { icon: Smartphone, title: "Mobile Apps", desc: "Native iOS and Android applications designed for optimal user experience.", color: "purple" },
@@ -415,45 +478,44 @@ I'd like to discuss this project further.`;
                 { icon: Shield, title: "Cybersecurity", desc: "Enterprise-grade security audits and protection for your digital assets.", color: "red" },
                 { icon: Layout, title: "UI/UX Design", desc: "User-centric interfaces that are beautiful, intuitive, and conversion-focused.", color: "pink" }
               ].map((service, idx) => (
-                <MotionDiv 
+                <MotionDiv
                   key={idx}
-                  variants={fadeInUp}
-                  className="group relative p-8 bg-white dark:bg-[#0f172a]/60 border border-slate-200 dark:border-white/5 rounded-2xl hover:border-blue-500/30 dark:hover:bg-[#1e293b]/80 dark:hover:border-white/10 transition-all duration-300 hover:-translate-y-2 overflow-hidden shadow-lg dark:shadow-none"
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: idx * 0.1 }}
                 >
-                   <div className={`absolute inset-0 bg-gradient-to-br from-${service.color}-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
-                   
-                   <div className={`w-14 h-14 rounded-xl bg-${service.color}-100 dark:bg-${service.color}-500/10 flex items-center justify-center text-${service.color}-600 dark:text-${service.color}-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-${service.color}-200 dark:border-${service.color}-500/20`}>
-                      <MotionDiv
-                        animate={{ y: [0, -3, 0] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut", delay: idx * 0.2 }}
-                        whileHover={{ rotate: 360, scale: 1.1 }}
-                      >
+                  <div className="group relative h-full p-8 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 rounded-3xl hover:border-slate-300 dark:hover:border-white/20 transition-all duration-300 hover:-translate-y-1 shadow-lg dark:shadow-none overflow-hidden">
+                     {/* Hover Gradient */}
+                     <div className={`absolute inset-0 bg-gradient-to-br from-${service.color}-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
+                     
+                     <div className={`w-14 h-14 rounded-2xl bg-${service.color}-50 dark:bg-${service.color}-500/10 flex items-center justify-center text-${service.color}-600 dark:text-${service.color}-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-${service.color}-100 dark:border-${service.color}-500/20`}>
                         <service.icon size={28} />
-                      </MotionDiv>
-                   </div>
-                   
-                   <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 relative z-10">{service.title}</h3>
-                   <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 relative z-10">
-                      {service.desc}
-                   </p>
-                   
-                   <Link to="/services" className={`inline-flex items-center text-xs font-bold uppercase tracking-wider text-${service.color}-600 dark:text-${service.color}-400 hover:text-${service.color}-500 dark:hover:text-${service.color}-300 relative z-10 group-hover:translate-x-1 transition-transform`}>
-                      Learn More <ChevronRight size={14} className="ml-1" />
-                   </Link>
+                     </div>
+                     
+                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 relative z-10">{service.title}</h3>
+                     <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 relative z-10">
+                        {service.desc}
+                     </p>
+                     
+                     <Link to="/services" className={`inline-flex items-center text-xs font-bold uppercase tracking-wider text-${service.color}-600 dark:text-${service.color}-400 hover:text-${service.color}-700 dark:hover:text-${service.color}-300 relative z-10 group-hover:translate-x-1 transition-transform`}>
+                        Learn More <ChevronRight size={14} className="ml-1" />
+                     </Link>
+                  </div>
                 </MotionDiv>
               ))}
-           </MotionDiv>
+           </div>
         </div>
       </section>
 
-      {/* --- WORKFLOW PULSE (NEW) --- */}
-      <section className="py-12 bg-slate-100 dark:bg-[#0a0f1d] border-y border-slate-200 dark:border-white/5 overflow-hidden">
+      {/* --- WORKFLOW PULSE --- */}
+      <section className="py-16 bg-slate-100 dark:bg-[#0a0f1d] border-y border-slate-200 dark:border-white/5 overflow-hidden">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative">
                {/* Line */}
                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-300 dark:bg-white/10 -translate-y-1/2"></div>
                {/* Pulse */}
-               <div className="absolute top-1/2 left-0 w-24 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent -translate-y-1/2 animate-[pulseMove_3s_linear_infinite]"></div>
+               <div className="absolute top-1/2 left-0 w-48 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent -translate-y-1/2 animate-[pulseMove_4s_linear_infinite]"></div>
                
                <div className="grid grid-cols-3 relative z-10">
                   {[
@@ -462,12 +524,12 @@ I'd like to discuss this project further.`;
                     { step: "03", title: "Launch", icon: Rocket }
                   ].map((s, i) => (
                      <div key={i} className="flex flex-col items-center text-center group">
-                        <div className="w-12 h-12 rounded-full bg-slate-50 dark:bg-[#0f172a] border-4 border-slate-200 dark:border-[#1e293b] flex items-center justify-center text-slate-400 dark:text-slate-500 group-hover:border-blue-500 group-hover:text-blue-500 transition-all duration-500 z-10">
-                           <s.icon size={20} />
+                        <div className="w-16 h-16 rounded-full bg-slate-50 dark:bg-[#0f172a] border-4 border-slate-200 dark:border-[#1e293b] flex items-center justify-center text-slate-400 dark:text-slate-500 group-hover:border-blue-500 group-hover:text-blue-500 transition-all duration-500 z-10 shadow-lg">
+                           <s.icon size={24} />
                         </div>
-                        <div className="mt-4 opacity-50 group-hover:opacity-100 transition-opacity duration-500">
-                           <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{s.step}</div>
-                           <div className="text-sm font-bold text-slate-900 dark:text-white">{s.title}</div>
+                        <div className="mt-6 opacity-60 group-hover:opacity-100 transition-opacity duration-500">
+                           <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400 mb-1">{s.step}</div>
+                           <div className="text-lg font-bold text-slate-900 dark:text-white">{s.title}</div>
                         </div>
                      </div>
                   ))}
@@ -476,169 +538,138 @@ I'd like to discuss this project further.`;
          </div>
          <style>{`
             @keyframes pulseMove {
-               0% { left: 0%; opacity: 0; }
+               0% { left: -10%; opacity: 0; }
                20% { opacity: 1; }
                80% { opacity: 1; }
-               100% { left: 100%; opacity: 0; }
+               100% { left: 110%; opacity: 0; }
             }
          `}</style>
       </section>
 
-      {/* --- THE ORBITAL CORE (REPLACES ABOUT MINI-SECTION) --- */}
+      {/* --- INNOVATION BENTO GRID (REPLACES ORBITAL CORE) --- */}
       <section className="py-32 bg-white dark:bg-[#050b1d] overflow-hidden transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
-               <MotionDiv 
-                 initial={{ opacity: 0, x: -30 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 0.8 }}
-               >
-                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold tracking-widest uppercase mb-6">
-                     Our Ecosystem
-                  </div>
-                  <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-6 leading-tight">
-                     Innovation Driven by <br />
-                     <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500 dark:from-purple-400 dark:to-pink-500">Purpose & Passion</span>
-                  </h2>
-                  <div className="space-y-6 text-slate-600 dark:text-slate-400 text-lg leading-relaxed">
-                     <p>
-                        TechSafi isn't just a software company; we are a collective of visionaries, engineers, and creatives dedicated to reshaping the digital landscape of Africa.
-                     </p>
-                     <p>
-                        We operate at the intersection of creativity and technology, building a connected ecosystem of services that propels businesses forward.
-                     </p>
-                  </div>
-                  <div className="mt-10">
-                     <Link to="/company">
-                        <Button className="bg-slate-900 dark:bg-white text-white dark:text-purple-900 hover:bg-slate-800 dark:hover:bg-slate-100 font-bold px-8 py-3 rounded-lg shadow-lg hover:shadow-xl transition-shadow">
-                           Discover Our Story
-                        </Button>
-                     </Link>
-                  </div>
-               </MotionDiv>
+            <MotionDiv 
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-20"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
+                  Innovation at the <span className="text-purple-600 dark:text-purple-500">Core</span>
+               </h2>
+               <p className="text-slate-600 dark:text-slate-400 text-lg max-w-2xl mx-auto">
+                  Our ecosystem is built on pillars of speed, security, intelligence, and scalability.
+               </p>
+            </MotionDiv>
 
-               {/* 3D ORBITAL VISUALIZATION */}
-               <MotionDiv
-                 initial={{ opacity: 0, scale: 0.8 }}
-                 whileInView={{ opacity: 1, scale: 1 }}
-                 viewport={{ once: true }}
-                 transition={{ duration: 1 }}
-                 className="relative h-[400px] w-full flex items-center justify-center perspective-1000"
-               >
-                  {/* Central Core */}
-                  <div className="relative z-20 w-32 h-32 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-[0_0_60px_rgba(124,58,237,0.5)] animate-pulse-slow">
-                     <div className="text-white font-bold text-xl font-display tracking-tight">Tech<span className="text-cyan-200">Safi</span></div>
-                     <div className="absolute inset-0 border-4 border-white/20 rounded-full animate-ping opacity-20"></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-6 h-auto md:h-[600px]">
+               {/* 1. AI Integration (Large Block) */}
+               <MagicCard className="md:col-span-2 md:row-span-1 p-8 flex flex-col md:flex-row items-center justify-between group">
+                  <div className="md:w-1/2 z-10">
+                     <div className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-500/20 text-purple-600 dark:text-purple-300 text-xs font-bold uppercase tracking-wider mb-4">
+                        <Brain size={12} className="mr-2" /> Artificial Intelligence
+                     </div>
+                     <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Neural Processing</h3>
+                     <p className="text-slate-600 dark:text-slate-400 text-sm">Our solutions embed advanced AI models to predict, automate, and optimize your business logic in real-time.</p>
                   </div>
+                  <div className="md:w-1/2 flex items-center justify-center mt-8 md:mt-0 relative">
+                     {/* Pulse Animation */}
+                     <div className="relative w-32 h-32 bg-purple-600 rounded-full flex items-center justify-center animate-pulse-slow">
+                        <Brain size={48} className="text-white" />
+                        <div className="absolute inset-0 border-2 border-white/20 rounded-full animate-ping"></div>
+                     </div>
+                  </div>
+               </MagicCard>
 
-                  {/* Inner Ring */}
-                  <MotionDiv 
-                     animate={{ rotate: 360 }}
-                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
-                     className="absolute w-[280px] h-[280px] rounded-full border border-dashed border-slate-300 dark:border-white/10 z-10"
-                  >
-                     {[
-                       { icon: Code2, bg: "bg-blue-500", deg: 0 },
-                       { icon: Brain, bg: "bg-purple-500", deg: 120 },
-                       { icon: Cloud, bg: "bg-cyan-500", deg: 240 }
-                     ].map((item, i) => (
-                        <div 
-                           key={i}
-                           className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white dark:bg-[#0f172a] shadow-lg flex items-center justify-center border border-slate-200 dark:border-white/20"
-                           style={{ transform: `rotate(${item.deg}deg) translateY(-140px) rotate(-${item.deg}deg)` }} // Counter-rotate to keep icon upright
-                        >
-                           <MotionDiv animate={{ rotate: -360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}>
-                              <item.icon size={18} className={`text-${item.bg.replace('bg-', '')}`} />
-                           </MotionDiv>
-                        </div>
-                     ))}
-                  </MotionDiv>
+               {/* 2. Global Scale (Tall Block) */}
+               <MagicCard className="md:col-span-1 md:row-span-2 p-8 flex flex-col relative overflow-hidden">
+                  <div className="z-10">
+                     <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-6">
+                        <Globe size={24} />
+                     </div>
+                     <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Global Scale</h3>
+                     <p className="text-slate-600 dark:text-slate-400 text-sm mb-8">Deploy anywhere with our edge-optimized architecture. Low latency, high availability.</p>
+                  </div>
+                  {/* Simulated Map Dots */}
+                  <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')] bg-cover opacity-10 dark:opacity-20 bg-center"></div>
+                  <div className="absolute bottom-10 left-10 w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
+                  <div className="absolute bottom-20 right-20 w-2 h-2 bg-purple-500 rounded-full animate-ping delay-700"></div>
+                  <div className="absolute bottom-32 left-1/2 w-2 h-2 bg-cyan-500 rounded-full animate-ping delay-300"></div>
+               </MagicCard>
 
-                  {/* Outer Ring */}
-                  <MotionDiv 
-                     animate={{ rotate: -360 }}
-                     transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
-                     className="absolute w-[450px] h-[450px] rounded-full border border-slate-200 dark:border-white/5 z-0"
-                  >
-                     {[
-                        { icon: Smartphone, color: "text-pink-500", deg: 45 },
-                        { icon: Shield, color: "text-emerald-500", deg: 135 },
-                        { icon: Globe, color: "text-orange-500", deg: 225 },
-                        { icon: Database, color: "text-indigo-500", deg: 315 }
-                     ].map((item, i) => (
-                        <div 
-                           key={i}
-                           className="absolute top-1/2 left-1/2 w-12 h-12 rounded-xl bg-white/80 dark:bg-[#1e293b]/80 backdrop-blur-md shadow-lg flex items-center justify-center border border-slate-200 dark:border-white/10"
-                           style={{ 
-                              transform: `translate(-50%, -50%) rotate(${item.deg}deg) translateY(-225px) rotate(-${item.deg}deg)` 
-                           }}
-                        >
-                           <MotionDiv animate={{ rotate: 360 }} transition={{ duration: 35, repeat: Infinity, ease: "linear" }}>
-                              <item.icon size={20} className={item.color} />
-                           </MotionDiv>
-                        </div>
-                     ))}
-                  </MotionDiv>
-               </MotionDiv>
+               {/* 3. Security (Small Block) */}
+               <MagicCard className="md:col-span-1 md:row-span-1 p-8 flex flex-col justify-center">
+                  <div className="flex items-center justify-between mb-4">
+                     <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
+                        <Shield size={24} />
+                     </div>
+                     <div className="text-emerald-500 text-xs font-bold uppercase animate-pulse">Secure</div>
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Bank-Grade Security</h3>
+                  <div className="mt-4 h-2 w-full bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
+                     <div className="h-full bg-emerald-500 w-[90%] animate-[width_2s_ease-in-out_infinite]"></div>
+                  </div>
+               </MagicCard>
+
+               {/* 4. Real-time Sync (Small Block) */}
+               <MagicCard className="md:col-span-1 md:row-span-1 p-8 flex flex-col justify-center">
+                  <div className="flex items-center justify-between mb-4">
+                     <div className="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center text-orange-600 dark:text-orange-400">
+                        <Activity size={24} />
+                     </div>
+                     <Wifi size={16} className="text-orange-500" />
+                  </div>
+                  <h3 className="text-lg font-bold text-slate-900 dark:text-white">Real-time Sync</h3>
+                  <div className="mt-4 flex gap-1">
+                     <div className="w-2 h-8 bg-orange-500/40 rounded-sm animate-pulse"></div>
+                     <div className="w-2 h-5 bg-orange-500/60 rounded-sm animate-pulse delay-75"></div>
+                     <div className="w-2 h-10 bg-orange-500 rounded-sm animate-pulse delay-150"></div>
+                     <div className="w-2 h-6 bg-orange-500/50 rounded-sm animate-pulse delay-300"></div>
+                  </div>
+               </MagicCard>
             </div>
          </div>
       </section>
 
-      {/* --- PORTFOLIO PREVIEW --- */}
+      {/* --- SELECTED WORKS (MAGIC BORDER) --- */}
       <section className="py-24 relative bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
                <MotionDiv 
-                 variants={fadeInUp}
-                 initial="hidden"
-                 whileInView="visible"
+                 initial={{ opacity: 0, x: -20 }}
+                 whileInView={{ opacity: 1, x: 0 }}
                  viewport={{ once: true }}
                >
                   <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
-                     Selected <span className="text-blue-500">Works</span>
+                     Selected <span className="text-blue-600 dark:text-blue-500">Works</span>
                   </h2>
                   <p className="text-slate-600 dark:text-slate-400 text-lg">
                      A glimpse into the digital solutions we've crafted.
                   </p>
                </MotionDiv>
-               <MotionDiv
-                 initial={{ opacity: 0, x: 20 }}
-                 whileInView={{ opacity: 1, x: 0 }}
-                 viewport={{ once: true }}
-                 transition={{ delay: 0.2 }}
-               >
-                 <Link to="/portfolio">
-                    <Button variant="ghost" className="text-slate-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 group">
-                       View All Projects <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                    </Button>
-                 </Link>
-               </MotionDiv>
+               <Link to="/portfolio">
+                  <Button variant="ghost" className="text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 group">
+                     View All Projects <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                  </Button>
+               </Link>
             </div>
 
-            <MotionDiv 
-               variants={staggerContainer}
-               initial="hidden"
-               whileInView="visible"
-               viewport={{ once: true, margin: "-50px" }}
-               className="grid grid-cols-1 md:grid-cols-3 gap-8"
-            >
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
                {PROJECTS.slice(0, 3).map((project, idx) => (
-                  <MotionDiv
-                     key={project.id}
-                     variants={scaleIn}
-                     className="group relative rounded-2xl overflow-hidden aspect-[4/3] cursor-pointer shadow-lg dark:shadow-none hover:shadow-2xl transition-all duration-300 hover:-translate-y-2"
-                  >
-                     <img 
-                       src={project.image} 
-                       alt={project.title} 
-                       className="object-cover w-full h-full group-hover:scale-110 transition-transform duration-700"
-                     />
-                     <div className="absolute inset-0 bg-gradient-to-t from-slate-900/90 via-slate-900/40 to-transparent dark:from-[#020617] dark:via-[#020617]/60 opacity-90 transition-opacity duration-300"></div>
+                  <MagicCard key={project.id} className="aspect-[4/5] cursor-pointer">
+                     <div className="absolute inset-0">
+                        <img 
+                          src={project.image} 
+                          alt={project.title} 
+                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500"></div>
+                     </div>
                      
                      <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
                         <div className="flex gap-2 mb-3">
-                           <span className="px-2 py-1 rounded bg-blue-600/80 text-white text-[10px] font-bold uppercase tracking-wider backdrop-blur-sm">
+                           <span className="px-2 py-1 rounded-md bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider border border-white/10">
                               {project.category}
                            </span>
                         </div>
@@ -646,15 +677,13 @@ I'd like to discuss this project further.`;
                         <p className="text-slate-200 text-sm line-clamp-2 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
                            {project.description}
                         </p>
-                        <div className="flex flex-wrap gap-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200">
-                           {project.technologies.slice(0, 3).map(t => (
-                              <span key={t} className="text-[10px] text-slate-200 border border-white/20 px-2 py-0.5 rounded-full">{t}</span>
-                           ))}
+                        <div className="flex items-center text-white text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200">
+                           View Case Study <ArrowRight size={14} className="ml-2" />
                         </div>
                      </div>
-                  </MotionDiv>
+                  </MagicCard>
                ))}
-            </MotionDiv>
+            </div>
          </div>
       </section>
 
@@ -714,9 +743,8 @@ I'd like to discuss this project further.`;
       <section className="py-24 bg-slate-50 dark:bg-[#020617] transition-colors duration-300 perspective-1000">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv 
-               variants={fadeInUp}
-               initial="hidden"
-               whileInView="visible"
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                className="text-center mb-20"
             >
@@ -725,13 +753,7 @@ I'd like to discuss this project further.`;
                </h2>
             </MotionDiv>
 
-            <MotionDiv 
-               variants={staggerContainer}
-               initial="hidden"
-               whileInView="visible"
-               viewport={{ once: true }}
-               className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"
-            >
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                {[
                  { icon: Rocket, title: "Fast Delivery", desc: "Agile methodologies that ensure rapid deployment without compromising quality." },
                  { icon: Brain, title: "AI-Driven", desc: "We integrate intelligence into every layer of development for smarter solutions." },
@@ -751,7 +773,7 @@ I'd like to discuss this project further.`;
                     </div>
                  </TiltCard>
                ))}
-            </MotionDiv>
+            </div>
          </div>
       </section>
 
@@ -899,9 +921,8 @@ I'd like to discuss this project further.`;
       <section className="py-20 border-y border-slate-200 dark:border-white/5 bg-white dark:bg-[#050b1d] transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv 
-               variants={staggerContainer}
-               initial="hidden"
-               whileInView="visible"
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
                viewport={{ once: true }}
                className="grid grid-cols-2 md:grid-cols-4 gap-12 text-center"
             >
@@ -911,17 +932,14 @@ I'd like to discuss this project further.`;
                  { val: "15+", label: "AI Solutions", color: "text-pink-600 dark:text-pink-400" },
                  { val: "24/7", label: "Support Active", color: "text-emerald-600 dark:text-emerald-400" }
                ].map((stat, idx) => (
-                 <MotionDiv
-                    key={idx}
-                    variants={scaleIn}
-                 >
+                 <div key={idx}>
                     <div className={`text-4xl md:text-6xl font-bold ${stat.color} font-display mb-2 drop-shadow-lg`}>
                        {stat.val}
                     </div>
                     <div className="text-sm font-bold text-slate-500 uppercase tracking-widest">
                        {stat.label}
                     </div>
-                 </MotionDiv>
+                 </div>
                ))}
             </MotionDiv>
          </div>
@@ -946,13 +964,11 @@ I'd like to discuss this project further.`;
                   Ready to transform your ideas into reality? Our team is standing by to help you launch your next big project.
                </p>
                <Link to="/contact">
-                  <MotionButton 
-                    whileHover={{ scale: 1.05 }}
-                    whileTap={{ scale: 0.95 }}
-                    className="bg-white text-blue-900 hover:bg-gray-100 font-bold text-lg px-10 py-5 rounded-full shadow-2xl transition-all duration-300"
+                  <Button 
+                    className="bg-white text-blue-900 hover:bg-gray-100 font-bold text-lg px-10 py-5 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-105"
                   >
                      Contact Us Today
-                  </MotionButton>
+                  </Button>
                </Link>
             </MotionDiv>
          </div>
