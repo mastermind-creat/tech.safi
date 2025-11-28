@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import { 
   Mail, Phone, MapPin, Send, MessageCircle, Clock, 
   Facebook, Twitter, Linkedin, Instagram, Github, 
-  Search, Plus, Minus, CheckCircle2, FileText, Zap, ShieldCheck
+  Search, Plus, Minus, CheckCircle2, FileText, Zap, ShieldCheck,
+  ChevronDown, DollarSign
 } from 'lucide-react';
 import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
@@ -16,9 +17,12 @@ export const Contact: React.FC = () => {
     lastName: '', 
     email: '', 
     subject: '', 
+    customSubject: '',
+    budget: '',
     message: '',
     agreed: false
   });
+  const [isSubmitted, setIsSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -27,7 +31,10 @@ export const Contact: React.FC = () => {
       alert('Please agree to the privacy policy.');
       return;
     }
-    alert('Thank you for reaching out! This is a demo form.');
+    // Simulate API call
+    setTimeout(() => {
+      setIsSubmitted(true);
+    }, 500);
   };
 
   const toggleFaq = (index: number) => {
@@ -50,6 +57,25 @@ export const Contact: React.FC = () => {
       answer: "Yes, we provide comprehensive post-launch support and maintenance packages to ensure your software remains secure, up-to-date, and performs optimally."
     }
   ];
+
+  const subjects = [
+    "General Inquiry",
+    "Web Development Project",
+    "Mobile App Development",
+    "AI Integration Solution",
+    "Partnership Proposal",
+    "Careers / Job Application",
+    "Other"
+  ];
+
+  const budgetRanges = [
+    "< KES 50k",
+    "50k - 150k",
+    "150k - 500k",
+    "500k+"
+  ];
+
+  const showBudget = ['Web Development Project', 'Mobile App Development', 'AI Integration Solution'].includes(formState.subject);
 
   return (
     <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-20 overflow-x-hidden transition-colors duration-300">
@@ -160,83 +186,174 @@ export const Contact: React.FC = () => {
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
-                  className="bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 rounded-2xl p-8 shadow-lg dark:shadow-none"
+                  className="bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 rounded-2xl p-8 shadow-lg dark:shadow-none relative overflow-hidden"
                >
-                  <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Send Us a Message</h3>
-                  <form onSubmit={handleSubmit} className="space-y-6">
-                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                           <label htmlFor="firstName" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">First Name</label>
-                           <input 
-                              type="text" 
-                              id="firstName"
-                              className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-600"
-                              value={formState.firstName}
-                              onChange={e => setFormState({...formState, firstName: e.target.value})}
-                           />
+                  <AnimatePresence mode="wait">
+                    {isSubmitted ? (
+                      <MotionDiv
+                        key="success"
+                        initial={{ opacity: 0, scale: 0.9 }}
+                        animate={{ opacity: 1, scale: 1 }}
+                        exit={{ opacity: 0, scale: 0.9 }}
+                        className="flex flex-col items-center justify-center py-20 text-center"
+                      >
+                        <div className="w-20 h-20 bg-green-100 dark:bg-green-500/20 rounded-full flex items-center justify-center mb-6">
+                          <CheckCircle2 size={40} className="text-green-600 dark:text-green-400" />
                         </div>
-                        <div>
-                           <label htmlFor="lastName" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Last Name</label>
-                           <input 
-                              type="text" 
-                              id="lastName"
-                              className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-600"
-                              value={formState.lastName}
-                              onChange={e => setFormState({...formState, lastName: e.target.value})}
-                           />
-                        </div>
-                     </div>
+                        <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-2">Message Sent!</h3>
+                        <p className="text-slate-600 dark:text-slate-400 max-w-sm mb-8">
+                          Thank you for reaching out. Our team will review your message and get back to you within 24 hours.
+                        </p>
+                        <Button onClick={() => setIsSubmitted(false)} variant="outline">
+                          Send Another Message
+                        </Button>
+                      </MotionDiv>
+                    ) : (
+                      <motion.div key="form" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}>
+                        <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-6">Send Us a Message</h3>
+                        <form onSubmit={handleSubmit} className="space-y-6">
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                              <div>
+                                 <label htmlFor="firstName" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">First Name</label>
+                                 <input 
+                                    type="text" 
+                                    id="firstName"
+                                    required
+                                    className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-600"
+                                    value={formState.firstName}
+                                    onChange={e => setFormState({...formState, firstName: e.target.value})}
+                                 />
+                              </div>
+                              <div>
+                                 <label htmlFor="lastName" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Last Name</label>
+                                 <input 
+                                    type="text" 
+                                    id="lastName"
+                                    required
+                                    className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-600"
+                                    value={formState.lastName}
+                                    onChange={e => setFormState({...formState, lastName: e.target.value})}
+                                 />
+                              </div>
+                           </div>
 
-                     <div>
-                        <label htmlFor="email" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Email Address</label>
-                        <input 
-                           type="email" 
-                           id="email"
-                           className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-600"
-                           value={formState.email}
-                           onChange={e => setFormState({...formState, email: e.target.value})}
-                        />
-                     </div>
+                           <div>
+                              <label htmlFor="email" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Email Address</label>
+                              <input 
+                                 type="email" 
+                                 id="email"
+                                 required
+                                 className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-600"
+                                 value={formState.email}
+                                 onChange={e => setFormState({...formState, email: e.target.value})}
+                              />
+                           </div>
 
-                     <div>
-                        <label htmlFor="subject" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Subject</label>
-                        <input 
-                           type="text" 
-                           id="subject"
-                           className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-600"
-                           value={formState.subject}
-                           onChange={e => setFormState({...formState, subject: e.target.value})}
-                        />
-                     </div>
+                           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                             <div>
+                                <label htmlFor="subject" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Subject</label>
+                                <div className="relative">
+                                  <select
+                                     id="subject"
+                                     required
+                                     className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all appearance-none cursor-pointer"
+                                     value={formState.subject}
+                                     onChange={e => setFormState({...formState, subject: e.target.value})}
+                                  >
+                                    <option value="" disabled>Select a topic</option>
+                                    {subjects.map((subj, i) => (
+                                      <option key={i} value={subj}>{subj}</option>
+                                    ))}
+                                  </select>
+                                  <ChevronDown size={16} className="absolute right-4 top-3.5 text-slate-400 pointer-events-none" />
+                                </div>
+                             </div>
+                             
+                             {/* Dynamic Input based on selection */}
+                             <AnimatePresence mode="wait">
+                               {formState.subject === 'Other' && (
+                                 <MotionDiv 
+                                   initial={{ opacity: 0, x: -10 }} 
+                                   animate={{ opacity: 1, x: 0 }} 
+                                   exit={{ opacity: 0, x: -10 }}
+                                 >
+                                    <label htmlFor="customSubject" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Please Specify</label>
+                                    <input 
+                                       type="text" 
+                                       id="customSubject"
+                                       className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all"
+                                       value={formState.customSubject}
+                                       onChange={e => setFormState({...formState, customSubject: e.target.value})}
+                                    />
+                                 </MotionDiv>
+                               )}
+                             </AnimatePresence>
+                           </div>
 
-                     <div>
-                        <label htmlFor="message" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Your Message</label>
-                        <textarea 
-                           id="message"
-                           rows={5}
-                           className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-600 resize-none"
-                           value={formState.message}
-                           onChange={e => setFormState({...formState, message: e.target.value})}
-                        ></textarea>
-                     </div>
+                           {/* Budget Selector - Shown for Projects */}
+                           <AnimatePresence>
+                             {showBudget && (
+                               <MotionDiv
+                                 initial={{ opacity: 0, height: 0 }}
+                                 animate={{ opacity: 1, height: 'auto' }}
+                                 exit={{ opacity: 0, height: 0 }}
+                                 className="overflow-hidden"
+                               >
+                                 <label className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-3 uppercase flex items-center">
+                                   <DollarSign size={12} className="mr-1" /> Estimated Project Budget
+                                 </label>
+                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
+                                   {budgetRanges.map((range, i) => (
+                                     <button
+                                       key={i}
+                                       type="button"
+                                       onClick={() => setFormState({...formState, budget: range})}
+                                       className={`px-3 py-2 rounded-lg text-xs font-medium border transition-all ${
+                                         formState.budget === range 
+                                           ? 'bg-blue-600 text-white border-blue-600 shadow-md' 
+                                           : 'bg-slate-50 dark:bg-[#0f172a] text-slate-600 dark:text-slate-300 border-slate-200 dark:border-white/10 hover:border-blue-400'
+                                       }`}
+                                     >
+                                       {range}
+                                     </button>
+                                   ))}
+                                 </div>
+                               </MotionDiv>
+                             )}
+                           </AnimatePresence>
 
-                     <div className="flex items-start">
-                        <input 
-                           type="checkbox" 
-                           id="privacy" 
-                           className="mt-1 w-4 h-4 rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-[#0f172a] text-blue-600 focus:ring-blue-500"
-                           checked={formState.agreed}
-                           onChange={e => setFormState({...formState, agreed: e.target.checked})}
-                        />
-                        <label htmlFor="privacy" className="ml-3 text-xs text-slate-600 dark:text-slate-400">
-                           I agree to the <a href="#" className="text-blue-500 hover:underline">Privacy Policy</a> and <a href="#" className="text-blue-500 hover:underline">Terms of Service</a>
-                        </label>
-                     </div>
+                           <div>
+                              <label htmlFor="message" className="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-2 uppercase">Your Message</label>
+                              <textarea 
+                                 id="message"
+                                 required
+                                 rows={5}
+                                 className="w-full bg-slate-50 dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-lg px-4 py-3 text-slate-900 dark:text-white text-sm focus:outline-none focus:border-blue-500 transition-all placeholder-slate-400 dark:placeholder-slate-600 resize-none"
+                                 value={formState.message}
+                                 onChange={e => setFormState({...formState, message: e.target.value})}
+                              ></textarea>
+                           </div>
 
-                     <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 shadow-lg shadow-blue-900/20 text-white">
-                        Send Message
-                     </Button>
-                  </form>
+                           <div className="flex items-start">
+                              <input 
+                                 type="checkbox" 
+                                 id="privacy" 
+                                 className="mt-1 w-4 h-4 rounded border-slate-300 dark:border-slate-600 bg-white dark:bg-[#0f172a] text-blue-600 focus:ring-blue-500"
+                                 checked={formState.agreed}
+                                 onChange={e => setFormState({...formState, agreed: e.target.checked})}
+                              />
+                              <label htmlFor="privacy" className="ml-3 text-xs text-slate-600 dark:text-slate-400">
+                                 I agree to the <Link to="/privacy-policy" className="text-blue-500 hover:underline">Privacy Policy</Link> and <Link to="/terms-of-service" className="text-blue-500 hover:underline">Terms of Service</Link>
+                              </label>
+                           </div>
+
+                           <Button className="w-full bg-blue-600 hover:bg-blue-700 py-3 shadow-lg shadow-blue-900/20 text-white">
+                              Send Message
+                           </Button>
+                        </form>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                </MotionDiv>
             </div>
 
