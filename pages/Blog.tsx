@@ -1,12 +1,13 @@
-
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { BLOG_POSTS } from '../constants';
+import { BlogPost } from '../types';
+import { Modal } from '../components/ui/Modal';
 import { Link } from 'react-router-dom';
 import { 
   Calendar, Clock, ArrowRight, Tag, Search, Newspaper, Mail, 
   Share2, Facebook, Twitter, Linkedin, Flame, ChevronRight, Hash,
-  TrendingUp, Sparkles, Filter
+  TrendingUp, Sparkles, Filter, X
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
@@ -16,6 +17,7 @@ export const Blog: React.FC = () => {
   const [activeCategory, setActiveCategory] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [hoveredPost, setHoveredPost] = useState<string | null>(null);
+  const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
 
   const categories = ['All', 'AI & Tech', 'Web Development', 'Cloud Computing', 'Security', 'Digital Strategy'];
 
@@ -29,6 +31,10 @@ export const Blog: React.FC = () => {
 
   const featuredPost = BLOG_POSTS[0];
   const gridPosts = filteredPosts.filter(p => p.id !== featuredPost.id);
+
+  const handlePostClick = (post: BlogPost) => {
+    setSelectedPost(post);
+  };
 
   return (
     <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-20 transition-colors duration-300 font-sans">
@@ -86,11 +92,12 @@ export const Blog: React.FC = () => {
                     </div>
                  </div>
 
-                 <Link to={`/blog/${featuredPost.id}`}>
-                    <Button className="rounded-full px-8 py-3 bg-white text-slate-900 hover:bg-blue-50 font-bold flex items-center gap-2">
-                       Read Article <ArrowRight size={18} />
-                    </Button>
-                 </Link>
+                 <Button 
+                    onClick={() => handlePostClick(featuredPost)}
+                    className="rounded-full px-8 py-3 bg-white text-slate-900 hover:bg-blue-50 font-bold flex items-center gap-2"
+                 >
+                    Read Article <ArrowRight size={18} />
+                 </Button>
               </div>
            </MotionDiv>
         </div>
@@ -159,7 +166,8 @@ export const Blog: React.FC = () => {
                         transition={{ duration: 0.3, delay: idx * 0.05 }}
                         onMouseEnter={() => setHoveredPost(post.id)}
                         onMouseLeave={() => setHoveredPost(null)}
-                        className={`group relative bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-purple-900/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full`}
+                        onClick={() => handlePostClick(post)}
+                        className={`group relative bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 rounded-3xl overflow-hidden hover:shadow-2xl hover:shadow-blue-500/10 dark:hover:shadow-purple-900/10 transition-all duration-500 hover:-translate-y-2 flex flex-col h-full cursor-pointer`}
                      >
                         {/* Image Container */}
                         <div className="relative h-64 overflow-hidden">
@@ -270,6 +278,70 @@ export const Blog: React.FC = () => {
             </div>
          </div>
       </div>
+
+      {/* --- ARTICLE MODAL --- */}
+      <Modal isOpen={!!selectedPost} onClose={() => setSelectedPost(null)}>
+        {selectedPost && (
+          <div className="bg-white dark:bg-[#0f172a] rounded-2xl overflow-hidden text-left">
+            {/* Modal Hero Image */}
+            <div className="relative h-64 md:h-80 w-full">
+              <img 
+                src={selectedPost.image} 
+                alt={selectedPost.title} 
+                className="w-full h-full object-cover"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent"></div>
+              <div className="absolute bottom-6 left-6 right-6">
+                <div className="flex gap-2 mb-3">
+                  <span className="bg-blue-600 text-white text-[10px] font-bold px-3 py-1 rounded-full uppercase tracking-wider">
+                    {selectedPost.category}
+                  </span>
+                </div>
+                <h2 className="text-2xl md:text-4xl font-bold text-white leading-tight font-display">
+                  {selectedPost.title}
+                </h2>
+              </div>
+            </div>
+
+            {/* Content Body */}
+            <div className="p-8 md:p-10">
+              {/* Meta Data */}
+              <div className="flex items-center justify-between border-b border-slate-200 dark:border-white/10 pb-6 mb-8">
+                <div className="flex items-center gap-3">
+                  <img src={selectedPost.author.avatar} alt={selectedPost.author.name} className="w-10 h-10 rounded-full border border-slate-200 dark:border-white/10" />
+                  <div>
+                    <p className="text-sm font-bold text-slate-900 dark:text-white">{selectedPost.author.name}</p>
+                    <p className="text-xs text-slate-500 dark:text-slate-400">{selectedPost.author.role || "Author"}</p>
+                  </div>
+                </div>
+                <div className="text-right">
+                  <p className="text-xs text-slate-500 dark:text-slate-400 mb-1">{selectedPost.date}</p>
+                  <p className="text-xs font-medium text-slate-700 dark:text-slate-300 flex items-center justify-end">
+                    <Clock size={12} className="mr-1" /> {selectedPost.readTime}
+                  </p>
+                </div>
+              </div>
+
+              {/* HTML Content Render */}
+              <div 
+                className="prose dark:prose-invert prose-blue max-w-none prose-headings:font-display prose-headings:font-bold prose-p:text-slate-600 dark:prose-p:text-slate-300 prose-a:text-blue-500 prose-img:rounded-xl"
+                dangerouslySetInnerHTML={{ __html: selectedPost.content }}
+              />
+
+              {/* Tags Footer */}
+              <div className="mt-12 pt-6 border-t border-slate-200 dark:border-white/10">
+                <div className="flex flex-wrap gap-2">
+                  {selectedPost.tags.map(tag => (
+                    <span key={tag} className="flex items-center text-xs font-medium px-3 py-1.5 rounded-full bg-slate-100 dark:bg-white/5 text-slate-600 dark:text-slate-400">
+                      <Hash size={12} className="mr-1 opacity-50" /> {tag}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+      </Modal>
 
     </div>
   );

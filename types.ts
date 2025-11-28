@@ -65,10 +65,12 @@ export interface BlogPost {
   id: string;
   title: string;
   excerpt: string;
+  content: string; // Added full content field
   category: string;
   author: {
     name: string;
     avatar: string;
+    role?: string;
   };
   date: string;
   readTime: string;
