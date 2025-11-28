@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Bot, Minimize2, User, Sparkles, AlertCircle, WifiOff, ChevronRight, RefreshCw, Trash2 } from 'lucide-react';
+import { MessageCircle, Minimize2, User, Sparkles, AlertCircle, WifiOff, ChevronRight, RefreshCw, Send, Bot } from 'lucide-react';
 import { Button } from './ui/Button';
 import { GoogleGenAI } from "@google/genai";
 
@@ -10,7 +10,7 @@ interface Message {
   type: 'user' | 'bot';
   text: string;
   timestamp: Date;
-  suggestions?: string[]; // New: Contextual suggestions
+  suggestions?: string[]; // Contextual suggestions
 }
 
 export const Chatbot: React.FC = () => {
@@ -203,58 +203,61 @@ export const Chatbot: React.FC = () => {
     setInputValue('');
     setIsTyping(true);
 
-    // Artificial delay for natural feel
-    const delay = isAiActive ? 0 : 600;
-
-    try {
-      if (isAiActive && chatSessionRef.current) {
-        const result = await chatSessionRef.current.sendMessage({ message: userMsg.text });
-        
-        if (result.text) {
-          const botResponse: Message = {
-            id: (Date.now() + 1).toString(),
+    // AI Streaming Response
+    if (isAiActive && chatSessionRef.current) {
+        const botMsgId = (Date.now() + 1).toString();
+        // Add placeholder for streaming
+        setMessages(prev => [...prev, {
+            id: botMsgId,
             type: 'bot',
-            text: result.text,
+            text: '',
             timestamp: new Date()
-          };
-          setMessages(prev => [...prev, botResponse]);
-        } else {
-          throw new Error("Empty response from AI");
+        }]);
+
+        try {
+            const resultStream = await chatSessionRef.current.sendMessageStream({ message: userMsg.text });
+            
+            let fullText = '';
+            for await (const chunk of resultStream) {
+                const chunkText = (chunk as any).text;
+                if (chunkText) {
+                    fullText += chunkText;
+                    setMessages(prev => prev.map(m => 
+                        m.id === botMsgId ? { ...m, text: fullText } : m
+                    ));
+                }
+            }
+        } catch (error) {
+            console.warn("AI service interrupted, using fallback.", error);
+            // Revert the empty bubble to a fallback message if AI completely fails mid-stream or start
+            setMessages(prev => prev.filter(m => m.id !== botMsgId));
+            const { text: fallbackText, suggestions } = handleBasicModeQuery(userMsg.text);
+            const fallbackResponse: Message = {
+                id: (Date.now() + 2).toString(),
+                type: 'bot',
+                text: fallbackText,
+                timestamp: new Date(),
+                suggestions: suggestions
+            };
+            setMessages(prev => [...prev, fallbackResponse]);
         }
-      } else {
-        // Basic Mode Fallback
-        setTimeout(() => {
-          const { text: fallbackText, suggestions } = handleBasicModeQuery(userMsg.text);
-          const fallbackResponse: Message = {
-            id: (Date.now() + 1).toString(),
-            type: 'bot',
-            text: fallbackText,
-            timestamp: new Date(),
-            suggestions: suggestions
-          };
-          setMessages(prev => [...prev, fallbackResponse]);
-          setIsTyping(false);
-        }, delay);
-        return; // Exit early as timeout handles state
-      }
-    } catch (error) {
-      console.warn("AI service unavailable, using fallback.", error);
-      setTimeout(() => {
-        const { text: fallbackText, suggestions } = handleBasicModeQuery(userMsg.text);
-        const fallbackResponse: Message = {
-          id: (Date.now() + 1).toString(),
-          type: 'bot',
-          text: fallbackText,
-          timestamp: new Date(),
-          suggestions: suggestions
-        };
-        setMessages(prev => [...prev, fallbackResponse]);
         setIsTyping(false);
-      }, delay);
-      return;
-    } 
-    
-    setIsTyping(false);
+        return;
+    }
+
+    // Basic Mode Fallback (Simulated Delay)
+    setTimeout(() => {
+      const { text: fallbackText, suggestions } = handleBasicModeQuery(userMsg.text);
+      const fallbackResponse: Message = {
+        id: (Date.now() + 1).toString(),
+        type: 'bot',
+        text: fallbackText,
+        timestamp: new Date(),
+        suggestions: suggestions
+      };
+      setMessages(prev => [...prev, fallbackResponse]);
+      setIsTyping(false);
+    }, 600);
   };
 
   const handleSuggestionClick = (suggestion: string) => {
@@ -273,18 +276,28 @@ export const Chatbot: React.FC = () => {
     ]);
   };
 
-  // Helper to render basic markdown-like formatting
+  // Helper to render markdown-like formatting (Bold, Lists)
   const formatMessage = (text: string) => {
+    // Split by newlines to handle paragraphs and lists
     return text.split('\n').map((line, i) => {
-      const parts = line.split(/(\*\*.*?\*\*)/g);
+      // Check for bullet points
+      const isBullet = line.trim().startsWith('- ') || line.trim().startsWith('* ') || line.trim().startsWith('• ');
+      const cleanLine = isBullet ? line.trim().replace(/^[-*•]\s+/, '') : line;
+      
+      // Parse Bold (**text**)
+      const parts = cleanLine.split(/(\*\*.*?\*\*)/g);
+      
       return (
-        <div key={i} className={`min-h-[1.2em] ${line.trim().startsWith('-') || line.trim().startsWith('•') ? 'ml-4 mb-1' : 'mb-1'}`}>
-          {parts.map((part, j) => {
-            if (part.startsWith('**') && part.endsWith('**')) {
-              return <strong key={j} className="font-bold text-slate-900 dark:text-white">{part.slice(2, -2)}</strong>;
-            }
-            return part;
-          })}
+        <div key={i} className={`text-sm leading-relaxed ${isBullet ? 'flex items-start ml-2 mb-1.5' : 'mb-2 min-h-[1.2em]'}`}>
+          {isBullet && <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-current rounded-full flex-shrink-0 opacity-60"></span>}
+          <span>
+            {parts.map((part, j) => {
+              if (part.startsWith('**') && part.endsWith('**')) {
+                return <strong key={j} className="font-bold text-slate-900 dark:text-white">{part.slice(2, -2)}</strong>;
+              }
+              return part;
+            })}
+          </span>
         </div>
       );
     });
@@ -376,12 +389,12 @@ export const Chatbot: React.FC = () => {
                       </div>
 
                       {/* Bubble */}
-                      <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                      <div className={`px-4 py-2.5 rounded-2xl shadow-sm ${
                         msg.type === 'user' 
                           ? 'bg-blue-600 text-white rounded-br-none' 
                           : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-white/5 rounded-bl-none'
                       }`}>
-                        {msg.type === 'bot' ? formatMessage(msg.text) : msg.text}
+                        {msg.type === 'bot' ? formatMessage(msg.text) : <div className="text-sm">{msg.text}</div>}
                       </div>
                     </div>
                   </MotionDiv>

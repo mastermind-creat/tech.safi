@@ -1,7 +1,7 @@
 
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { 
   Mail, Phone, MapPin, Send, MessageCircle, Clock, 
   Facebook, Twitter, Linkedin, Instagram, Github, 
@@ -12,6 +12,7 @@ import { Card } from '../components/ui/Card';
 import { Button } from '../components/ui/Button';
 
 export const Contact: React.FC = () => {
+  const location = useLocation();
   const [formState, setFormState] = useState({ 
     firstName: '', 
     lastName: '', 
@@ -24,6 +25,19 @@ export const Contact: React.FC = () => {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [openFaq, setOpenFaq] = useState<number | null>(null);
+
+  // Check for incoming state from Project Estimator
+  useEffect(() => {
+    if (location.state) {
+      const { subject, message, budget } = location.state as any;
+      setFormState(prev => ({
+        ...prev,
+        subject: subject || prev.subject,
+        message: message || prev.message,
+        budget: budget || prev.budget
+      }));
+    }
+  }, [location.state]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -60,6 +74,7 @@ export const Contact: React.FC = () => {
 
   const subjects = [
     "General Inquiry",
+    "Project Inquiry", // Added for Estimator
     "Web Development Project",
     "Mobile App Development",
     "AI Integration Solution",
@@ -75,7 +90,7 @@ export const Contact: React.FC = () => {
     "500k+"
   ];
 
-  const showBudget = ['Web Development Project', 'Mobile App Development', 'AI Integration Solution'].includes(formState.subject);
+  const showBudget = ['Project Inquiry', 'Web Development Project', 'Mobile App Development', 'AI Integration Solution'].includes(formState.subject);
 
   return (
     <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-20 overflow-x-hidden transition-colors duration-300">

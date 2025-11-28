@@ -1,20 +1,20 @@
 
-import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence, animate, useMotionValue } from 'framer-motion';
+import React, { useState, useEffect, useRef } from 'react';
+import { motion, useScroll, useTransform, AnimatePresence, animate, useMotionValue, useSpring } from 'framer-motion';
 import { 
   ArrowRight, Brain, Shield, 
   Clock, Server, Globe, Smartphone, 
   Code2, Rocket, Bot, 
   Layout, Cloud, ChevronRight, Star, ChevronLeft, Quote,
   Check, Zap, Database, CreditCard, Lock, Monitor, Laptop, Repeat,
-  ShoppingCart, MessageSquare, Home as HomeIcon
+  ShoppingCart, MessageSquare, Home as HomeIcon, Layers, Eye, Activity, Search
 } from 'lucide-react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Typewriter } from '../components/ui/Typewriter';
 import { PROJECTS } from '../constants';
 
-// Animation Variants
+// --- ANIMATION VARIANTS ---
 const fadeInUp = {
   hidden: { opacity: 0, y: 60 },
   visible: { 
@@ -29,7 +29,7 @@ const staggerContainer = {
   visible: {
     opacity: 1,
     transition: {
-      staggerChildren: 0.15,
+      staggerChildren: 0.1,
       delayChildren: 0.1
     }
   }
@@ -44,13 +44,14 @@ const scaleIn = {
   }
 };
 
-// Counter Component for Price
+// --- COMPONENTS ---
+
 const Counter = ({ value }: { value: number }) => {
   const [displayValue, setDisplayValue] = useState(0);
   
   useEffect(() => {
     const controls = animate(displayValue, value, {
-      duration: 0.5,
+      duration: 0.8,
       onUpdate: (v) => setDisplayValue(Math.floor(v)),
       ease: "circOut"
     });
@@ -60,7 +61,63 @@ const Counter = ({ value }: { value: number }) => {
   return <>{displayValue.toLocaleString()}</>;
 };
 
+// 3D Tilt Card Component
+const TiltCard: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className }) => {
+  const x = useMotionValue(0);
+  const y = useMotionValue(0);
+
+  const mouseX = useSpring(x, { stiffness: 150, damping: 15 });
+  const mouseY = useSpring(y, { stiffness: 150, damping: 15 });
+
+  function handleMouseMove(event: React.MouseEvent<HTMLDivElement>) {
+    const rect = event.currentTarget.getBoundingClientRect();
+    const width = rect.width;
+    const height = rect.height;
+    const mouseXVal = event.clientX - rect.left;
+    const mouseYVal = event.clientY - rect.top;
+    
+    const xPct = mouseXVal / width - 0.5;
+    const yPct = mouseYVal / height - 0.5;
+    
+    x.set(xPct);
+    y.set(yPct);
+  }
+
+  function handleMouseLeave() {
+    x.set(0);
+    y.set(0);
+  }
+
+  const rotateX = useTransform(mouseY, [-0.5, 0.5], [7, -7]);
+  const rotateY = useTransform(mouseX, [-0.5, 0.5], [-7, 7]);
+  const sheenX = useTransform(mouseX, [-0.5, 0.5], [0, 100]);
+  const sheenY = useTransform(mouseY, [-0.5, 0.5], [0, 100]);
+
+  const MotionDiv = motion.div as any;
+
+  return (
+    <MotionDiv
+      onMouseMove={handleMouseMove}
+      onMouseLeave={handleMouseLeave}
+      style={{
+        rotateX,
+        rotateY,
+        transformStyle: "preserve-3d"
+      }}
+      className={`relative perspective-1000 ${className}`}
+    >
+      <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-white/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none z-20 mix-blend-overlay"
+           style={{
+             background: `radial-gradient(circle at ${sheenX}% ${sheenY}%, rgba(255,255,255,0.3) 0%, transparent 50%)`
+           }}
+      />
+      {children}
+    </MotionDiv>
+  );
+};
+
 export const Home: React.FC = () => {
+  const navigate = useNavigate();
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
@@ -123,6 +180,24 @@ export const Home: React.FC = () => {
 
   const toggleFeature = (feat: string) => {
     setFeatures(prev => prev.includes(feat) ? prev.filter(f => f !== feat) : [...prev, feat]);
+  };
+
+  const handleBookProject = () => {
+    const total = calculateEstimate();
+    const message = `Hi TechSafi, I used your project estimator.
+    
+Platform: ${platform === 'both' ? 'Web & Mobile' : platform}
+Features: ${features.join(', ') || 'None'}
+Timeline: ${urgency}
+Estimated Budget: ~KES ${total.toLocaleString()}
+
+I'd like to discuss this project further.`;
+
+    navigate('/contact', { state: { 
+      subject: 'Project Inquiry', 
+      message: message,
+      budget: total > 500000 ? '500k+' : total > 150000 ? '150k - 500k' : '50k - 150k'
+    }});
   };
 
   return (
@@ -234,13 +309,13 @@ export const Home: React.FC = () => {
           </MotionDiv>
       </section>
 
-      {/* --- INFINITE CLIENT MARQUEE (NEW) --- */}
+      {/* --- INFINITE CLIENT MARQUEE --- */}
       <section className="py-10 bg-white dark:bg-[#050b1d] border-b border-slate-200 dark:border-white/5 overflow-hidden">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
            <p className="text-center text-sm font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Trusted By Industry Leaders</p>
         </div>
         <div className="relative flex overflow-x-hidden group">
-           <div className="animate-marquee whitespace-nowrap flex items-center space-x-16">
+           <div className="animate-marquee whitespace-nowrap flex items-center space-x-16 hover:[animation-play-state:paused]">
               {[...Array(2)].map((_, i) => (
                  <React.Fragment key={i}>
                     {[
@@ -253,7 +328,7 @@ export const Home: React.FC = () => {
                       { name: "Uber", icon: Smartphone },
                       { name: "Netflix", icon: Repeat }
                     ].map((brand, idx) => (
-                       <div key={idx} className="flex items-center space-x-2 text-slate-400 dark:text-slate-600 hover:text-slate-800 dark:hover:text-slate-300 transition-colors cursor-pointer mx-8">
+                       <div key={idx} className="flex items-center space-x-2 text-slate-400 dark:text-slate-600 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer mx-8">
                           <brand.icon size={28} />
                           <span className="text-xl font-bold font-display">{brand.name}</span>
                        </div>
@@ -263,7 +338,7 @@ export const Home: React.FC = () => {
            </div>
            
            {/* Clone for seamless loop */}
-           <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex items-center space-x-16">
+           <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex items-center space-x-16 hover:[animation-play-state:paused]">
               {[...Array(2)].map((_, i) => (
                  <React.Fragment key={i}>
                     {[
@@ -276,7 +351,7 @@ export const Home: React.FC = () => {
                       { name: "Uber", icon: Smartphone },
                       { name: "Netflix", icon: Repeat }
                     ].map((brand, idx) => (
-                       <div key={idx} className="flex items-center space-x-2 text-slate-400 dark:text-slate-600 hover:text-slate-800 dark:hover:text-slate-300 transition-colors cursor-pointer mx-8">
+                       <div key={idx} className="flex items-center space-x-2 text-slate-400 dark:text-slate-600 hover:text-blue-600 dark:hover:text-blue-400 transition-colors cursor-pointer mx-8">
                           <brand.icon size={28} />
                           <span className="text-xl font-bold font-display">{brand.name}</span>
                        </div>
@@ -371,8 +446,46 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* --- ABOUT MINI-SECTION --- */}
-      <section className="py-24 bg-white dark:bg-[#050b1d] border-y border-slate-100 dark:border-white/5 overflow-hidden transition-colors duration-300">
+      {/* --- WORKFLOW PULSE (NEW) --- */}
+      <section className="py-12 bg-slate-100 dark:bg-[#0a0f1d] border-y border-slate-200 dark:border-white/5 overflow-hidden">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div className="relative">
+               {/* Line */}
+               <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-300 dark:bg-white/10 -translate-y-1/2"></div>
+               {/* Pulse */}
+               <div className="absolute top-1/2 left-0 w-24 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent -translate-y-1/2 animate-[pulseMove_3s_linear_infinite]"></div>
+               
+               <div className="grid grid-cols-3 relative z-10">
+                  {[
+                    { step: "01", title: "Discovery", icon: Search },
+                    { step: "02", title: "Development", icon: Code2 },
+                    { step: "03", title: "Launch", icon: Rocket }
+                  ].map((s, i) => (
+                     <div key={i} className="flex flex-col items-center text-center group">
+                        <div className="w-12 h-12 rounded-full bg-slate-50 dark:bg-[#0f172a] border-4 border-slate-200 dark:border-[#1e293b] flex items-center justify-center text-slate-400 dark:text-slate-500 group-hover:border-blue-500 group-hover:text-blue-500 transition-all duration-500 z-10">
+                           <s.icon size={20} />
+                        </div>
+                        <div className="mt-4 opacity-50 group-hover:opacity-100 transition-opacity duration-500">
+                           <div className="text-xs font-bold uppercase tracking-wider text-slate-500 dark:text-slate-400">{s.step}</div>
+                           <div className="text-sm font-bold text-slate-900 dark:text-white">{s.title}</div>
+                        </div>
+                     </div>
+                  ))}
+               </div>
+            </div>
+         </div>
+         <style>{`
+            @keyframes pulseMove {
+               0% { left: 0%; opacity: 0; }
+               20% { opacity: 1; }
+               80% { opacity: 1; }
+               100% { left: 100%; opacity: 0; }
+            }
+         `}</style>
+      </section>
+
+      {/* --- THE ORBITAL CORE (REPLACES ABOUT MINI-SECTION) --- */}
+      <section className="py-32 bg-white dark:bg-[#050b1d] overflow-hidden transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
                <MotionDiv 
@@ -382,7 +495,7 @@ export const Home: React.FC = () => {
                  transition={{ duration: 0.8 }}
                >
                   <div className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-500/10 border border-purple-200 dark:border-purple-500/20 text-purple-600 dark:text-purple-400 text-xs font-bold tracking-widest uppercase mb-6">
-                     About TechSafi
+                     Our Ecosystem
                   </div>
                   <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-6 leading-tight">
                      Innovation Driven by <br />
@@ -393,7 +506,7 @@ export const Home: React.FC = () => {
                         TechSafi isn't just a software company; we are a collective of visionaries, engineers, and creatives dedicated to reshaping the digital landscape of Africa.
                      </p>
                      <p>
-                        Founded in 2024, our mission is to democratize access to advanced technology. Whether it's helping a startup launch their MVP or enabling an enterprise to leverage AI, we bring the same level of excellence and integrity to every project.
+                        We operate at the intersection of creativity and technology, building a connected ecosystem of services that propels businesses forward.
                      </p>
                   </div>
                   <div className="mt-10">
@@ -405,41 +518,68 @@ export const Home: React.FC = () => {
                   </div>
                </MotionDiv>
 
+               {/* 3D ORBITAL VISUALIZATION */}
                <MotionDiv
-                 initial={{ opacity: 0, x: 30 }}
-                 whileInView={{ opacity: 1, x: 0 }}
+                 initial={{ opacity: 0, scale: 0.8 }}
+                 whileInView={{ opacity: 1, scale: 1 }}
                  viewport={{ once: true }}
-                 transition={{ duration: 0.8 }}
-                 className="relative"
+                 transition={{ duration: 1 }}
+                 className="relative h-[400px] w-full flex items-center justify-center perspective-1000"
                >
-                  <div className="relative aspect-square md:aspect-[4/3] bg-slate-50 dark:bg-gradient-to-br dark:from-purple-900/20 dark:to-blue-900/20 rounded-3xl border border-slate-200 dark:border-white/10 overflow-hidden flex items-center justify-center shadow-2xl dark:shadow-none group">
-                     <div className="absolute inset-0 bg-[url('https://www.transparenttextures.com/patterns/circuit-board.png')] opacity-[0.05] dark:opacity-10"></div>
-                     <MotionDiv 
-                        animate={{ y: [-10, 10, -10] }}
-                        transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute top-1/4 left-1/4 w-24 h-24 bg-blue-100 dark:bg-blue-500/20 rounded-2xl border border-blue-200 dark:border-blue-500/30 backdrop-blur-md flex items-center justify-center shadow-lg"
-                     >
-                        <Code2 size={40} className="text-blue-500 dark:text-blue-400" />
-                     </MotionDiv>
-                     <MotionDiv 
-                        animate={{ y: [15, -15, 15] }}
-                        transition={{ duration: 5, repeat: Infinity, ease: "easeInOut", delay: 0.5 }}
-                        className="absolute bottom-1/4 right-1/4 w-32 h-32 bg-purple-100 dark:bg-purple-500/20 rounded-full border border-purple-200 dark:border-purple-500/30 backdrop-blur-md flex items-center justify-center z-10 shadow-lg"
-                     >
-                        <Brain size={48} className="text-purple-500 dark:text-purple-400" />
-                     </MotionDiv>
-                     <MotionDiv 
-                        animate={{ scale: [1, 1.1, 1] }}
-                        transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
-                        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 border border-slate-200 dark:border-white/5 rounded-full"
-                     />
-                     {/* Hover Interaction Overlay */}
-                     <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center backdrop-blur-sm">
-                        <Link to="/company" className="px-6 py-3 bg-white text-slate-900 rounded-full font-bold transform scale-90 group-hover:scale-100 transition-transform duration-300">
-                           Meet The Team
-                        </Link>
-                     </div>
+                  {/* Central Core */}
+                  <div className="relative z-20 w-32 h-32 rounded-full bg-gradient-to-br from-blue-600 to-purple-600 flex items-center justify-center shadow-[0_0_60px_rgba(124,58,237,0.5)] animate-pulse-slow">
+                     <div className="text-white font-bold text-xl font-display tracking-tight">Tech<span className="text-cyan-200">Safi</span></div>
+                     <div className="absolute inset-0 border-4 border-white/20 rounded-full animate-ping opacity-20"></div>
                   </div>
+
+                  {/* Inner Ring */}
+                  <MotionDiv 
+                     animate={{ rotate: 360 }}
+                     transition={{ duration: 20, repeat: Infinity, ease: "linear" }}
+                     className="absolute w-[280px] h-[280px] rounded-full border border-dashed border-slate-300 dark:border-white/10 z-10"
+                  >
+                     {[
+                       { icon: Code2, bg: "bg-blue-500", deg: 0 },
+                       { icon: Brain, bg: "bg-purple-500", deg: 120 },
+                       { icon: Cloud, bg: "bg-cyan-500", deg: 240 }
+                     ].map((item, i) => (
+                        <div 
+                           key={i}
+                           className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full bg-white dark:bg-[#0f172a] shadow-lg flex items-center justify-center border border-slate-200 dark:border-white/20"
+                           style={{ transform: `rotate(${item.deg}deg) translateY(-140px) rotate(-${item.deg}deg)` }} // Counter-rotate to keep icon upright
+                        >
+                           <MotionDiv animate={{ rotate: -360 }} transition={{ duration: 20, repeat: Infinity, ease: "linear" }}>
+                              <item.icon size={18} className={`text-${item.bg.replace('bg-', '')}`} />
+                           </MotionDiv>
+                        </div>
+                     ))}
+                  </MotionDiv>
+
+                  {/* Outer Ring */}
+                  <MotionDiv 
+                     animate={{ rotate: -360 }}
+                     transition={{ duration: 35, repeat: Infinity, ease: "linear" }}
+                     className="absolute w-[450px] h-[450px] rounded-full border border-slate-200 dark:border-white/5 z-0"
+                  >
+                     {[
+                        { icon: Smartphone, color: "text-pink-500", deg: 45 },
+                        { icon: Shield, color: "text-emerald-500", deg: 135 },
+                        { icon: Globe, color: "text-orange-500", deg: 225 },
+                        { icon: Database, color: "text-indigo-500", deg: 315 }
+                     ].map((item, i) => (
+                        <div 
+                           key={i}
+                           className="absolute top-1/2 left-1/2 w-12 h-12 rounded-xl bg-white/80 dark:bg-[#1e293b]/80 backdrop-blur-md shadow-lg flex items-center justify-center border border-slate-200 dark:border-white/10"
+                           style={{ 
+                              transform: `translate(-50%, -50%) rotate(${item.deg}deg) translateY(-225px) rotate(-${item.deg}deg)` 
+                           }}
+                        >
+                           <MotionDiv animate={{ rotate: 360 }} transition={{ duration: 35, repeat: Infinity, ease: "linear" }}>
+                              <item.icon size={20} className={item.color} />
+                           </MotionDiv>
+                        </div>
+                     ))}
+                  </MotionDiv>
                </MotionDiv>
             </div>
          </div>
@@ -570,8 +710,8 @@ export const Home: React.FC = () => {
          </div>
       </section>
 
-      {/* --- WHY CHOOSE US --- */}
-      <section className="py-24 bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
+      {/* --- WHY CHOOSE US (HOLOGRAPHIC TILT) --- */}
+      <section className="py-24 bg-slate-50 dark:bg-[#020617] transition-colors duration-300 perspective-1000">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv 
                variants={fadeInUp}
@@ -599,25 +739,23 @@ export const Home: React.FC = () => {
                  { icon: Server, title: "Scalable Architecture", desc: "Systems built to grow with your business, handling millions of users effortlessly." },
                  { icon: Clock, title: "24/7 Support", desc: "Round-the-clock technical support to ensure your operations never stop." }
                ].slice(0, 4).map((item, idx) => (
-                 <MotionDiv
-                    key={idx}
-                    variants={fadeInUp}
-                    className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 rounded-2xl p-8 hover:border-emerald-500/30 transition-all group shadow-lg dark:shadow-none hover:-translate-y-1 duration-300"
-                 >
-                    <div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-[#1e293b] flex items-center justify-center text-slate-700 dark:text-white mb-6 group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
-                       <item.icon size={28} />
+                 <TiltCard key={idx} className="h-full">
+                    <div className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 rounded-2xl p-8 h-full shadow-lg dark:shadow-2xl">
+                       <div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-[#1e293b] flex items-center justify-center text-slate-700 dark:text-white mb-6 group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
+                          <item.icon size={28} />
+                       </div>
+                       <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{item.title}</h3>
+                       <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                          {item.desc}
+                       </p>
                     </div>
-                    <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3">{item.title}</h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                       {item.desc}
-                    </p>
-                 </MotionDiv>
+                 </TiltCard>
                ))}
             </MotionDiv>
          </div>
       </section>
 
-      {/* --- INTERACTIVE PROJECT ESTIMATOR (NEW) --- */}
+      {/* --- INTERACTIVE PROJECT ESTIMATOR --- */}
       <section className="py-24 bg-slate-100 dark:bg-[#050b1d] border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv
@@ -710,10 +848,14 @@ export const Home: React.FC = () => {
 
                {/* Total Estimate Card */}
                <div className="lg:col-span-1">
-                  <div className="sticky top-24 bg-slate-900 dark:bg-[#0f172a] rounded-3xl p-8 text-white shadow-2xl border border-white/10 relative overflow-hidden">
-                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                  <div className="sticky top-24 bg-gradient-to-br from-[#0f172a] to-[#1e293b] dark:from-[#0f172a] dark:to-[#0f172a] text-white rounded-3xl p-8 shadow-2xl border border-white/10 relative overflow-hidden">
+                     {/* Theme-Adaptive Gradient Background for Light Mode */}
+                     <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-900 opacity-100 dark:opacity-0 transition-opacity duration-300 z-0"></div>
+                     
+                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl pointer-events-none z-0"></div>
+                     
                      <div className="relative z-10">
-                        <h3 className="text-lg font-bold text-slate-300 mb-6 uppercase tracking-wider">Estimated Investment</h3>
+                        <h3 className="text-lg font-bold text-slate-200 mb-6 uppercase tracking-wider">Estimated Investment</h3>
                         
                         <div className="flex items-start mb-8">
                            <span className="text-2xl mt-1 text-slate-400 mr-2">KES</span>
@@ -723,26 +865,27 @@ export const Home: React.FC = () => {
                         </div>
 
                         <div className="space-y-4 mb-8">
-                           <div className="flex justify-between text-sm text-slate-400 border-b border-white/10 pb-2">
+                           <div className="flex justify-between text-sm text-slate-300 border-b border-white/10 pb-2">
                               <span>Platform</span>
                               <span className="text-white capitalize">{platform === 'both' ? 'Web & Mobile' : platform}</span>
                            </div>
-                           <div className="flex justify-between text-sm text-slate-400 border-b border-white/10 pb-2">
+                           <div className="flex justify-between text-sm text-slate-300 border-b border-white/10 pb-2">
                               <span>Features</span>
                               <span className="text-white">{features.length} selected</span>
                            </div>
-                           <div className="flex justify-between text-sm text-slate-400 border-b border-white/10 pb-2">
+                           <div className="flex justify-between text-sm text-slate-300 border-b border-white/10 pb-2">
                               <span>Timeline</span>
                               <span className="text-white capitalize">{urgency}</span>
                            </div>
                         </div>
 
-                        <Link to="/contact" className="block">
-                           <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 py-4 font-bold text-lg shadow-lg shadow-blue-500/25">
-                              Book This Project
-                           </Button>
-                        </Link>
-                        <p className="text-[10px] text-center text-slate-500 mt-4">
+                        <Button 
+                           onClick={handleBookProject}
+                           className="w-full bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-400 hover:to-purple-500 py-4 font-bold text-lg shadow-lg shadow-blue-500/25 border-0 text-white"
+                        >
+                           Send Quote Request
+                        </Button>
+                        <p className="text-[10px] text-center text-slate-400 mt-4">
                            *Estimate is indicative. Final quote provided after consultation.
                         </p>
                      </div>
