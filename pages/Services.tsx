@@ -1,21 +1,55 @@
 
-import React from 'react';
-import { motion } from 'framer-motion';
+import React, { useRef } from 'react';
+import { motion, useScroll, useTransform, useSpring } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { 
   Laptop, Smartphone, Palette, Cloud, BarChart3, Headphones, 
   Layers, CreditCard, Banknote, Wrench, Sliders, Users, 
   CheckCircle2, ArrowRight, Code2, Database, ShieldCheck,
   Search, ClipboardList, Rocket, Calendar, DollarSign,
-  Server, Globe, Cpu, Terminal, Shield, Zap
+  Server, Globe, Cpu, Terminal, Shield, Zap, MousePointer2, Brain
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
-const fadeInUp = {
-  initial: { opacity: 0, y: 20 },
-  whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true },
-  transition: { duration: 0.5 }
+// --- ANIMATED COMPONENTS ---
+
+const PerspectiveGrid = () => {
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none perspective-1000">
+      <div className="absolute inset-0 bg-gradient-to-t from-slate-50 via-transparent to-transparent dark:from-[#020617] dark:via-transparent dark:to-transparent z-10"></div>
+      <motion.div 
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 0.4 }}
+        transition={{ duration: 2 }}
+        className="absolute -top-[50%] -left-[50%] w-[200%] h-[200%] bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:40px_40px] [transform:rotateX(60deg)] animate-[grid-move_20s_linear_infinite]"
+      >
+      </motion.div>
+      <style>{`
+        @keyframes grid-move {
+          0% { transform: rotateX(60deg) translateY(0); }
+          100% { transform: rotateX(60deg) translateY(40px); }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+const HoloCard: React.FC<{ children: React.ReactNode; className?: string }> = ({ children, className = "" }) => {
+  return (
+    <div className={`group relative bg-white/50 dark:bg-[#0f172a]/40 backdrop-blur-md border border-slate-200 dark:border-white/5 rounded-3xl overflow-hidden transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl hover:shadow-blue-500/20 dark:hover:shadow-blue-900/20 ${className}`}>
+      {/* Animated Border Gradient */}
+      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 pointer-events-none">
+        <div className="absolute inset-[-50%] bg-gradient-to-r from-transparent via-blue-500/20 to-transparent rotate-[35deg] translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000 ease-in-out"></div>
+      </div>
+      
+      {/* Inner Glow */}
+      <div className="absolute -inset-px bg-gradient-to-r from-blue-500 to-purple-600 rounded-3xl opacity-0 group-hover:opacity-10 blur-md transition-opacity duration-500"></div>
+      
+      <div className="relative z-10 h-full">
+        {children}
+      </div>
+    </div>
+  );
 };
 
 const servicesList = [
@@ -94,7 +128,7 @@ const servicesList = [
   {
     icon: Wrench,
     color: "amber",
-    title: "System Maintenance & Upgrades",
+    title: "System Maintenance",
     description: "Keep your systems running smoothly with our comprehensive maintenance, upgrade, and advancement services for existing software solutions.",
     features: ["Software Maintenance", "System Upgrades", "Performance Optimization", "Bug Fixes & Updates", "Feature Enhancement"],
     linkText: "Request Service"
@@ -118,382 +152,278 @@ const servicesList = [
 ];
 
 const processSteps = [
-  {
-    step: "1",
-    icon: Search,
-    title: "Discover",
-    desc: "We begin by understanding your business, goals, and challenges through in-depth discussions and research to define project requirements.",
-    color: "bg-blue-600",
-    shadow: "shadow-blue-500/20"
-  },
-  {
-    step: "2",
-    icon: ClipboardList,
-    title: "Plan",
-    desc: "We create a detailed project plan with clear milestones, deliverables, timelines, and success metrics to ensure alignment.",
-    color: "bg-purple-600",
-    shadow: "shadow-purple-500/20"
-  },
-  {
-    step: "3",
-    icon: Code2,
-    title: "Execute",
-    desc: "Our team works diligently to bring your project to life with agile development, regular updates, and continuous feedback loops.",
-    color: "bg-emerald-600",
-    shadow: "shadow-emerald-500/20"
-  },
-  {
-    step: "4",
-    icon: Rocket,
-    title: "Deliver",
-    desc: "We launch your project successfully and provide ongoing support, maintenance, and optimization to ensure long-term success.",
-    color: "bg-yellow-600",
-    shadow: "shadow-yellow-500/20"
-  }
+  { step: "01", title: "Discover", desc: "We dive deep into your business goals, challenges, and user needs through workshops and research.", icon: Search, color: "blue" },
+  { step: "02", title: "Strategy", desc: "We architect a roadmap, selecting the right tech stack and designing the user journey.", icon: MousePointer2, color: "purple" },
+  { step: "03", title: "Design", desc: "We craft high-fidelity prototypes and UI systems that align with your brand identity.", icon: Palette, color: "pink" },
+  { step: "04", title: "Develop", desc: "Our engineers build robust, scalable code using agile methodologies and best practices.", icon: Code2, color: "indigo" },
+  { step: "05", title: "Test", desc: " rigorous QA testing ensures your product is bug-free, secure, and performant.", icon: ShieldCheck, color: "emerald" },
+  { step: "06", title: "Launch", desc: "We handle the deployment and provide post-launch support to ensure a smooth takeoff.", icon: Rocket, color: "orange" },
 ];
 
 const techStack = [
-  {
-    category: "Frontend",
-    icon: Globe,
-    color: "text-blue-500 dark:text-blue-400",
-    techs: ["React.js", "Vue.js", "Angular", "Next.js", "TypeScript", "Tailwind CSS", "Bootstrap"]
-  },
-  {
-    category: "Backend",
-    icon: Server,
-    color: "text-emerald-500 dark:text-emerald-400",
-    techs: ["Node.js", "Python/Django", "PHP", "Laravel", "Java/Spring", ".NET Core", "Ruby on Rails"]
-  },
-  {
-    category: "Mobile",
-    icon: Smartphone,
-    color: "text-purple-500 dark:text-purple-400",
-    techs: ["React Native", "Flutter", "iOS/Swift", "Android/Kotlin", "Ionic", "Xamarin"]
-  },
-  {
-    category: "Database",
-    icon: Database,
-    color: "text-yellow-500 dark:text-yellow-400",
-    techs: ["MySQL", "PostgreSQL", "MongoDB", "Redis", "Firebase", "SQL Server"]
-  },
-  {
-    category: "Cloud & DevOps",
-    icon: Cloud,
-    color: "text-cyan-500 dark:text-cyan-400",
-    techs: ["AWS", "Azure", "Google Cloud", "Docker", "Kubernetes", "Jenkins", "GitHub Actions"]
-  },
-  {
-    category: "AI & ML",
-    icon: Cpu,
-    color: "text-pink-500 dark:text-pink-400",
-    techs: ["TensorFlow", "PyTorch", "OpenAI/GPT", "Scikit-learn", "Keras", "Hugging Face"]
-  }
+  { name: "React", icon: Globe, color: "text-cyan-400" },
+  { name: "Node.js", icon: Server, color: "text-green-500" },
+  { name: "Python", icon: Terminal, color: "text-yellow-400" },
+  { name: "AWS", icon: Cloud, color: "text-orange-500" },
+  { name: "Docker", icon: Layers, color: "text-blue-500" },
+  { name: "Flutter", icon: Smartphone, color: "text-cyan-500" },
+  { name: "TensorFlow", icon: Brain, color: "text-orange-600" },
+  { name: "GraphQL", icon: Database, color: "text-pink-600" },
 ];
 
 export const Services: React.FC = () => {
   const MotionDiv = motion.div as any;
+  const { scrollYProgress } = useScroll();
+  const scaleX = useSpring(scrollYProgress, {
+    stiffness: 100,
+    damping: 30,
+    restDelta: 0.001
+  });
 
   return (
-    <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-0 overflow-hidden transition-colors duration-300">
-      {/* Hero Section */}
-      <div className="relative pt-32 pb-20 overflow-hidden bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
-        {/* Background Gradient & Effects */}
-        <div className="absolute inset-0 bg-gradient-to-b from-purple-100/40 via-slate-50 to-transparent dark:from-purple-900/20 dark:via-[#020617] dark:to-[#020617] z-0"></div>
-        <div className="absolute top-0 left-0 right-0 h-[500px] bg-gradient-to-br from-blue-200/20 via-purple-200/20 to-pink-200/20 dark:from-blue-600/10 dark:via-purple-600/10 dark:to-pink-600/10 blur-[100px] pointer-events-none"></div>
+    <div className="bg-slate-50 dark:bg-[#020617] min-h-screen pb-0 transition-colors duration-300 overflow-hidden">
+      
+      {/* --- CINEMATIC HERO --- */}
+      <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
+        <PerspectiveGrid />
         
-        {/* Floating Shapes */}
-        <div className="absolute top-20 left-[10%] w-24 h-24 border border-slate-200 dark:border-white/5 rounded-full animate-float opacity-30"></div>
-        <div className="absolute top-40 right-[15%] w-16 h-16 bg-blue-500/5 dark:bg-blue-500/10 rounded-lg animate-pulse-slow rotate-12"></div>
-        <div className="absolute bottom-10 left-[20%] w-32 h-32 bg-purple-500/5 rounded-full blur-xl"></div>
+        {/* Floating Orbs */}
+        <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px] animate-pulse-slow"></div>
+        <div className="absolute bottom-1/4 right-1/4 w-64 h-64 bg-blue-500/20 rounded-full blur-[100px] animate-pulse-slow delay-1000"></div>
 
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 text-center">
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <MotionDiv
-             initial={{ opacity: 0, y: -20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.5 }}
+             initial={{ opacity: 0, scale: 0.8 }}
+             animate={{ opacity: 1, scale: 1 }}
+             transition={{ duration: 0.8, ease: "easeOut" }}
+             className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/80 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md text-xs font-bold tracking-[0.2em] uppercase mb-8 text-slate-600 dark:text-slate-300 shadow-xl"
           >
-            <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-white border border-slate-200 dark:bg-white/10 dark:border-white/20 backdrop-blur-md text-xs font-bold tracking-widest uppercase mb-6 text-purple-600 dark:text-slate-300">
-               <Layers size={14} className="mr-2 text-purple-500 dark:text-purple-400" /> Comprehensive Solutions
-            </div>
+             <Layers size={14} className="mr-2 text-purple-500" /> Premium Solutions
           </MotionDiv>
           
           <MotionDiv
-             initial={{ opacity: 0, scale: 0.95 }}
-             animate={{ opacity: 1, scale: 1 }}
-             transition={{ duration: 0.6, delay: 0.1 }}
+             initial={{ opacity: 0, y: 40 }}
+             animate={{ opacity: 1, y: 0 }}
+             transition={{ duration: 0.8, delay: 0.2 }}
           >
-            <h1 className="text-5xl md:text-7xl font-bold text-slate-900 dark:text-white font-display mb-6 tracking-tight">
-              Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-purple-500 to-pink-500">Services</span>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold font-display text-slate-900 dark:text-white mb-8 tracking-tight leading-[1.1]">
+              Architecting the <br />
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 via-purple-600 to-pink-600 dark:from-blue-400 dark:via-purple-400 dark:to-pink-400 animate-gradient-x">
+                Digital Future
+              </span>
             </h1>
           </MotionDiv>
           
           <MotionDiv
              initial={{ opacity: 0, y: 20 }}
              animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.6, delay: 0.2 }}
+             transition={{ duration: 0.8, delay: 0.4 }}
           >
-            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed mb-10">
-              End-to-end technology solutions designed to <span className="text-orange-500 dark:text-orange-400 font-semibold">transform your business</span> and drive digital innovation.
+            <p className="text-lg md:text-xl text-slate-600 dark:text-slate-300 max-w-2xl mx-auto leading-relaxed mb-12 font-light">
+              We fuse <span className="font-semibold text-slate-900 dark:text-white">creative strategy</span> with <span className="font-semibold text-slate-900 dark:text-white">engineering excellence</span> to build software that defines industries.
             </p>
           </MotionDiv>
 
-          {/* Tags */}
+          {/* Floating Tags */}
           <MotionDiv
-             initial={{ opacity: 0, y: 20 }}
-             animate={{ opacity: 1, y: 0 }}
-             transition={{ duration: 0.6, delay: 0.3 }}
-             className="flex flex-wrap justify-center gap-3 md:gap-4"
+             initial={{ opacity: 0 }}
+             animate={{ opacity: 1 }}
+             transition={{ delay: 0.6, duration: 1 }}
+             className="flex flex-wrap justify-center gap-3"
           >
-            {[
-              { icon: Laptop, text: "Web Development" },
-              { icon: Smartphone, text: "Mobile Apps" },
-              { icon: Code2, text: "AI Solutions" },
-              { icon: Cloud, text: "Cloud Services" },
-              { icon: Palette, text: "UI/UX Design" }
-            ].map((tag, i) => (
-              <div key={i} className="flex items-center px-4 py-2 rounded-full bg-white border border-slate-200 dark:bg-white/5 dark:border-white/10 hover:bg-slate-50 dark:hover:bg-white/10 transition-colors text-xs md:text-sm font-medium text-slate-600 dark:text-slate-300">
-                <tag.icon size={14} className="mr-2 text-purple-500 dark:text-purple-400" /> {tag.text}
-              </div>
+            {['Web', 'Mobile', 'AI', 'Cloud', 'Design', 'Strategy'].map((tag, i) => (
+              <span key={i} className="px-4 py-2 rounded-xl bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 text-xs font-bold uppercase text-slate-500 dark:text-slate-400 backdrop-blur-sm hover:scale-105 transition-transform cursor-default">
+                {tag}
+              </span>
             ))}
           </MotionDiv>
         </div>
       </div>
 
-      {/* Services Grid with Micro-Interactions */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10 mb-24 mt-16">
-        <div className="text-center mb-16">
-           <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4">What We <span className="text-blue-500">Offer</span></h2>
-           <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto text-sm md:text-base">From concept to deployment, we provide comprehensive technology solutions that help businesses thrive in the digital age.</p>
-        </div>
-
+      {/* --- SERVICE CARDS (HOLOGRAPHIC GRID) --- */}
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {servicesList.map((service, idx) => (
             <MotionDiv
               key={idx}
-              {...fadeInUp}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true, margin: "-50px" }}
               transition={{ delay: idx * 0.05 }}
-              whileHover={{ y: -8 }}
-              className="group"
             >
-              <div className="h-full bg-white dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-white/5 p-8 hover:border-slate-300 dark:hover:border-white/10 transition-all duration-300 flex flex-col shadow-lg dark:shadow-none hover:shadow-xl dark:hover:shadow-blue-900/10">
-                {/* Icon with Animation */}
-                <div className={`w-14 h-14 rounded-xl bg-${service.color}-100 dark:bg-${service.color}-500/10 flex items-center justify-center text-${service.color}-600 dark:text-${service.color}-500 mb-6 group-hover:scale-110 transition-transform duration-300 border border-${service.color}-200 dark:border-${service.color}-500/20`}>
-                  <MotionDiv
-                    animate={{ y: [0, -3, 0] }}
-                    transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-                    whileHover={{ rotate: [0, -10, 10, -10, 10, 0], scale: 1.1 }}
-                  >
-                    <service.icon size={28} />
-                  </MotionDiv>
+              <HoloCard className="h-full p-8 flex flex-col">
+                {/* Background Pattern */}
+                <div className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05] pointer-events-none bg-[radial-gradient(#6366f1_1px,transparent_1px)] [background-size:16px_16px]"></div>
+
+                <div className={`w-16 h-16 rounded-2xl bg-${service.color}-50 dark:bg-${service.color}-500/10 flex items-center justify-center text-${service.color}-600 dark:text-${service.color}-400 mb-8 border border-${service.color}-100 dark:border-${service.color}-500/20 group-hover:scale-110 group-hover:rotate-6 transition-all duration-500 shadow-lg`}>
+                  <service.icon size={32} />
                 </div>
                 
-                {/* Content */}
-                <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-3 font-display">{service.title}</h3>
-                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-6 flex-grow">
+                <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4 font-display group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">{service.title}</h3>
+                <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed mb-8 flex-grow">
                   {service.description}
                 </p>
 
-                {/* Features List (Expandable Feel) */}
-                <div className="space-y-3 mb-8">
-                   {service.features.map((feature, fIdx) => (
-                     <MotionDiv 
-                        key={fIdx} 
-                        className="flex items-start group/item"
-                        initial={{ opacity: 0.8 }}
-                        whileHover={{ x: 5, opacity: 1 }}
-                     >
-                        <MotionDiv
-                          whileHover={{ scale: 1.3, rotate: 15 }}
-                          className="mr-3 flex-shrink-0"
-                        >
-                           <CheckCircle2 size={16} className={`text-${service.color}-500 mt-0.5`} />
-                        </MotionDiv>
-                        <span className="text-xs md:text-sm text-slate-500 dark:text-slate-300 transition-colors group-hover/item:text-slate-700 dark:group-hover/item:text-white">{feature}</span>
-                     </MotionDiv>
+                <div className="space-y-3 mb-8 border-t border-slate-100 dark:border-white/5 pt-6">
+                   {service.features.slice(0, 3).map((feature, fIdx) => (
+                     <div key={fIdx} className="flex items-center text-xs font-medium text-slate-500 dark:text-slate-400">
+                        <div className={`w-1.5 h-1.5 rounded-full bg-${service.color}-500 mr-2`}></div>
+                        {feature}
+                     </div>
                    ))}
                 </div>
 
-                {/* Action Link */}
                 <Link 
                   to="/contact" 
-                  className={`inline-flex items-center text-xs font-bold uppercase tracking-wider text-${service.color}-600 dark:text-${service.color}-400 hover:text-${service.color}-500 dark:hover:text-${service.color}-300 transition-colors mt-auto group-hover:translate-x-1 duration-300`}
+                  className="mt-auto w-full group/btn"
                 >
-                  {service.linkText} <ArrowRight size={14} className="ml-2" />
+                  <Button variant="outline" className="w-full justify-between group-hover/btn:bg-slate-900 group-hover/btn:text-white dark:group-hover/btn:bg-white dark:group-hover/btn:text-slate-900 border-slate-200 dark:border-white/10">
+                    {service.linkText} 
+                    <ArrowRight size={16} className="group-hover/btn:translate-x-1 transition-transform" />
+                  </Button>
                 </Link>
-              </div>
+              </HoloCard>
             </MotionDiv>
           ))}
         </div>
       </div>
 
-      {/* Our Process Section */}
-      <div className="relative py-24 bg-slate-100 dark:bg-[#050b1d] border-t border-slate-200 dark:border-white/5 transition-colors duration-300">
-         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-blue-500/20 to-transparent"></div>
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      {/* --- LIVE CIRCUIT PROCESS --- */}
+      <div className="relative py-32 bg-slate-100 dark:bg-[#050b1d] border-y border-slate-200 dark:border-white/5 overflow-hidden transition-colors duration-300">
+         {/* Center Line Container */}
+         <div className="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-1 bg-slate-200 dark:bg-white/5 -translate-x-1/2">
+            <motion.div 
+              style={{ scaleY: scrollYProgress, transformOrigin: "top" }}
+              className="w-full h-full bg-gradient-to-b from-blue-500 via-purple-500 to-emerald-500 shadow-[0_0_20px_rgba(59,130,246,0.5)]"
+            />
+         </div>
+
+         <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
             <MotionDiv 
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              className="text-center mb-16"
+              className="text-center mb-24 pl-8 md:pl-0"
             >
-              <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-blue-100 dark:bg-[#1e293b] text-blue-600 dark:text-blue-400 text-xs font-bold tracking-widest uppercase mb-4 border border-blue-500/20">
-                 <ClipboardList size={12} className="mr-2" /> Our Methodology
-              </div>
               <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
-                 Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500">Process</span>
+                 Our Execution <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-indigo-500">Methodology</span>
               </h2>
               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                 We follow a proven methodology to deliver exceptional results and ensure your project's success from start to finish.
+                 Precision-engineered workflow ensuring predictable success.
               </p>
-
-              {/* Payment Terms Card */}
-              <div className="mt-8 inline-block">
-                 <div className="bg-white dark:bg-[#0f172a] border border-blue-500/20 rounded-xl p-4 flex flex-col items-center shadow-lg shadow-blue-900/5">
-                    <div className="flex items-center text-blue-600 dark:text-blue-400 text-sm font-bold mb-2">
-                       <DollarSign size={16} className="mr-1" /> Payment Terms
-                    </div>
-                    <div className="flex gap-4 text-xs">
-                       <div className="flex items-center text-slate-600 dark:text-slate-300">
-                          <CheckCircle2 size={12} className="text-green-500 mr-1.5" /> 
-                          <span className="font-bold text-slate-900 dark:text-white mr-1">40% upfront fee</span> after agreement
-                       </div>
-                       <div className="flex items-center text-slate-600 dark:text-slate-300">
-                          <CheckCircle2 size={12} className="text-green-500 mr-1.5" />
-                          <span className="font-bold text-slate-900 dark:text-white mr-1">Remaining 60%</span> on project delivery
-                       </div>
-                    </div>
-                 </div>
-              </div>
             </MotionDiv>
 
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-6 relative">
-               {/* Connecting Line (Desktop) */}
-               <div className="hidden md:block absolute top-[2.5rem] left-[12%] right-[12%] h-0.5 bg-gradient-to-r from-blue-500/20 via-purple-500/20 to-yellow-500/20 z-0"></div>
-
+            <div className="space-y-20">
                {processSteps.map((step, idx) => (
                   <MotionDiv
                     key={idx}
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ delay: idx * 0.1 }}
-                    className="relative z-10"
+                    initial={{ opacity: 0, x: idx % 2 === 0 ? -50 : 50 }}
+                    whileInView={{ opacity: 1, x: 0 }}
+                    viewport={{ once: true, margin: "-100px" }}
+                    transition={{ duration: 0.6 }}
+                    className={`flex flex-col md:flex-row items-center gap-8 md:gap-16 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''} relative`}
                   >
-                     <div className="bg-white dark:bg-[#1e293b] border border-slate-200 dark:border-white/5 rounded-2xl p-6 h-full flex flex-col items-center text-center hover:border-slate-300 dark:hover:border-white/10 transition-all hover:-translate-y-1 group shadow-lg dark:shadow-none">
-                        <div className={`w-16 h-16 rounded-2xl ${step.color} flex items-center justify-center text-white text-xl font-bold mb-6 ${step.shadow} group-hover:scale-110 transition-transform`}>
-                           {idx + 1}
+                     {/* Mobile Dot */}
+                     <div className="absolute left-[20px] top-0 md:hidden -translate-x-1/2 w-4 h-4 rounded-full bg-slate-900 dark:bg-white border-4 border-slate-100 dark:border-slate-900 z-20"></div>
+
+                     {/* Center Dot Desktop */}
+                     <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 hidden md:flex w-8 h-8 rounded-full bg-slate-50 dark:bg-[#050b1d] border-4 border-slate-200 dark:border-white/10 items-center justify-center z-20 shadow-xl group-hover:border-blue-500 transition-colors">
+                        <div className={`w-2 h-2 rounded-full bg-${step.color}-500`}></div>
+                     </div>
+
+                     <div className="w-full md:w-1/2 pl-12 md:pl-0"></div>
+                     
+                     <div className="w-full md:w-1/2 pl-12 md:pl-0">
+                        <div className={`bg-white dark:bg-[#1e293b]/50 border border-slate-200 dark:border-white/5 p-8 rounded-2xl relative group hover:-translate-y-1 transition-transform duration-300 shadow-lg dark:shadow-none hover:shadow-xl hover:border-${step.color}-500/30`}>
+                           <div className={`absolute top-0 left-0 w-1 h-full bg-${step.color}-500 rounded-l-2xl opacity-0 group-hover:opacity-100 transition-opacity`}></div>
+                           <div className="flex items-center gap-4 mb-4">
+                              <div className={`w-12 h-12 rounded-xl bg-${step.color}-100 dark:bg-${step.color}-500/20 flex items-center justify-center text-${step.color}-600 dark:text-${step.color}-400`}>
+                                 <step.icon size={24} />
+                              </div>
+                              <div>
+                                 <span className={`text-xs font-bold text-${step.color}-600 dark:text-${step.color}-400 uppercase tracking-wider`}>Step {step.step}</span>
+                                 <h3 className="text-xl font-bold text-slate-900 dark:text-white">{step.title}</h3>
+                              </div>
+                           </div>
+                           <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
+                              {step.desc}
+                           </p>
                         </div>
-                        <div className="mb-4">
-                           <MotionDiv
-                             whileHover={{ rotate: 20, scale: 1.2 }}
-                           >
-                             <step.icon size={24} className="text-slate-400 mx-auto mb-2" />
-                           </MotionDiv>
-                           <h3 className="text-xl font-bold text-slate-900 dark:text-white">{step.title}</h3>
-                        </div>
-                        <p className="text-slate-600 dark:text-slate-400 text-sm leading-relaxed">
-                           {step.desc}
-                        </p>
                      </div>
                   </MotionDiv>
                ))}
             </div>
+         </div>
+      </div>
 
-            <div className="text-center mt-12">
+      {/* --- TECH CONSTELLATION --- */}
+      <div className="py-32 bg-slate-50 dark:bg-[#020617] relative overflow-hidden">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center relative z-10">
+            <MotionDiv
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="mb-20"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white mb-6">
+                  Powered by <span className="text-slate-400">World-Class Tech</span>
+               </h2>
+               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+                  Our ecosystem thrives on the most advanced, scalable, and secure technologies available today.
+               </p>
+            </MotionDiv>
+
+            <div className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
+               {techStack.map((tech, idx) => (
+                  <MotionDiv
+                     key={idx}
+                     initial={{ opacity: 0, scale: 0 }}
+                     whileInView={{ opacity: 1, scale: 1 }}
+                     viewport={{ once: true }}
+                     transition={{ delay: idx * 0.05, type: "spring" }}
+                     whileHover={{ y: -10 }}
+                     className="relative group"
+                  >
+                     <div className="px-6 py-4 bg-white dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-white/5 shadow-lg dark:shadow-none flex items-center space-x-3 hover:border-blue-500/30 transition-colors">
+                        <tech.icon size={20} className={tech.color} />
+                        <span className="font-bold text-slate-700 dark:text-slate-200">{tech.name}</span>
+                     </div>
+                  </MotionDiv>
+               ))}
+            </div>
+         </div>
+      </div>
+
+      {/* --- CTA PORTAL --- */}
+      <div className="relative py-32 overflow-hidden">
+         <div className="absolute inset-0 bg-[#0f172a]">
+            <div className="absolute inset-0 bg-gradient-to-r from-blue-600/20 to-purple-600/20"></div>
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[120px]"></div>
+         </div>
+         
+         <div className="relative z-10 max-w-4xl mx-auto px-4 text-center">
+            <h2 className="text-4xl md:text-6xl font-bold text-white font-display mb-8">
+               Ready to Launch?
+            </h2>
+            <p className="text-slate-300 text-lg mb-12 max-w-2xl mx-auto font-light">
+               Partner with a team that treats your product with the same passion as you do. Let's build something iconic.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-6 justify-center">
                <Link to="/contact">
-                  <Button className="bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-700 hover:to-purple-700 shadow-lg shadow-blue-900/20 text-white">
-                     <Rocket size={16} className="mr-2" /> Start Your Project Today <ArrowRight size={16} className="ml-2" />
+                  <Button className="bg-white text-slate-900 hover:bg-blue-50 font-bold px-10 py-4 h-auto text-lg rounded-full shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-transform hover:scale-105">
+                     Start Project
+                  </Button>
+               </Link>
+               <Link to="/pricing">
+                  <Button variant="outline" className="border-white/20 text-white hover:bg-white/10 font-bold px-10 py-4 h-auto text-lg rounded-full backdrop-blur-md">
+                     View Plans
                   </Button>
                </Link>
             </div>
          </div>
       </div>
 
-      {/* Technology Stack Section */}
-      <div className="py-24 bg-white dark:bg-[#020617] border-t border-slate-200 dark:border-white/5">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <MotionDiv 
-               initial={{ opacity: 0, y: 20 }}
-               whileInView={{ opacity: 1, y: 0 }}
-               viewport={{ once: true }}
-               className="text-center mb-16"
-            >
-               <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
-                  Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-emerald-500 to-cyan-500">Technology Stack</span>
-               </h2>
-               <div className="h-1 w-20 bg-gradient-to-r from-emerald-500 to-cyan-500 rounded-full mx-auto mb-6"></div>
-               <p className="text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
-                  We work with modern technologies and frameworks to build robust, scalable, and future-proof solutions.
-               </p>
-            </MotionDiv>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8">
-               {techStack.map((stack, idx) => (
-                  <MotionDiv
-                     key={idx}
-                     initial={{ opacity: 0, scale: 0.9 }}
-                     whileInView={{ opacity: 1, scale: 1 }}
-                     viewport={{ once: true }}
-                     transition={{ delay: idx * 0.05 }}
-                     className="flex flex-col items-center group"
-                  >
-                     <div className="w-12 h-12 rounded-xl bg-slate-100 dark:bg-[#1e293b] flex items-center justify-center mb-4 border border-slate-200 dark:border-white/5 shadow-sm dark:shadow-none group-hover:scale-110 transition-transform">
-                        <MotionDiv
-                          whileHover={{ rotate: 360 }}
-                          transition={{ duration: 0.7 }}
-                        >
-                           <stack.icon size={24} className={stack.color} />
-                        </MotionDiv>
-                     </div>
-                     <h3 className="text-slate-900 dark:text-white font-bold text-sm mb-3">{stack.category}</h3>
-                     <ul className="space-y-1.5 text-center">
-                        {stack.techs.map((tech, tIdx) => (
-                           <li key={tIdx} className="text-xs text-slate-500 hover:text-slate-800 dark:hover:text-slate-300 transition-colors">
-                              {tech}
-                           </li>
-                        ))}
-                     </ul>
-                  </MotionDiv>
-               ))}
-            </div>
-         </div>
-      </div>
-
-      {/* Bottom CTA Section */}
-      <div className="relative py-20 bg-blue-600 overflow-hidden">
-         {/* Decorative Circles/Background */}
-         <div className="absolute top-0 left-0 w-64 h-64 bg-white/10 rounded-full blur-3xl -translate-x-1/2 -translate-y-1/2 pointer-events-none"></div>
-         <div className="absolute bottom-0 right-0 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl translate-x-1/3 translate-y-1/3 pointer-events-none"></div>
-         
-         <div className="max-w-4xl mx-auto px-4 text-center relative z-10">
-            <MotionDiv
-               initial={{ opacity: 0, scale: 0.9 }}
-               whileInView={{ opacity: 1, scale: 1 }}
-               viewport={{ once: true }}
-            >
-               <h2 className="text-3xl md:text-5xl font-bold text-white font-display mb-6">
-                  Ready to Transform Your Business?
-               </h2>
-               <p className="text-blue-100 text-lg mb-10 max-w-2xl mx-auto">
-                  Let's discuss how our technology solutions can help you achieve your business goals and drive growth.
-               </p>
-               
-               <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                  <Link to="/contact">
-                     <Button className="bg-white text-blue-600 hover:bg-gray-100 border-0 font-bold px-8 py-4 h-auto text-base shadow-xl">
-                        <Calendar size={18} className="mr-2" /> Schedule a Consultation
-                     </Button>
-                  </Link>
-                  <Link to="/pricing">
-                     <Button variant="outline" className="border-2 border-white/30 text-white hover:bg-white/10 hover:border-white font-bold px-8 py-4 h-auto text-base">
-                        <DollarSign size={18} className="mr-2" /> View Pricing
-                     </Button>
-                  </Link>
-               </div>
-            </MotionDiv>
-         </div>
-      </div>
     </div>
   );
 };
