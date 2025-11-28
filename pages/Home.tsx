@@ -1,11 +1,13 @@
 
 import React, { useState, useEffect } from 'react';
-import { motion, useScroll, useTransform, AnimatePresence } from 'framer-motion';
+import { motion, useScroll, useTransform, AnimatePresence, animate, useMotionValue } from 'framer-motion';
 import { 
   ArrowRight, Brain, Shield, 
   Clock, Server, Globe, Smartphone, 
   Code2, Rocket, Bot, 
-  Layout, Cloud, ChevronRight, Star, ChevronLeft, Quote
+  Layout, Cloud, ChevronRight, Star, ChevronLeft, Quote,
+  Check, Zap, Database, CreditCard, Lock, Monitor, Laptop, Repeat,
+  ShoppingCart, MessageSquare, Home as HomeIcon
 } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
@@ -42,12 +44,33 @@ const scaleIn = {
   }
 };
 
+// Counter Component for Price
+const Counter = ({ value }: { value: number }) => {
+  const [displayValue, setDisplayValue] = useState(0);
+  
+  useEffect(() => {
+    const controls = animate(displayValue, value, {
+      duration: 0.5,
+      onUpdate: (v) => setDisplayValue(Math.floor(v)),
+      ease: "circOut"
+    });
+    return controls.stop;
+  }, [value]);
+
+  return <>{displayValue.toLocaleString()}</>;
+};
+
 export const Home: React.FC = () => {
   const { scrollY } = useScroll();
   const y1 = useTransform(scrollY, [0, 500], [0, 200]);
   const y2 = useTransform(scrollY, [0, 500], [0, -150]);
   const [greeting, setGreeting] = useState('');
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+
+  // Estimator State
+  const [platform, setPlatform] = useState<'web' | 'mobile' | 'both'>('web');
+  const [features, setFeatures] = useState<string[]>([]);
+  const [urgency, setUrgency] = useState<'standard' | 'fast' | 'rush'>('standard');
 
   const MotionDiv = motion.div as any;
   const MotionButton = motion.button as any;
@@ -71,6 +94,35 @@ export const Home: React.FC = () => {
 
   const prevTestimonial = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  // Estimator Logic
+  const calculateEstimate = () => {
+    let base = 0;
+    if (platform === 'web') base = 50000;
+    if (platform === 'mobile') base = 250000;
+    if (platform === 'both') base = 450000;
+
+    const featureCosts:Record<string, number> = {
+      'ai': 100000,
+      'auth': 30000,
+      'payments': 40000,
+      'cms': 50000,
+      'analytics': 30000,
+      'chat': 60000
+    };
+
+    let extras = features.reduce((acc, feat) => acc + (featureCosts[feat] || 0), 0);
+    
+    let multiplier = 1;
+    if (urgency === 'fast') multiplier = 1.25;
+    if (urgency === 'rush') multiplier = 1.5;
+
+    return Math.round((base + extras) * multiplier);
+  };
+
+  const toggleFeature = (feat: string) => {
+    setFeatures(prev => prev.includes(feat) ? prev.filter(f => f !== feat) : [...prev, feat]);
   };
 
   return (
@@ -180,6 +232,79 @@ export const Home: React.FC = () => {
                ))}
              </div>
           </MotionDiv>
+      </section>
+
+      {/* --- INFINITE CLIENT MARQUEE (NEW) --- */}
+      <section className="py-10 bg-white dark:bg-[#050b1d] border-b border-slate-200 dark:border-white/5 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-6">
+           <p className="text-center text-sm font-bold uppercase tracking-widest text-slate-400 dark:text-slate-500">Trusted By Industry Leaders</p>
+        </div>
+        <div className="relative flex overflow-x-hidden group">
+           <div className="animate-marquee whitespace-nowrap flex items-center space-x-16">
+              {[...Array(2)].map((_, i) => (
+                 <React.Fragment key={i}>
+                    {[
+                      { name: "Google", icon: Globe },
+                      { name: "Amazon", icon: ShoppingCart },
+                      { name: "Microsoft", icon: Monitor },
+                      { name: "Spotify", icon: Zap },
+                      { name: "Slack", icon: MessageSquare },
+                      { name: "Airbnb", icon: HomeIcon },
+                      { name: "Uber", icon: Smartphone },
+                      { name: "Netflix", icon: Repeat }
+                    ].map((brand, idx) => (
+                       <div key={idx} className="flex items-center space-x-2 text-slate-400 dark:text-slate-600 hover:text-slate-800 dark:hover:text-slate-300 transition-colors cursor-pointer mx-8">
+                          <brand.icon size={28} />
+                          <span className="text-xl font-bold font-display">{brand.name}</span>
+                       </div>
+                    ))}
+                 </React.Fragment>
+              ))}
+           </div>
+           
+           {/* Clone for seamless loop */}
+           <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex items-center space-x-16">
+              {[...Array(2)].map((_, i) => (
+                 <React.Fragment key={i}>
+                    {[
+                      { name: "Google", icon: Globe },
+                      { name: "Amazon", icon: ShoppingCart },
+                      { name: "Microsoft", icon: Monitor },
+                      { name: "Spotify", icon: Zap },
+                      { name: "Slack", icon: MessageSquare },
+                      { name: "Airbnb", icon: HomeIcon },
+                      { name: "Uber", icon: Smartphone },
+                      { name: "Netflix", icon: Repeat }
+                    ].map((brand, idx) => (
+                       <div key={idx} className="flex items-center space-x-2 text-slate-400 dark:text-slate-600 hover:text-slate-800 dark:hover:text-slate-300 transition-colors cursor-pointer mx-8">
+                          <brand.icon size={28} />
+                          <span className="text-xl font-bold font-display">{brand.name}</span>
+                       </div>
+                    ))}
+                 </React.Fragment>
+              ))}
+           </div>
+           
+           {/* Fade Masks */}
+           <div className="absolute inset-y-0 left-0 w-32 bg-gradient-to-r from-white dark:from-[#050b1d] to-transparent pointer-events-none"></div>
+           <div className="absolute inset-y-0 right-0 w-32 bg-gradient-to-l from-white dark:from-[#050b1d] to-transparent pointer-events-none"></div>
+        </div>
+        <style>{`
+          @keyframes marquee {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(-100%); }
+          }
+          @keyframes marquee2 {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(0); }
+          }
+          .animate-marquee {
+            animation: marquee 40s linear infinite;
+          }
+          .animate-marquee2 {
+            animation: marquee2 40s linear infinite;
+          }
+        `}</style>
       </section>
 
       {/* --- SERVICES PREVIEW --- */}
@@ -393,7 +518,7 @@ export const Home: React.FC = () => {
          </div>
       </section>
 
-      {/* --- TESTIMONIALS CAROUSEL (NEW) --- */}
+      {/* --- TESTIMONIALS CAROUSEL --- */}
       <section className="py-24 bg-white dark:bg-[#050b1d] border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv 
@@ -489,6 +614,141 @@ export const Home: React.FC = () => {
                  </MotionDiv>
                ))}
             </MotionDiv>
+         </div>
+      </section>
+
+      {/* --- INTERACTIVE PROJECT ESTIMATOR (NEW) --- */}
+      <section className="py-24 bg-slate-100 dark:bg-[#050b1d] border-y border-slate-200 dark:border-white/5 transition-colors duration-300">
+         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <MotionDiv
+               initial={{ opacity: 0, y: 20 }}
+               whileInView={{ opacity: 1, y: 0 }}
+               viewport={{ once: true }}
+               className="text-center mb-16"
+            >
+               <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
+                  Estimate Your <span className="text-blue-600 dark:text-blue-500">Project</span>
+               </h2>
+               <p className="text-slate-600 dark:text-slate-400 text-lg">Build your custom package and get an instant ballpark figure.</p>
+            </MotionDiv>
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+               {/* Controls */}
+               <div className="lg:col-span-2 space-y-8">
+                  {/* Platform Selector */}
+                  <div className="bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 rounded-2xl p-8 shadow-sm">
+                     <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center"><Globe size={20} className="mr-2 text-blue-500" /> Platform</h3>
+                     <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                        {[
+                          { id: 'web', label: 'Web Only', icon: Laptop, price: '50k+' },
+                          { id: 'mobile', label: 'Mobile App', icon: Smartphone, price: '250k+' },
+                          { id: 'both', label: 'Web & Mobile', icon: Layout, price: '450k+' }
+                        ].map((opt) => (
+                           <div 
+                             key={opt.id}
+                             onClick={() => setPlatform(opt.id as any)}
+                             className={`cursor-pointer rounded-xl p-4 border-2 transition-all ${platform === opt.id ? 'border-blue-500 bg-blue-50 dark:bg-blue-500/10' : 'border-slate-200 dark:border-white/10 hover:border-blue-300 dark:hover:border-white/20'}`}
+                           >
+                              <div className={`w-10 h-10 rounded-full flex items-center justify-center mb-3 ${platform === opt.id ? 'bg-blue-500 text-white' : 'bg-slate-100 dark:bg-white/10 text-slate-500 dark:text-slate-400'}`}>
+                                 <opt.icon size={20} />
+                              </div>
+                              <div className="font-bold text-slate-900 dark:text-white">{opt.label}</div>
+                              <div className="text-xs text-slate-500 dark:text-slate-400 mt-1">Starts at {opt.price}</div>
+                           </div>
+                        ))}
+                     </div>
+                  </div>
+
+                  {/* Feature Toggles */}
+                  <div className="bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 rounded-2xl p-8 shadow-sm">
+                     <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center"><Code2 size={20} className="mr-2 text-purple-500" /> Add-on Features</h3>
+                     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
+                        {[
+                          { id: 'ai', label: 'AI Integration', icon: Brain },
+                          { id: 'auth', label: 'User Auth', icon: Lock },
+                          { id: 'payments', label: 'Payments', icon: CreditCard },
+                          { id: 'cms', label: 'Custom CMS', icon: Database },
+                          { id: 'analytics', label: 'Analytics', icon: Star },
+                          { id: 'chat', label: 'Live Chat', icon: MessageSquare }
+                        ].map((feat) => (
+                           <div 
+                             key={feat.id}
+                             onClick={() => toggleFeature(feat.id)}
+                             className={`flex items-center p-3 rounded-lg border cursor-pointer transition-all ${features.includes(feat.id) ? 'border-purple-500 bg-purple-50 dark:bg-purple-500/10' : 'border-slate-200 dark:border-white/10 hover:border-purple-300'}`}
+                           >
+                              <div className={`mr-3 ${features.includes(feat.id) ? 'text-purple-600 dark:text-purple-400' : 'text-slate-400'}`}>
+                                 <feat.icon size={18} />
+                              </div>
+                              <span className={`text-sm font-medium ${features.includes(feat.id) ? 'text-purple-900 dark:text-white' : 'text-slate-600 dark:text-slate-400'}`}>{feat.label}</span>
+                              {features.includes(feat.id) && <Check size={16} className="ml-auto text-purple-500" />}
+                           </div>
+                        ))}
+                     </div>
+                  </div>
+
+                  {/* Urgency Slider */}
+                  <div className="bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 rounded-2xl p-8 shadow-sm">
+                     <h3 className="text-lg font-bold text-slate-900 dark:text-white mb-6 flex items-center"><Clock size={20} className="mr-2 text-orange-500" /> Timeline Urgency</h3>
+                     <div className="flex justify-between mb-2 text-sm font-medium text-slate-600 dark:text-slate-400">
+                        <span className={urgency === 'standard' ? 'text-orange-500 font-bold' : ''}>Standard</span>
+                        <span className={urgency === 'fast' ? 'text-orange-500 font-bold' : ''}>Fast Track (+25%)</span>
+                        <span className={urgency === 'rush' ? 'text-orange-500 font-bold' : ''}>Rush (+50%)</span>
+                     </div>
+                     <input 
+                       type="range" 
+                       min="0" 
+                       max="2" 
+                       step="1" 
+                       className="w-full h-2 bg-slate-200 dark:bg-white/10 rounded-lg appearance-none cursor-pointer accent-orange-500"
+                       onChange={(e) => {
+                          const val = parseInt(e.target.value);
+                          setUrgency(val === 0 ? 'standard' : val === 1 ? 'fast' : 'rush');
+                       }}
+                     />
+                  </div>
+               </div>
+
+               {/* Total Estimate Card */}
+               <div className="lg:col-span-1">
+                  <div className="sticky top-24 bg-slate-900 dark:bg-[#0f172a] rounded-3xl p-8 text-white shadow-2xl border border-white/10 relative overflow-hidden">
+                     <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl pointer-events-none"></div>
+                     <div className="relative z-10">
+                        <h3 className="text-lg font-bold text-slate-300 mb-6 uppercase tracking-wider">Estimated Investment</h3>
+                        
+                        <div className="flex items-start mb-8">
+                           <span className="text-2xl mt-1 text-slate-400 mr-2">KES</span>
+                           <div className="text-5xl font-display font-bold text-white">
+                              <Counter value={calculateEstimate()} />
+                           </div>
+                        </div>
+
+                        <div className="space-y-4 mb-8">
+                           <div className="flex justify-between text-sm text-slate-400 border-b border-white/10 pb-2">
+                              <span>Platform</span>
+                              <span className="text-white capitalize">{platform === 'both' ? 'Web & Mobile' : platform}</span>
+                           </div>
+                           <div className="flex justify-between text-sm text-slate-400 border-b border-white/10 pb-2">
+                              <span>Features</span>
+                              <span className="text-white">{features.length} selected</span>
+                           </div>
+                           <div className="flex justify-between text-sm text-slate-400 border-b border-white/10 pb-2">
+                              <span>Timeline</span>
+                              <span className="text-white capitalize">{urgency}</span>
+                           </div>
+                        </div>
+
+                        <Link to="/contact" className="block">
+                           <Button className="w-full bg-gradient-to-r from-blue-600 to-purple-600 hover:from-blue-500 hover:to-purple-500 py-4 font-bold text-lg shadow-lg shadow-blue-500/25">
+                              Book This Project
+                           </Button>
+                        </Link>
+                        <p className="text-[10px] text-center text-slate-500 mt-4">
+                           *Estimate is indicative. Final quote provided after consultation.
+                        </p>
+                     </div>
+                  </div>
+               </div>
+            </div>
          </div>
       </section>
 
