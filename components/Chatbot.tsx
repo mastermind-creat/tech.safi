@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Bot, Minimize2, User, Sparkles } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, Minimize2, User, Sparkles, AlertCircle, WifiOff } from 'lucide-react';
 import { Button } from './ui/Button';
 import { GoogleGenAI } from "@google/genai";
 
@@ -15,6 +15,7 @@ interface Message {
 export const Chatbot: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isTyping, setIsTyping] = useState(false);
+  const [isAiActive, setIsAiActive] = useState(false);
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
@@ -29,58 +30,97 @@ export const Chatbot: React.FC = () => {
   const MotionDiv = motion.div as any;
   const MotionButton = motion.button as any;
 
-  // Initialize Gemini Chat Session with detailed company knowledge
-  useEffect(() => {
-    try {
-      const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-      chatSessionRef.current = ai.chats.create({
-        model: 'gemini-3-pro-preview',
-        config: {
-          systemInstruction: `You are the intelligent virtual assistant for TechSafi, a premier AI-driven software company in Nairobi, Kenya.
-          
-          **Company Profile:**
-          - **Name:** TechSafi
-          - **Tagline:** Innovation Elevated
-          - **Mission:** Empowering businesses with AI, custom software, and digital transformation.
-          - **Location:** Nairobi, Kenya.
-          - **Contact:** info@techsafi.com | +254 751 380 948 | +254 110 046 523
-          - **Support:** Available 24/7.
-
-          **Services & Pricing (KES):**
-          *Web Development:*
-          - **Portfolio Website:** KES 35,000 (5 pages, Basic SEO)
-          - **Business Website:** KES 85,000 (10 pages, CMS, Blog)
-          - **E-commerce Store:** KES 150,000 (Shopping cart, M-Pesa Integration)
-
-          *Mobile App Development:*
-          - **Basic App:** KES 250,000 (Cross-platform, 5 screens)
-          - **Advanced App:** KES 550,000 (Native, User Auth, Payments)
-
-          *AI Integration:*
-          - **AI Chatbot:** KES 60,000
-          - **Advanced AI Features:** KES 180,000 (GPT Integration, Recommendations)
-          - **Enterprise AI Suite:** KES 350,000
-          - **AI-Powered Website:** KES 280,000
-          - **Custom AI Application:** Starting at KES 700,000+
-
-          *Monthly Services:*
-          - **Chatbot Maintenance:** KES 10,000/mo
-          - **Website Maintenance:** KES 15,000/mo
-          - **SEO Optimization:** KES 25,000/mo
-          - **AI Model Training:** KES 30,000/mo
-
-          **Tone & Style:**
-          - Professional, enthusiastic, and helpful.
-          - Use Markdown formatting for lists and bold text to make responses readable.
-          - Keep answers concise but informative.
-          - If asked about custom projects not listed, encourage the user to use the Contact form for a custom quote.
-          - Always mention prices in KES.
-          `
-        }
-      });
-    } catch (error) {
-      console.error("Failed to initialize AI:", error);
+  // Fallback Logic: Rule-based responses when AI is down
+  const getFallbackResponse = (query: string): string => {
+    const lowerQuery = query.toLowerCase();
+    
+    if (lowerQuery.includes('price') || lowerQuery.includes('cost') || lowerQuery.includes('how much')) {
+      return "**Pricing Overview:**\n\n- **Websites:** Start at KES 35,000 (Portfolio) to KES 150,000 (E-commerce).\n- **Mobile Apps:** Start at KES 250,000.\n- **AI Chatbots:** KES 60,000.\n\nVisit our **Pricing** page for full details.";
     }
+    if (lowerQuery.includes('web') || lowerQuery.includes('website')) {
+      return "We build Portfolio websites, Business sites, and E-commerce stores. Our packages include SEO, mobile design, and support. Prices range from KES 35,000 to KES 150,000.";
+    }
+    if (lowerQuery.includes('mobile') || lowerQuery.includes('app') || lowerQuery.includes('android') || lowerQuery.includes('ios')) {
+      return "We develop native (iOS/Android) and cross-platform apps using React Native. A basic utility app starts at KES 250,000, while feature-rich apps start at KES 550,000.";
+    }
+    if (lowerQuery.includes('ai') || lowerQuery.includes('intelligence') || lowerQuery.includes('bot')) {
+      return "Our AI solutions include Custom Chatbots (KES 60k), Predictive Analytics, and full AI Software integration. We use tools like OpenAI, TensorFlow, and Gemini.";
+    }
+    if (lowerQuery.includes('contact') || lowerQuery.includes('email') || lowerQuery.includes('phone') || lowerQuery.includes('location')) {
+      return "You can reach us at:\n\n- **Email:** info@techsafi.com\n- **Phone:** +254 751 380 948\n- **Location:** Nairobi, Kenya\n\nOr use the Contact form on our site.";
+    }
+    if (lowerQuery.includes('hello') || lowerQuery.includes('hi') || lowerQuery.includes('hey')) {
+      return "Hello! I'm here to help with your tech needs. You can ask about our services, pricing, or company info.";
+    }
+    
+    return "I'm currently operating in basic mode and didn't quite catch that. You can ask about **pricing**, **services**, or **contact info**, or email us at info@techsafi.com for complex queries.";
+  };
+
+  // Initialize Gemini Chat Session
+  useEffect(() => {
+    const initAI = async () => {
+      try {
+        const apiKey = process.env.API_KEY;
+        if (!apiKey || apiKey.includes('your_api_key')) {
+          console.warn("Gemini API Key missing or invalid. Switching to fallback mode.");
+          setIsAiActive(false);
+          return;
+        }
+
+        const ai = new GoogleGenAI({ apiKey });
+        chatSessionRef.current = ai.chats.create({
+          model: 'gemini-3-pro-preview',
+          config: {
+            systemInstruction: `You are the intelligent virtual assistant for TechSafi, a premier AI-driven software company in Nairobi, Kenya.
+            
+            **Company Profile:**
+            - **Name:** TechSafi
+            - **Tagline:** Innovation Elevated
+            - **Mission:** Empowering businesses with AI, custom software, and digital transformation.
+            - **Location:** Nairobi, Kenya.
+            - **Contact:** info@techsafi.com | +254 751 380 948 | +254 110 046 523
+            - **Support:** Available 24/7.
+
+            **Services & Pricing (KES):**
+            *Web Development:*
+            - **Portfolio Website:** KES 35,000 (5 pages, Basic SEO)
+            - **Business Website:** KES 85,000 (10 pages, CMS, Blog)
+            - **E-commerce Store:** KES 150,000 (Shopping cart, M-Pesa Integration)
+
+            *Mobile App Development:*
+            - **Basic App:** KES 250,000 (Cross-platform, 5 screens)
+            - **Advanced App:** KES 550,000 (Native, User Auth, Payments)
+
+            *AI Integration:*
+            - **AI Chatbot:** KES 60,000
+            - **Advanced AI Features:** KES 180,000 (GPT Integration, Recommendations)
+            - **Enterprise AI Suite:** KES 350,000
+            - **AI-Powered Website:** KES 280,000
+            - **Custom AI Application:** Starting at KES 700,000+
+
+            *Monthly Services:*
+            - **Chatbot Maintenance:** KES 10,000/mo
+            - **Website Maintenance:** KES 15,000/mo
+            - **SEO Optimization:** KES 25,000/mo
+            - **AI Model Training:** KES 30,000/mo
+
+            **Tone & Style:**
+            - Professional, enthusiastic, and helpful.
+            - Use Markdown formatting for lists and bold text to make responses readable.
+            - Keep answers concise but informative.
+            - If asked about custom projects not listed, encourage the user to use the Contact form for a custom quote.
+            - Always mention prices in KES.
+            `
+          }
+        });
+        setIsAiActive(true);
+      } catch (error) {
+        console.error("Failed to initialize AI:", error);
+        setIsAiActive(false);
+      }
+    };
+
+    initAI();
   }, []);
 
   const scrollToBottom = () => {
@@ -107,33 +147,46 @@ export const Chatbot: React.FC = () => {
     setIsTyping(true);
 
     try {
-      if (!chatSessionRef.current) {
-         // Re-init if lost (though useEffect should handle it)
-         const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
-         chatSessionRef.current = ai.chats.create({ model: 'gemini-3-pro-preview' });
+      // Check if AI is initialized and active
+      if (isAiActive && chatSessionRef.current) {
+        const result = await chatSessionRef.current.sendMessage({ message: userMsg.text });
+        
+        if (result.text) {
+          const botResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'bot',
+            text: result.text,
+            timestamp: new Date()
+          };
+          setMessages(prev => [...prev, botResponse]);
+        } else {
+          throw new Error("Empty response from AI");
+        }
+      } else {
+        // AI not active, throw to catch block for fallback
+        throw new Error("AI not active");
       }
-
-      const result = await chatSessionRef.current.sendMessage({ message: userMsg.text });
-      
-      const botResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'bot',
-        text: result.text || "I'm processing that information but didn't get a clear result. Could you rephrase?",
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, botResponse]);
     } catch (error) {
-      console.error("AI Error:", error);
-      const errorResponse: Message = {
-        id: (Date.now() + 1).toString(),
-        type: 'bot',
-        text: "I'm currently experiencing high traffic. Please email info@techsafi.com for immediate assistance.",
-        timestamp: new Date()
-      };
-      setMessages(prev => [...prev, errorResponse]);
-    } finally {
-      setIsTyping(false);
-    }
+      console.warn("AI service unavailable or failed, using fallback.", error);
+      
+      // Artificial delay for fallback to feel natural
+      setTimeout(() => {
+        const fallbackText = getFallbackResponse(userMsg.text);
+        const fallbackResponse: Message = {
+          id: (Date.now() + 1).toString(),
+          type: 'bot',
+          text: fallbackText,
+          timestamp: new Date()
+        };
+        setMessages(prev => [...prev, fallbackResponse]);
+        setIsTyping(false);
+      }, 600);
+      
+      // Return early since we handled the state update in timeout
+      return; 
+    } 
+    
+    setIsTyping(false);
   };
 
   // Helper to render basic markdown-like formatting
@@ -168,7 +221,7 @@ export const Chatbot: React.FC = () => {
             className="fixed bottom-24 right-6 z-50 w-14 h-14 bg-gradient-to-r from-blue-600 to-purple-600 rounded-full shadow-lg shadow-purple-500/30 flex items-center justify-center text-white focus:outline-none"
           >
             <MessageCircle size={28} />
-            <span className="absolute top-0 right-0 w-3 h-3 bg-green-500 rounded-full border-2 border-white dark:border-[#020617] animate-pulse"></span>
+            <span className={`absolute top-0 right-0 w-3 h-3 rounded-full border-2 border-white dark:border-[#020617] ${isAiActive ? 'bg-green-500 animate-pulse' : 'bg-amber-500'}`}></span>
           </MotionButton>
         )}
       </AnimatePresence>
@@ -189,10 +242,19 @@ export const Chatbot: React.FC = () => {
                   <Bot size={20} />
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">TechSafi AI Assistant</h3>
+                  <h3 className="font-bold text-sm">TechSafi Assistant</h3>
                   <div className="flex items-center text-[10px] text-blue-100">
-                    <span className="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5 animate-pulse"></span>
-                    Gemini 3 Pro Powered
+                    {isAiActive ? (
+                      <>
+                        <span className="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5 animate-pulse"></span>
+                        Gemini 3 Pro Online
+                      </>
+                    ) : (
+                      <>
+                        <span className="w-1.5 h-1.5 bg-amber-400 rounded-full mr-1.5"></span>
+                        Automated Support
+                      </>
+                    )}
                   </div>
                 </div>
               </div>
@@ -208,6 +270,15 @@ export const Chatbot: React.FC = () => {
 
             {/* Messages Area */}
             <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-[#020617]/50 scrollbar-thin">
+              {/* Connection Status Notice if Offline */}
+              {!isAiActive && (
+                <div className="flex justify-center mb-4">
+                  <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 text-xs px-3 py-1.5 rounded-full flex items-center border border-amber-200 dark:border-amber-700/50">
+                    <WifiOff size={10} className="mr-1.5" /> AI Offline - Using Basic Rules
+                  </div>
+                </div>
+              )}
+
               {messages.map((msg) => (
                 <MotionDiv
                   key={msg.id}
@@ -259,7 +330,7 @@ export const Chatbot: React.FC = () => {
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder="Ask about pricing, services..."
+                  placeholder={isAiActive ? "Ask about pricing, services..." : "Ask keywords like 'pricing', 'contact'..."}
                   className="flex-1 bg-slate-100 dark:bg-[#1e293b] text-slate-900 dark:text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/50 border border-transparent focus:bg-white dark:focus:bg-[#0f172a] transition-all placeholder-slate-400"
                 />
                 <Button 
@@ -270,8 +341,12 @@ export const Chatbot: React.FC = () => {
                   <Send size={18} />
                 </Button>
               </form>
-              <div className="text-[10px] text-center text-slate-400 mt-2">
-                Powered by Gemini 3 Pro
+              <div className="text-[10px] text-center text-slate-400 mt-2 flex items-center justify-center gap-1">
+                {isAiActive ? (
+                  <>Powered by Gemini 3 Pro <Sparkles size={8} className="text-purple-500" /></>
+                ) : (
+                  <>Basic Mode Active <AlertCircle size={8} className="text-amber-500" /></>
+                )}
               </div>
             </div>
           </MotionDiv>
