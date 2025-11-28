@@ -1,7 +1,7 @@
 
 import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { MessageCircle, X, Send, Bot, Minimize2, User, Sparkles, AlertCircle, WifiOff } from 'lucide-react';
+import { MessageCircle, X, Send, Bot, Minimize2, User, Sparkles, AlertCircle, WifiOff, ChevronRight, RefreshCw, Trash2 } from 'lucide-react';
 import { Button } from './ui/Button';
 import { GoogleGenAI } from "@google/genai";
 
@@ -10,6 +10,7 @@ interface Message {
   type: 'user' | 'bot';
   text: string;
   timestamp: Date;
+  suggestions?: string[]; // New: Contextual suggestions
 }
 
 export const Chatbot: React.FC = () => {
@@ -20,8 +21,9 @@ export const Chatbot: React.FC = () => {
     {
       id: '1',
       type: 'bot',
-      text: "Hello! 👋 I'm the TechSafi AI assistant. Ask me about our web packages, mobile apps, AI solutions, or pricing!",
-      timestamp: new Date()
+      text: "Hello! 👋 Welcome to TechSafi. I'm your virtual assistant.\n\nHow can I help you today?",
+      timestamp: new Date(),
+      suggestions: ["Our Services", "Pricing Plans", "Careers & Internships", "Contact Support"]
     }
   ]);
   const [inputValue, setInputValue] = useState('');
@@ -30,31 +32,87 @@ export const Chatbot: React.FC = () => {
   const MotionDiv = motion.div as any;
   const MotionButton = motion.button as any;
 
-  // Fallback Logic: Rule-based responses when AI is down
-  const getFallbackResponse = (query: string): string => {
+  // --- ADVANCED FALLBACK ENGINE ---
+
+  const knowledgeBase = [
+    {
+      keywords: ['price', 'cost', 'quote', 'how much', 'rates', 'pricing', 'expensive'],
+      response: "💰 **Transparent Pricing Overview:**\n\n- **Websites:** KES 35k (Portfolio) - 150k (E-commerce)\n- **Mobile Apps:** Start at KES 250k\n- **AI Integration:** Starts at KES 60k\n\nWe also offer monthly maintenance packages starting at KES 10k.",
+      suggestions: ["View Full Pricing", "Get a Custom Quote", "Web Packages"]
+    },
+    {
+      keywords: ['web', 'website', 'design', 'development', 'ecommerce', 'e-commerce', 'shop'],
+      response: "🌐 **Web Development Services:**\n\nWe build responsive, SEO-optimized websites using React, Next.js, and modern CMS solutions.\n\n- **Portfolio Sites:** Perfect for personal brands.\n- **Business Sites:** For SMEs looking to grow.\n- **E-commerce:** Complete stores with M-Pesa integration.",
+      suggestions: ["Web Pricing", "View Portfolio", "Contact Sales"]
+    },
+    {
+      keywords: ['mobile', 'app', 'android', 'ios', 'flutter', 'react native'],
+      response: "📱 **Mobile App Development:**\n\nWe develop high-performance native and cross-platform mobile applications.\n\n- **Basic App:** Utility apps (KES 250k)\n- **Advanced App:** Complex Logic, Auth, Payments (KES 550k)\n\nSupported platforms: iOS & Android.",
+      suggestions: ["Mobile Pricing", "See Case Studies", "Start App Project"]
+    },
+    {
+      keywords: ['ai', 'intelligence', 'bot', 'gpt', 'chatgpt', 'ml', 'machine learning', 'automation'],
+      response: "🤖 **AI & Automation Solutions:**\n\nTransform your business with our AI services:\n\n- **Custom Chatbots:** KES 60,000\n- **Predictive Analytics:** Forecast trends.\n- **Process Automation:** Reduce manual work.\n\nWe use OpenAI, Gemini, and TensorFlow.",
+      suggestions: ["AI Pricing", "Book AI Consultation", "View AI Features"]
+    },
+    {
+      keywords: ['career', 'job', 'work', 'hiring', 'vacancy', 'apply', 'intern', 'attachment'],
+      response: "🚀 **Careers at TechSafi:**\n\nWe are always looking for talent! \n\n- **Current Roles:** Marketing Specialist (Growth), C-Level Roles (Pending).\n- **Students:** We offer Internships & Industrial Attachment.\n\nCheck our Careers page for the roadmap and culture.",
+      suggestions: ["View Openings", "Internship Details", "Our Culture"]
+    },
+    {
+      keywords: ['contact', 'email', 'phone', 'call', 'location', 'address', 'office', 'reach'],
+      response: "📞 **Get in Touch:**\n\n- **Email:** info@techsafi.com\n- **Phone:** +254 751 380 948\n- **WhatsApp:** +254 751 380 948\n- **Location:** Nairobi, Kenya\n\nSupport is available 24/7.",
+      suggestions: ["Open WhatsApp", "Send Email", "Request Call"]
+    },
+    {
+      keywords: ['tech', 'stack', 'technologies', 'tools', 'language'],
+      response: "💻 **Our Tech Stack:**\n\n- **Frontend:** React, Next.js, Tailwind CSS, TypeScript\n- **Backend:** Node.js, Python, Django, Go\n- **Mobile:** React Native, Flutter\n- **AI:** Python, PyTorch, TensorFlow, Google GenAI",
+      suggestions: ["Web Services", "AI Solutions"]
+    },
+    {
+      keywords: ['hello', 'hi', 'hey', 'greetings', 'morning', 'afternoon', 'evening'],
+      response: (msg: string) => {
+        const hour = new Date().getHours();
+        const timeGreeting = hour < 12 ? "Good morning" : hour < 18 ? "Good afternoon" : "Good evening";
+        return `${timeGreeting}! 👋 I'm here to help you navigate TechSafi's services. What are you looking for today?`;
+      },
+      suggestions: ["Our Services", "Pricing", "About TechSafi"]
+    }
+  ];
+
+  const handleBasicModeQuery = (query: string): { text: string, suggestions: string[] } => {
     const lowerQuery = query.toLowerCase();
     
-    if (lowerQuery.includes('price') || lowerQuery.includes('cost') || lowerQuery.includes('how much')) {
-      return "**Pricing Overview:**\n\n- **Websites:** Start at KES 35,000 (Portfolio) to KES 150,000 (E-commerce).\n- **Mobile Apps:** Start at KES 250,000.\n- **AI Chatbots:** KES 60,000.\n\nVisit our **Pricing** page for full details.";
+    // Find best match based on keyword density
+    let bestMatch = null;
+    let maxScore = 0;
+
+    for (const entry of knowledgeBase) {
+      let score = 0;
+      entry.keywords.forEach(k => {
+        if (lowerQuery.includes(k)) score++;
+      });
+
+      if (score > maxScore) {
+        maxScore = score;
+        bestMatch = entry;
+      }
     }
-    if (lowerQuery.includes('web') || lowerQuery.includes('website')) {
-      return "We build Portfolio websites, Business sites, and E-commerce stores. Our packages include SEO, mobile design, and support. Prices range from KES 35,000 to KES 150,000.";
+
+    if (bestMatch) {
+      const responseText = typeof bestMatch.response === 'function' ? bestMatch.response(lowerQuery) : bestMatch.response;
+      return { text: responseText, suggestions: bestMatch.suggestions };
     }
-    if (lowerQuery.includes('mobile') || lowerQuery.includes('app') || lowerQuery.includes('android') || lowerQuery.includes('ios')) {
-      return "We develop native (iOS/Android) and cross-platform apps using React Native. A basic utility app starts at KES 250,000, while feature-rich apps start at KES 550,000.";
-    }
-    if (lowerQuery.includes('ai') || lowerQuery.includes('intelligence') || lowerQuery.includes('bot')) {
-      return "Our AI solutions include Custom Chatbots (KES 60k), Predictive Analytics, and full AI Software integration. We use tools like OpenAI, TensorFlow, and Gemini.";
-    }
-    if (lowerQuery.includes('contact') || lowerQuery.includes('email') || lowerQuery.includes('phone') || lowerQuery.includes('location')) {
-      return "You can reach us at:\n\n- **Email:** info@techsafi.com\n- **Phone:** +254 751 380 948\n- **Location:** Nairobi, Kenya\n\nOr use the Contact form on our site.";
-    }
-    if (lowerQuery.includes('hello') || lowerQuery.includes('hi') || lowerQuery.includes('hey')) {
-      return "Hello! I'm here to help with your tech needs. You can ask about our services, pricing, or company info.";
-    }
-    
-    return "I'm currently operating in basic mode and didn't quite catch that. You can ask about **pricing**, **services**, or **contact info**, or email us at info@techsafi.com for complex queries.";
+
+    // Default Fallback
+    return { 
+      text: "I didn't quite catch that. I'm currently in **Basic Mode** and best at answering specific questions about our services.\n\nTry asking about:", 
+      suggestions: ["Web Development", "Mobile Apps", "Pricing Info", "Contact Us"] 
+    };
   };
+
+  // --- END FALLBACK ENGINE ---
 
   // Initialize Gemini Chat Session
   useEffect(() => {
@@ -62,7 +120,7 @@ export const Chatbot: React.FC = () => {
       try {
         const apiKey = process.env.API_KEY;
         if (!apiKey || apiKey.includes('your_api_key')) {
-          console.warn("Gemini API Key missing or invalid. Switching to fallback mode.");
+          console.warn("Gemini API Key missing or invalid. Switching to Basic Mode.");
           setIsAiActive(false);
           return;
         }
@@ -131,14 +189,13 @@ export const Chatbot: React.FC = () => {
     scrollToBottom();
   }, [messages, isTyping, isOpen]);
 
-  const handleSend = async (e?: React.FormEvent) => {
-    e?.preventDefault();
-    if (!inputValue.trim()) return;
+  const handleSend = async (text: string = inputValue) => {
+    if (!text.trim()) return;
 
     const userMsg: Message = {
       id: Date.now().toString(),
       type: 'user',
-      text: inputValue,
+      text: text,
       timestamp: new Date()
     };
 
@@ -146,8 +203,10 @@ export const Chatbot: React.FC = () => {
     setInputValue('');
     setIsTyping(true);
 
+    // Artificial delay for natural feel
+    const delay = isAiActive ? 0 : 600;
+
     try {
-      // Check if AI is initialized and active
       if (isAiActive && chatSessionRef.current) {
         const result = await chatSessionRef.current.sendMessage({ message: userMsg.text });
         
@@ -163,39 +222,63 @@ export const Chatbot: React.FC = () => {
           throw new Error("Empty response from AI");
         }
       } else {
-        // AI not active, throw to catch block for fallback
-        throw new Error("AI not active");
+        // Basic Mode Fallback
+        setTimeout(() => {
+          const { text: fallbackText, suggestions } = handleBasicModeQuery(userMsg.text);
+          const fallbackResponse: Message = {
+            id: (Date.now() + 1).toString(),
+            type: 'bot',
+            text: fallbackText,
+            timestamp: new Date(),
+            suggestions: suggestions
+          };
+          setMessages(prev => [...prev, fallbackResponse]);
+          setIsTyping(false);
+        }, delay);
+        return; // Exit early as timeout handles state
       }
     } catch (error) {
-      console.warn("AI service unavailable or failed, using fallback.", error);
-      
-      // Artificial delay for fallback to feel natural
+      console.warn("AI service unavailable, using fallback.", error);
       setTimeout(() => {
-        const fallbackText = getFallbackResponse(userMsg.text);
+        const { text: fallbackText, suggestions } = handleBasicModeQuery(userMsg.text);
         const fallbackResponse: Message = {
           id: (Date.now() + 1).toString(),
           type: 'bot',
           text: fallbackText,
-          timestamp: new Date()
+          timestamp: new Date(),
+          suggestions: suggestions
         };
         setMessages(prev => [...prev, fallbackResponse]);
         setIsTyping(false);
-      }, 600);
-      
-      // Return early since we handled the state update in timeout
-      return; 
+      }, delay);
+      return;
     } 
     
     setIsTyping(false);
   };
 
+  const handleSuggestionClick = (suggestion: string) => {
+    handleSend(suggestion);
+  };
+
+  const clearChat = () => {
+    setMessages([
+      {
+        id: Date.now().toString(),
+        type: 'bot',
+        text: "Chat cleared. How can I help you now?",
+        timestamp: new Date(),
+        suggestions: ["Our Services", "Pricing Plans", "Contact Support"]
+      }
+    ]);
+  };
+
   // Helper to render basic markdown-like formatting
   const formatMessage = (text: string) => {
     return text.split('\n').map((line, i) => {
-      // Bold text handling (**text**)
       const parts = line.split(/(\*\*.*?\*\*)/g);
       return (
-        <div key={i} className={`min-h-[1.2em] ${line.trim().startsWith('-') || line.trim().startsWith('•') ? 'ml-4' : ''}`}>
+        <div key={i} className={`min-h-[1.2em] ${line.trim().startsWith('-') || line.trim().startsWith('•') ? 'ml-4 mb-1' : 'mb-1'}`}>
           {parts.map((part, j) => {
             if (part.startsWith('**') && part.endsWith('**')) {
               return <strong key={j} className="font-bold text-slate-900 dark:text-white">{part.slice(2, -2)}</strong>;
@@ -233,32 +316,30 @@ export const Chatbot: React.FC = () => {
             initial={{ opacity: 0, y: 50, scale: 0.9 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 50, scale: 0.9 }}
-            className="fixed bottom-6 right-6 z-50 w-[90vw] md:w-[400px] h-[600px] max-h-[85vh] bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden font-sans"
+            className="fixed bottom-6 right-6 z-50 w-[90vw] md:w-[380px] h-[600px] max-h-[85vh] bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/10 rounded-2xl shadow-2xl flex flex-col overflow-hidden font-sans"
           >
             {/* Header */}
-            <div className="p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-between shrink-0">
+            <div className="p-4 bg-gradient-to-r from-blue-600 to-purple-600 text-white flex items-center justify-between shrink-0 shadow-md z-10">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm shadow-inner">
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-sm shadow-inner relative">
                   <Bot size={20} />
+                  <span className={`absolute bottom-0 right-0 w-2.5 h-2.5 border-2 border-purple-600 rounded-full ${isAiActive ? 'bg-green-400' : 'bg-amber-400'}`}></span>
                 </div>
                 <div>
-                  <h3 className="font-bold text-sm">TechSafi Assistant</h3>
-                  <div className="flex items-center text-[10px] text-blue-100">
-                    {isAiActive ? (
-                      <>
-                        <span className="w-1.5 h-1.5 bg-green-400 rounded-full mr-1.5 animate-pulse"></span>
-                        Gemini 3 Pro Online
-                      </>
-                    ) : (
-                      <>
-                        <span className="w-1.5 h-1.5 bg-amber-400 rounded-full mr-1.5"></span>
-                        Automated Support
-                      </>
-                    )}
+                  <h3 className="font-bold text-sm tracking-wide">TechSafi Assistant</h3>
+                  <div className="flex items-center text-[10px] text-blue-100 opacity-90">
+                    {isAiActive ? 'Gemini 3 Pro Active' : 'Automated Support'}
                   </div>
                 </div>
               </div>
               <div className="flex items-center gap-1">
+                <button 
+                  onClick={clearChat}
+                  className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                  title="Clear Chat"
+                >
+                  <RefreshCw size={16} />
+                </button>
                 <button 
                   onClick={() => setIsOpen(false)}
                   className="p-2 hover:bg-white/10 rounded-full transition-colors"
@@ -269,47 +350,67 @@ export const Chatbot: React.FC = () => {
             </div>
 
             {/* Messages Area */}
-            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-[#020617]/50 scrollbar-thin">
+            <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50 dark:bg-[#020617]/95 scrollbar-thin">
               {/* Connection Status Notice if Offline */}
               {!isAiActive && (
-                <div className="flex justify-center mb-4">
-                  <div className="bg-amber-100 dark:bg-amber-900/30 text-amber-800 dark:text-amber-200 text-xs px-3 py-1.5 rounded-full flex items-center border border-amber-200 dark:border-amber-700/50">
-                    <WifiOff size={10} className="mr-1.5" /> AI Offline - Using Basic Rules
+                <div className="flex justify-center mb-2">
+                  <div className="bg-amber-50 dark:bg-amber-900/20 text-amber-600 dark:text-amber-400 text-[10px] px-3 py-1 rounded-full flex items-center border border-amber-200 dark:border-amber-700/30">
+                    <WifiOff size={10} className="mr-1.5" /> Basic Mode (AI Offline)
                   </div>
                 </div>
               )}
 
               {messages.map((msg) => (
-                <MotionDiv
-                  key={msg.id}
-                  initial={{ opacity: 0, y: 10 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
-                >
-                  <div className={`flex items-end max-w-[85%] ${msg.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
-                    {/* Avatar */}
-                    <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mb-1 ${
-                      msg.type === 'user' ? 'ml-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300' : 'mr-2 bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400'
-                    }`}>
-                      {msg.type === 'user' ? <User size={12} /> : <Sparkles size={12} />}
-                    </div>
+                <div key={msg.id} className="space-y-2">
+                  <MotionDiv
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    className={`flex ${msg.type === 'user' ? 'justify-end' : 'justify-start'}`}
+                  >
+                    <div className={`flex items-end max-w-[85%] ${msg.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
+                      {/* Avatar */}
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mb-1 shadow-sm ${
+                        msg.type === 'user' ? 'ml-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300' : 'mr-2 bg-gradient-to-br from-blue-500 to-purple-500 text-white'
+                      }`}>
+                        {msg.type === 'user' ? <User size={12} /> : <Sparkles size={12} />}
+                      </div>
 
-                    {/* Bubble */}
-                    <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
-                      msg.type === 'user' 
-                        ? 'bg-blue-600 text-white rounded-br-none' 
-                        : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-white/5 rounded-bl-none'
-                    }`}>
-                      {msg.type === 'bot' ? formatMessage(msg.text) : msg.text}
+                      {/* Bubble */}
+                      <div className={`px-4 py-2.5 rounded-2xl text-sm leading-relaxed shadow-sm ${
+                        msg.type === 'user' 
+                          ? 'bg-blue-600 text-white rounded-br-none' 
+                          : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-white/5 rounded-bl-none'
+                      }`}>
+                        {msg.type === 'bot' ? formatMessage(msg.text) : msg.text}
+                      </div>
                     </div>
-                  </div>
-                </MotionDiv>
+                  </MotionDiv>
+                  
+                  {/* Suggestions Chips (Only for last message of type bot) */}
+                  {msg.type === 'bot' && msg.suggestions && msg.id === messages[messages.length - 1].id && !isTyping && (
+                    <MotionDiv 
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      className="flex flex-wrap gap-2 pl-9"
+                    >
+                      {msg.suggestions.map((sugg, idx) => (
+                        <button
+                          key={idx}
+                          onClick={() => handleSuggestionClick(sugg)}
+                          className="text-xs px-3 py-1.5 bg-white dark:bg-[#1e293b] border border-blue-200 dark:border-blue-500/20 text-blue-600 dark:text-blue-400 rounded-full hover:bg-blue-50 dark:hover:bg-blue-900/20 transition-colors shadow-sm flex items-center group"
+                        >
+                          {sugg} <ChevronRight size={10} className="ml-1 opacity-50 group-hover:translate-x-0.5 transition-transform" />
+                        </button>
+                      ))}
+                    </MotionDiv>
+                  )}
+                </div>
               ))}
 
               {isTyping && (
                 <MotionDiv initial={{ opacity: 0 }} animate={{ opacity: 1 }} className="flex justify-start">
                   <div className="flex items-end max-w-[85%]">
-                    <div className="w-6 h-6 rounded-full bg-purple-100 dark:bg-purple-900/30 text-purple-600 dark:text-purple-400 flex items-center justify-center flex-shrink-0 mb-1 mr-2">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-blue-500 to-purple-500 text-white flex items-center justify-center flex-shrink-0 mb-1 mr-2 shadow-sm">
                       <Bot size={12} />
                     </div>
                     <div className="px-4 py-3 bg-white dark:bg-[#1e293b] border border-slate-100 dark:border-white/5 rounded-2xl rounded-bl-none shadow-sm flex gap-1">
@@ -324,13 +425,13 @@ export const Chatbot: React.FC = () => {
             </div>
 
             {/* Input Area */}
-            <div className="p-3 bg-white dark:bg-[#0f172a] border-t border-slate-200 dark:border-white/10 shrink-0">
-              <form onSubmit={handleSend} className="flex gap-2">
+            <div className="p-3 bg-white dark:bg-[#0f172a] border-t border-slate-200 dark:border-white/10 shrink-0 relative z-20">
+              <form onSubmit={(e) => { e.preventDefault(); handleSend(); }} className="flex gap-2">
                 <input
                   type="text"
                   value={inputValue}
                   onChange={(e) => setInputValue(e.target.value)}
-                  placeholder={isAiActive ? "Ask about pricing, services..." : "Ask keywords like 'pricing', 'contact'..."}
+                  placeholder={isAiActive ? "Type your question..." : "Ask keywords like 'pricing', 'contact'..."}
                   className="flex-1 bg-slate-100 dark:bg-[#1e293b] text-slate-900 dark:text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/50 border border-transparent focus:bg-white dark:focus:bg-[#0f172a] transition-all placeholder-slate-400"
                 />
                 <Button 
@@ -341,11 +442,11 @@ export const Chatbot: React.FC = () => {
                   <Send size={18} />
                 </Button>
               </form>
-              <div className="text-[10px] text-center text-slate-400 mt-2 flex items-center justify-center gap-1">
+              <div className="text-[9px] text-center text-slate-400 mt-2 flex items-center justify-center gap-1 opacity-70">
                 {isAiActive ? (
                   <>Powered by Gemini 3 Pro <Sparkles size={8} className="text-purple-500" /></>
                 ) : (
-                  <>Basic Mode Active <AlertCircle size={8} className="text-amber-500" /></>
+                  <>Running in Basic Support Mode <AlertCircle size={8} className="text-amber-500" /></>
                 )}
               </div>
             </div>
