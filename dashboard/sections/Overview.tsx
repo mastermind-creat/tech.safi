@@ -35,7 +35,8 @@ const TrafficLineChart = ({ data }: { data: ChartDataPoint[] }) => {
     <div className="relative w-full h-[180px] mt-4">
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
         <defs>
-          <linearGradient id="lineGradient" x1="0" x1="0" x2="0" y2="1">
+          {/* Fix: Changed second x1="0" to y1="0" to avoid duplicate attribute error on line 38 */}
+          <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.4" />
             <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
           </linearGradient>

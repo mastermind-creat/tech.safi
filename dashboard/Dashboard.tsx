@@ -13,6 +13,7 @@ import {
 import { useTheme } from '../context/ThemeContext';
 import { Overview } from './sections/Overview';
 import { PagesManager } from './sections/PagesManager';
+import { GlobalLayoutManager } from './sections/GlobalLayoutManager';
 import { Button } from '../components/ui/Button';
 
 // Icons for nested items
@@ -98,7 +99,7 @@ const NAV_GROUPS = [
 export const Dashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedItems, setExpandedItems] = useState<string[]>([]); // Collapsed by default to save space
+  const [expandedItems, setExpandedItems] = useState<string[]>(['layout-group']); // Expanded by default to help user find the current task
   const { theme, setTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -116,7 +117,6 @@ export const Dashboard: React.FC = () => {
     navigate('/login');
   };
 
-  // NavItem fixed to be explicitly typed as React.FC to allow 'key' prop when used in JSX
   const NavItem: React.FC<{ item: any; depth?: number }> = ({ item, depth = 0 }) => {
     const isExpanded = expandedItems.includes(item.id);
     const isActive = location.pathname === item.path;
@@ -151,8 +151,7 @@ export const Dashboard: React.FC = () => {
                   className="overflow-hidden border-l border-slate-100 dark:border-white/5 ml-4 my-1"
                 >
                   {item.children.map((child: any, idx: number) => (
-                    // Recursive usage of NavItem with key
-                    <NavItem key={idx} item={{...child, id: `${item.id}-${idx}`}} depth={depth + 1} />
+                    <NavItem key={idx} item={{...child, id: child.id || `${item.id}-${idx}`}} depth={depth + 1} />
                   ))}
                 </motion.div>
               )}
@@ -163,7 +162,7 @@ export const Dashboard: React.FC = () => {
             to={item.path === '#' ? '#' : item.path}
             className={`flex items-center gap-3 p-2.5 rounded-xl transition-all group ${
               isActive 
-                ? 'bg-primary/10 text-primary border-r-2 border-primary' 
+                ? 'bg-primary/10 text-primary border-r-2 border-primary font-bold' 
                 : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
             }`}
             style={{ paddingLeft: `${(depth * 12) + 12}px` }}
@@ -216,7 +215,6 @@ export const Dashboard: React.FC = () => {
               )}
               <div className="space-y-1">
                 {group.items.map((item) => (
-                  // Usage of NavItem component with key
                   <NavItem key={item.id} item={item} />
                 ))}
               </div>
@@ -269,7 +267,6 @@ export const Dashboard: React.FC = () => {
                     <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4 px-2">{group.title}</h5>
                     <div className="space-y-1">
                       {group.items.map((item) => (
-                        // Usage of NavItem component with key in mobile view
                         <NavItem key={item.id} item={item} />
                       ))}
                     </div>
@@ -348,6 +345,8 @@ export const Dashboard: React.FC = () => {
           <Routes>
             <Route path="/" element={<Overview />} />
             <Route path="/pages/*" element={<PagesManager />} />
+            <Route path="/manage/navbar" element={<GlobalLayoutManager activeTab="navbar" />} />
+            <Route path="/manage/footer" element={<GlobalLayoutManager activeTab="footer" />} />
             {/* Catch-all for non-implemented management routes */}
             <Route path="*" element={
               <div className="flex flex-col items-center justify-center py-32 text-center">
