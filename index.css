@@ -34,6 +34,15 @@
   @apply bg-slate-300 rounded hover:bg-slate-400 dark:bg-[#334155] dark:hover:bg-[#475569];
 }
 
+/* Utility to hide scrollbars for cleaner sidebars */
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-hide {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
 /* 3D Utilities */
 .perspective-1000 {
   perspective: 1000px;
@@ -67,4 +76,19 @@
   animation: wave 2s linear infinite;
   transform-origin: 70% 70%;
   display: inline-block;
+}
+
+/* Dashboard Animations */
+.animate-in {
+  animation-duration: 500ms;
+  animation-fill-mode: forwards;
+}
+
+.slide-in-from-bottom-4 {
+  animation-name: slideInBottom;
+}
+
+@keyframes slideInBottom {
+  from { transform: translateY(1rem); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
 }

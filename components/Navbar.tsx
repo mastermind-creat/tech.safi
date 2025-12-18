@@ -1,6 +1,7 @@
+
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
-import { Menu, X, ChevronDown, Sun, Moon, Monitor, ChevronRight } from 'lucide-react';
+import { Menu, X, ChevronDown, Sun, Moon, Monitor, ChevronRight, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { NAV_ITEMS } from '../constants';
 import { useTheme } from '../context/ThemeContext';
@@ -148,6 +149,15 @@ export const Navbar: React.FC = () => {
 
           {/* CTA & Theme Toggle */}
           <div className="flex items-center space-x-3">
+            {/* Login Icon for Executives */}
+            <NavLink 
+              to="/login" 
+              title="Executive Access"
+              className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-primary/10 hover:text-primary transition-all focus:outline-none"
+            >
+              <Lock size={18} />
+            </NavLink>
+
             {/* Theme Toggle */}
             <div className="relative">
               <button
@@ -280,6 +290,21 @@ export const Navbar: React.FC = () => {
                     )}
                   </div>
                 ))}
+
+                {/* Mobile Login Link */}
+                <NavLink
+                  to="/login"
+                  className={({ isActive }: any) =>
+                    `flex items-center space-x-3 p-3 rounded-xl transition-all ${
+                      isActive 
+                        ? 'bg-primary/10 text-primary border-l-2 border-primary' 
+                        : 'text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 hover:text-slate-900 dark:hover:text-white'
+                    }`
+                  }
+                >
+                  <Lock size={18} />
+                  <span className="font-medium">Executive Access</span>
+                </NavLink>
               </div>
 
               <div className="p-6 border-t border-slate-100 dark:border-white/5 space-y-4">
