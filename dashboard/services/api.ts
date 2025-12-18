@@ -11,6 +11,12 @@ export interface SystemStats {
   activeUsers: number;
   serverLoad: number;
   uptime: string;
+  latency: string;
+}
+
+export interface ChartDataPoint {
+  label: string;
+  value: number;
 }
 
 export interface ActivityLog {
@@ -22,15 +28,36 @@ export interface ActivityLog {
 }
 
 export const fetchSystemStats = async (): Promise<SystemStats> => {
-  // Simulate API delay
   await new Promise(resolve => setTimeout(resolve, 800));
   return {
     visitors: 12450,
     visitorsChange: 12.5,
     activeUsers: 42,
     serverLoad: 24,
-    uptime: "99.98%"
+    uptime: "99.98%",
+    latency: "45ms"
   };
+};
+
+export const fetchTrafficData = async (): Promise<ChartDataPoint[]> => {
+  return [
+    { label: 'Mon', value: 3200 },
+    { label: 'Tue', value: 4100 },
+    { label: 'Wed', value: 3800 },
+    { label: 'Thu', value: 5400 },
+    { label: 'Fri', value: 4900 },
+    { label: 'Sat', value: 6200 },
+    { label: 'Sun', value: 5800 },
+  ];
+};
+
+export const fetchServiceEngagement = async (): Promise<ChartDataPoint[]> => {
+  return [
+    { label: 'AI Solutions', value: 45 },
+    { label: 'Web Apps', value: 30 },
+    { label: 'Mobile Apps', value: 15 },
+    { label: 'Cloud Tech', value: 10 },
+  ];
 };
 
 export const fetchActivityLogs = async (): Promise<ActivityLog[]> => {
