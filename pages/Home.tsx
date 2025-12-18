@@ -8,7 +8,7 @@ import {
   Layout, Cloud, ChevronRight, Star, ChevronLeft, Quote,
   Check, Zap, Database, CreditCard, Lock, Monitor, Laptop, Repeat,
   ShoppingCart, MessageSquare, Home as HomeIcon, Search, Terminal,
-  Activity, Layers, BarChart3, Wifi, Sparkles
+  Activity, Layers, BarChart3, Wifi, Sparkles, Gift, Snowflake
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
@@ -96,8 +96,8 @@ const FloatingParticles = () => {
 
 // --- ANIMATION COMPONENTS ---
 
-// 1. Star Field Background
-const StarField = () => {
+// 1. Futuristic Star & Snowfall Field
+const FestiveBackground = () => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -111,43 +111,64 @@ const StarField = () => {
     canvas.width = width;
     canvas.height = height;
 
-    const stars: { x: number; y: number; z: number; size: number }[] = [];
-    const numStars = 200;
-    const speed = 0.5;
+    const particles: { 
+      x: number; 
+      y: number; 
+      z: number; 
+      size: number; 
+      speedX: number; 
+      speedY: number;
+      opacity: number;
+      isFestive: boolean;
+    }[] = [];
+    
+    const numParticles = 150;
+    const isDecember = new Date().getMonth() === 11;
 
-    for (let i = 0; i < numStars; i++) {
-      stars.push({
-        x: Math.random() * width - width / 2,
-        y: Math.random() * height - height / 2,
+    for (let i = 0; i < numParticles; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
         z: Math.random() * width,
-        size: Math.random() * 2
+        size: Math.random() * (isDecember ? 3 : 1.5),
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: isDecember ? Math.random() * 1.5 + 0.5 : (Math.random() - 0.5) * 0.2,
+        opacity: Math.random() * 0.5 + 0.2,
+        isFestive: isDecember && Math.random() > 0.5
       });
     }
 
     const animate = () => {
-      ctx.fillStyle = '#00000000'; // Transparent clear
       ctx.clearRect(0, 0, width, height);
       
-      // Update and draw stars
-      ctx.fillStyle = '#ffffff';
-      stars.forEach(star => {
-        star.z -= speed;
-        if (star.z <= 0) {
-          star.z = width;
-          star.x = Math.random() * width - width / 2;
-          star.y = Math.random() * height - height / 2;
+      particles.forEach(p => {
+        // Draw particle
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        
+        // Crystalline festive look
+        if (p.isFestive) {
+          ctx.fillStyle = `rgba(255, 255, 255, ${p.opacity})`;
+          ctx.shadowBlur = 4;
+          ctx.shadowColor = 'white';
+        } else {
+          ctx.fillStyle = `rgba(200, 220, 255, ${p.opacity})`;
+          ctx.shadowBlur = 0;
         }
+        
+        ctx.fill();
 
-        const x = (star.x / star.z) * width + width / 2;
-        const y = (star.y / star.z) * height + height / 2;
-        const s = (1 - star.z / width) * star.size * 2;
+        // Move particle
+        p.x += p.speedX;
+        p.y += p.speedY;
 
-        if (x >= 0 && x <= width && y >= 0 && y <= height) {
-          ctx.globalAlpha = 1 - star.z / width;
-          ctx.beginPath();
-          ctx.arc(x, y, s, 0, Math.PI * 2);
-          ctx.fill();
+        // Reset if off-screen
+        if (p.y > height) {
+          p.y = -10;
+          p.x = Math.random() * width;
         }
+        if (p.x > width) p.x = 0;
+        if (p.x < 0) p.x = width;
       });
 
       requestAnimationFrame(animate);
@@ -166,7 +187,7 @@ const StarField = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 z-10 opacity-30 pointer-events-none" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 z-10 opacity-40 pointer-events-none" />;
 };
 
 // 2. Magic Card (Spotlight Effect)
@@ -278,6 +299,9 @@ export const Home: React.FC = () => {
   const { scrollY } = useScroll();
   const [greeting, setGreeting] = useState('');
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(true);
 
   // Estimator State
   const [platform, setPlatform] = useState<'web' | 'mobile' | 'both'>('web');
@@ -288,9 +312,17 @@ export const Home: React.FC = () => {
 
   useEffect(() => {
     const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good Morning');
-    else if (hour < 18) setGreeting('Good Afternoon');
-    else setGreeting('Good Evening');
+    const month = new Date().getMonth();
+    const isFestive = month === 11; // December
+
+    if (isFestive) {
+      const holidayGreetings = ['Merry Christmas', 'Happy Holidays', 'Season\'s Greetings'];
+      setGreeting(holidayGreetings[Math.floor(Math.random() * holidayGreetings.length)]);
+    } else {
+      if (hour < 12) setGreeting('Good Morning');
+      else if (hour < 18) setGreeting('Good Afternoon');
+      else setGreeting('Good Evening');
+    }
   }, []);
 
   const testimonials = [
@@ -305,6 +337,23 @@ export const Home: React.FC = () => {
 
   const prevTestimonial = () => {
     setCurrentTestimonial((prev) => (prev - 1 + testimonials.length) % testimonials.length);
+  };
+
+  // Works Carousel Logic
+  const handleScroll = () => {
+    if (scrollRef.current) {
+      const { scrollLeft, scrollWidth, clientWidth } = scrollRef.current;
+      setCanScrollLeft(scrollLeft > 0);
+      setCanScrollRight(scrollLeft < scrollWidth - clientWidth - 10);
+    }
+  };
+
+  const scroll = (direction: 'left' | 'right') => {
+    if (scrollRef.current) {
+      const { clientWidth } = scrollRef.current;
+      const scrollAmount = direction === 'left' ? -clientWidth * 0.8 : clientWidth * 0.8;
+      scrollRef.current.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
   };
 
   // Estimator Logic
@@ -360,15 +409,18 @@ I'd like to discuss this project further.`;
       {/* --- HERO SECTION --- */}
       <section className="relative min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-20 overflow-hidden">
           
-          {/* New Cinematic Enhancements */}
           <BackgroundSlider />
           <FloatingParticles />
-          <StarField />
+          <FestiveBackground />
           
-          {/* Dynamic Gradient Blobs (Updated to blend with backgrounds) */}
+          {/* Dynamic Gradient Blobs */}
           <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
              <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow"></div>
              <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-cyan-500/10 dark:bg-cyan-600/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow"></div>
+             {/* Subtle Festive Gold Blob */}
+             {new Date().getMonth() === 11 && (
+               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[400px] h-[400px] bg-yellow-500/5 rounded-full blur-[100px] animate-pulse-slow"></div>
+             )}
           </div>
 
           <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8">
@@ -379,7 +431,9 @@ I'd like to discuss this project further.`;
                transition={{ duration: 0.6 }}
                className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/20 dark:bg-white/5 border border-white/20 dark:border-white/10 backdrop-blur-md shadow-lg group cursor-default hover:border-cyan-500/30 transition-colors"
              >
-               <span className="mr-2 text-lg animate-wave">👋</span>
+               <span className="mr-2 text-lg animate-wave">
+                 {new Date().getMonth() === 11 ? '🎄' : '👋'}
+               </span>
                <span className="text-sm font-medium tracking-wide text-white dark:text-cyan-100">
                  {greeting}, welcome to TechSafi
                </span>
@@ -395,7 +449,11 @@ I'd like to discuss this project further.`;
                   Building Intelligent <br className="hidden md:block" />
                   <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">
                     <Typewriter 
-                      words={['Digital Solutions', 'AI Ecosystems', 'Future Tech']} 
+                      words={
+                        new Date().getMonth() === 11 
+                        ? ['Digital Solutions', 'AI Ecosystems', 'Future Tech', 'Holiday Magic'] 
+                        : ['Digital Solutions', 'AI Ecosystems', 'Future Tech']
+                      } 
                       cursorClassName="text-cyan-400"
                       typingSpeed={80}
                       deletingSpeed={50}
@@ -488,7 +546,6 @@ I'd like to discuss this project further.`;
               ))}
            </div>
            
-           {/* Clone for seamless loop */}
            <div className="absolute top-0 animate-marquee2 whitespace-nowrap flex items-center space-x-20">
               {[...Array(2)].map((_, i) => (
                  <React.Fragment key={i}>
@@ -511,7 +568,6 @@ I'd like to discuss this project further.`;
               ))}
            </div>
            
-           {/* Fade Masks */}
            <div className="absolute inset-y-0 left-0 w-40 bg-gradient-to-r from-white dark:from-[#050b1d] to-transparent pointer-events-none"></div>
            <div className="absolute inset-y-0 right-0 w-40 bg-gradient-to-l from-white dark:from-[#050b1d] to-transparent pointer-events-none"></div>
         </div>
@@ -567,7 +623,6 @@ I'd like to discuss this project further.`;
                   transition={{ delay: idx * 0.1 }}
                 >
                   <div className="group relative h-full p-8 bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 rounded-3xl hover:border-slate-300 dark:hover:border-white/20 transition-all duration-300 hover:-translate-y-1 shadow-lg dark:shadow-none overflow-hidden">
-                     {/* Hover Gradient */}
                      <div className={`absolute inset-0 bg-gradient-to-br from-${service.color}-500/5 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500`}></div>
                      
                      <div className={`w-14 h-14 rounded-2xl bg-${service.color}-50 dark:bg-${service.color}-500/10 flex items-center justify-center text-${service.color}-600 dark:text-${service.color}-400 mb-6 group-hover:scale-110 transition-transform duration-300 border border-${service.color}-100 dark:border-${service.color}-500/20`}>
@@ -593,9 +648,7 @@ I'd like to discuss this project further.`;
       <section className="py-16 bg-slate-100 dark:bg-[#0a0f1d] border-y border-slate-200 dark:border-white/5 overflow-hidden">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div className="relative">
-               {/* Line */}
                <div className="absolute top-1/2 left-0 w-full h-0.5 bg-slate-300 dark:bg-white/10 -translate-y-1/2"></div>
-               {/* Pulse */}
                <div className="absolute top-1/2 left-0 w-48 h-1 bg-gradient-to-r from-transparent via-blue-500 to-transparent -translate-y-1/2 animate-[pulseMove_4s_linear_infinite]"></div>
                
                <div className="grid grid-cols-3 relative z-10">
@@ -627,7 +680,7 @@ I'd like to discuss this project further.`;
          `}</style>
       </section>
 
-      {/* --- INNOVATION BENTO GRID (REPLACES ORBITAL CORE) --- */}
+      {/* --- INNOVATION BENTO GRID --- */}
       <section className="py-32 bg-white dark:bg-[#050b1d] overflow-hidden transition-colors duration-300">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv 
@@ -645,7 +698,7 @@ I'd like to discuss this project further.`;
             </MotionDiv>
 
             <div className="grid grid-cols-1 md:grid-cols-3 grid-rows-2 gap-6 h-auto md:h-[600px]">
-               {/* 1. AI Integration (Large Block) */}
+               {/* 1. AI Integration */}
                <MagicCard className="md:col-span-2 md:row-span-1 p-8 flex flex-col md:flex-row items-center justify-between group">
                   <div className="md:w-1/2 z-10">
                      <div className="inline-flex items-center px-3 py-1 rounded-full bg-purple-100 dark:bg-purple-500/20 text-purple-600 dark:text-purple-300 text-xs font-bold uppercase tracking-wider mb-4">
@@ -655,7 +708,6 @@ I'd like to discuss this project further.`;
                      <p className="text-slate-600 dark:text-slate-400 text-sm">Our solutions embed advanced AI models to predict, automate, and optimize your business logic in real-time.</p>
                   </div>
                   <div className="md:w-1/2 flex items-center justify-center mt-8 md:mt-0 relative">
-                     {/* Pulse Animation */}
                      <div className="relative w-32 h-32 bg-purple-600 rounded-full flex items-center justify-center animate-pulse-slow">
                         <Brain size={48} className="text-white" />
                         <div className="absolute inset-0 border-2 border-white/20 rounded-full animate-ping"></div>
@@ -663,7 +715,7 @@ I'd like to discuss this project further.`;
                   </div>
                </MagicCard>
 
-               {/* 2. Global Scale (Tall Block) */}
+               {/* 2. Global Scale */}
                <MagicCard className="md:col-span-1 md:row-span-2 p-8 flex flex-col relative overflow-hidden">
                   <div className="z-10">
                      <div className="w-10 h-10 rounded-lg bg-blue-100 dark:bg-blue-500/20 flex items-center justify-center text-blue-600 dark:text-blue-400 mb-6">
@@ -672,14 +724,13 @@ I'd like to discuss this project further.`;
                      <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2">Global Scale</h3>
                      <p className="text-slate-600 dark:text-slate-400 text-sm mb-8">Deploy anywhere with our edge-optimized architecture. Low latency, high availability.</p>
                   </div>
-                  {/* Simulated Map Dots */}
                   <div className="absolute bottom-0 left-0 right-0 h-1/2 bg-[url('https://upload.wikimedia.org/wikipedia/commons/e/ec/World_map_blank_without_borders.svg')] bg-cover opacity-10 dark:opacity-20 bg-center"></div>
                   <div className="absolute bottom-10 left-10 w-2 h-2 bg-blue-500 rounded-full animate-ping"></div>
                   <div className="absolute bottom-20 right-20 w-2 h-2 bg-purple-500 rounded-full animate-ping delay-700"></div>
                   <div className="absolute bottom-32 left-1/2 w-2 h-2 bg-cyan-500 rounded-full animate-ping delay-300"></div>
                </MagicCard>
 
-               {/* 3. Security (Small Block) */}
+               {/* 3. Security */}
                <MagicCard className="md:col-span-1 md:row-span-1 p-8 flex flex-col justify-center">
                   <div className="flex items-center justify-between mb-4">
                      <div className="w-10 h-10 rounded-lg bg-emerald-100 dark:bg-emerald-500/20 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
@@ -689,11 +740,11 @@ I'd like to discuss this project further.`;
                   </div>
                   <h3 className="text-lg font-bold text-slate-900 dark:text-white">Bank-Grade Security</h3>
                   <div className="mt-4 h-2 w-full bg-slate-100 dark:bg-white/10 rounded-full overflow-hidden">
-                     <div className="h-full bg-emerald-500 w-[90%] animate-[width_2s_ease-in-out_infinite]"></div>
+                     <div className="h-full bg-emerald-50 w-[90%] animate-[width_2s_ease-in-out_infinite]"></div>
                   </div>
                </MagicCard>
 
-               {/* 4. Real-time Sync (Small Block) */}
+               {/* 4. Real-time Sync */}
                <MagicCard className="md:col-span-1 md:row-span-1 p-8 flex flex-col justify-center">
                   <div className="flex items-center justify-between mb-4">
                      <div className="w-10 h-10 rounded-lg bg-orange-100 dark:bg-orange-500/20 flex items-center justify-center text-orange-600 dark:text-orange-400">
@@ -713,57 +764,104 @@ I'd like to discuss this project further.`;
          </div>
       </section>
 
-      {/* --- SELECTED WORKS (MAGIC BORDER) --- */}
-      <section className="py-24 relative bg-slate-50 dark:bg-[#020617] transition-colors duration-300">
+      {/* --- HORIZONTAL SELECTED WORKS --- */}
+      <section className="py-24 relative bg-slate-50 dark:bg-[#020617] transition-colors duration-300 border-y border-slate-200 dark:border-white/5">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-6">
+            <div className="flex flex-col md:flex-row justify-between items-end mb-12 gap-6">
                <MotionDiv 
                  initial={{ opacity: 0, x: -20 }}
                  whileInView={{ opacity: 1, x: 0 }}
                  viewport={{ once: true }}
                >
-                  <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display mb-4">
+                  <div className="inline-flex items-center px-3 py-1 rounded-full bg-blue-100 dark:bg-blue-500/10 text-blue-600 dark:text-blue-400 text-xs font-bold tracking-widest uppercase mb-4">
+                     <Zap size={12} className="mr-2" /> Showcase
+                  </div>
+                  <h2 className="text-3xl md:text-5xl font-bold text-slate-900 dark:text-white font-display">
                      Selected <span className="text-blue-600 dark:text-blue-500">Works</span>
                   </h2>
-                  <p className="text-slate-600 dark:text-slate-400 text-lg">
-                     A glimpse into the digital solutions we've crafted.
-                  </p>
                </MotionDiv>
-               <Link to="/portfolio">
-                  <Button variant="ghost" className="text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 group">
-                     View All Projects <ArrowRight size={20} className="ml-2 group-hover:translate-x-1 transition-transform" />
-                  </Button>
-               </Link>
+               
+               <div className="flex items-center gap-4">
+                  <div className="flex gap-2 mr-4">
+                     <button 
+                       onClick={() => scroll('left')}
+                       disabled={!canScrollLeft}
+                       className={`p-3 rounded-full border transition-all ${canScrollLeft ? 'border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white' : 'border-slate-200 text-slate-300 dark:border-white/5 cursor-not-allowed'}`}
+                     >
+                        <ChevronLeft size={20} />
+                     </button>
+                     <button 
+                       onClick={() => scroll('right')}
+                       disabled={!canScrollRight}
+                       className={`p-3 rounded-full border transition-all ${canScrollRight ? 'border-blue-500 text-blue-500 hover:bg-blue-500 hover:text-white' : 'border-slate-200 text-slate-300 dark:border-white/5 cursor-not-allowed'}`}
+                     >
+                        <ChevronRight size={20} />
+                     </button>
+                  </div>
+                  <Link to="/portfolio">
+                     <Button variant="ghost" className="text-slate-900 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 group border border-slate-200 dark:border-white/10 rounded-full px-6">
+                        View All <ArrowRight size={18} className="ml-2 group-hover:translate-x-1 transition-transform" />
+                     </Button>
+                  </Link>
+               </div>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-               {PROJECTS.slice(0, 3).map((project, idx) => (
-                  <MagicCard key={project.id} className="aspect-[4/5] cursor-pointer">
-                     <div className="absolute inset-0">
-                        <img 
-                          src={project.image} 
-                          alt={project.title} 
-                          className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/40 to-transparent opacity-80 group-hover:opacity-60 transition-opacity duration-500"></div>
-                     </div>
-                     
-                     <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
-                        <div className="flex gap-2 mb-3">
-                           <span className="px-2 py-1 rounded-md bg-white/20 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-wider border border-white/10">
-                              {project.category}
-                           </span>
-                        </div>
-                        <h3 className="text-2xl font-bold text-white mb-2">{project.title}</h3>
-                        <p className="text-slate-200 text-sm line-clamp-2 mb-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
-                           {project.description}
-                        </p>
-                        <div className="flex items-center text-white text-xs font-bold uppercase tracking-wider opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-200">
-                           View Case Study <ArrowRight size={14} className="ml-2" />
-                        </div>
-                     </div>
-                  </MagicCard>
+            <div 
+              ref={scrollRef}
+              onScroll={handleScroll}
+              className="flex gap-6 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-8 -mx-4 px-4 md:mx-0 md:px-0"
+              style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+            >
+               {PROJECTS.map((project, idx) => (
+                  <div key={project.id} className="flex-shrink-0 w-[85vw] md:w-[420px] snap-center">
+                    <MagicCard className="aspect-[4/5] cursor-pointer group">
+                       <div className="absolute inset-0">
+                          <img 
+                            src={project.image} 
+                            alt={project.title} 
+                            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                          />
+                          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/50 to-transparent opacity-90 group-hover:opacity-70 transition-opacity duration-500"></div>
+                       </div>
+                       
+                       <div className="absolute top-6 left-6 z-10">
+                          <span className="px-3 py-1 rounded-full bg-white/10 backdrop-blur-md text-white text-[10px] font-bold uppercase tracking-widest border border-white/20">
+                             {project.category}
+                          </span>
+                       </div>
+
+                       <div className="absolute bottom-0 left-0 right-0 p-8 transform translate-y-4 group-hover:translate-y-0 transition-transform duration-300">
+                          <h3 className="text-3xl font-bold text-white mb-2 leading-tight">{project.title}</h3>
+                          <p className="text-slate-200 text-sm line-clamp-2 mb-6 opacity-0 group-hover:opacity-100 transition-opacity duration-300 delay-100">
+                             {project.description}
+                          </p>
+                          
+                          <div className="flex items-center justify-between border-t border-white/10 pt-6 opacity-0 group-hover:opacity-100 transition-all duration-300 delay-200">
+                             <div className="flex items-center text-blue-400 text-xs font-bold uppercase tracking-widest">
+                                {React.createElement(project.stats.icon, { size: 16, className: "mr-2" })}
+                                {project.stats.value} {project.stats.label}
+                             </div>
+                             <div className="w-10 h-10 rounded-full bg-white text-slate-900 flex items-center justify-center transform group-hover:scale-110 transition-transform">
+                                <ArrowRight size={20} />
+                             </div>
+                          </div>
+                       </div>
+                    </MagicCard>
+                  </div>
                ))}
+            </div>
+            
+            {/* Scroll Progress Indicator */}
+            <div className="mt-8 h-1 w-full bg-slate-200 dark:bg-white/5 rounded-full overflow-hidden">
+               <motion.div 
+                 className="h-full bg-blue-600"
+                 initial={{ width: "0%" }}
+                 animate={{ 
+                    width: scrollRef.current 
+                      ? `${(scrollRef.current.scrollLeft / (scrollRef.current.scrollWidth - scrollRef.current.clientWidth)) * 100}%` 
+                      : "0%" 
+                 }}
+               />
             </div>
          </div>
       </section>
@@ -807,7 +905,6 @@ I'd like to discuss this project further.`;
                   </AnimatePresence>
                </div>
 
-               {/* Controls */}
                <div className="flex justify-center gap-4 mt-8">
                   <button onClick={prevTestimonial} className="p-2 rounded-full bg-slate-100 dark:bg-white/5 hover:bg-slate-200 dark:hover:bg-white/10 transition-colors">
                      <ChevronLeft size={24} className="text-slate-600 dark:text-slate-400" />
@@ -820,7 +917,7 @@ I'd like to discuss this project further.`;
          </div>
       </section>
 
-      {/* --- WHY CHOOSE US (HOLOGRAPHIC TILT) --- */}
+      {/* --- WHY CHOOSE US --- */}
       <section className="py-24 bg-slate-50 dark:bg-[#020617] transition-colors duration-300 perspective-1000">
          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <MotionDiv 
@@ -839,9 +936,8 @@ I'd like to discuss this project further.`;
                  { icon: Rocket, title: "Fast Delivery", desc: "Agile methodologies that ensure rapid deployment without compromising quality." },
                  { icon: Brain, title: "AI-Driven", desc: "We integrate intelligence into every layer of development for smarter solutions." },
                  { icon: Shield, title: "Bank-Grade Security", desc: "Advanced encryption and security protocols to protect your business data." },
-                 { icon: Server, title: "Scalable Architecture", desc: "Systems built to grow with your business, handling millions of users effortlessly." },
-                 { icon: Clock, title: "24/7 Support", desc: "Round-the-clock technical support to ensure your operations never stop." }
-               ].slice(0, 4).map((item, idx) => (
+                 { icon: Server, title: "Scalable Architecture", desc: "Systems built to grow with your business, handling millions of users effortlessly." }
+               ].map((item, idx) => (
                  <TiltCard key={idx} className="h-full">
                     <div className="bg-white dark:bg-[#0f172a] border border-slate-200 dark:border-white/5 rounded-2xl p-8 h-full shadow-lg dark:shadow-2xl">
                        <div className="w-14 h-14 rounded-full bg-slate-100 dark:bg-[#1e293b] flex items-center justify-center text-slate-700 dark:text-white mb-6 group-hover:bg-emerald-500/10 dark:group-hover:bg-emerald-500/20 group-hover:text-emerald-500 dark:group-hover:text-emerald-400 transition-colors">
@@ -874,7 +970,6 @@ I'd like to discuss this project further.`;
             </MotionDiv>
 
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-               {/* Controls */}
                <div className="lg:col-span-2 space-y-8">
                   {/* Platform Selector */}
                   <div className="bg-white dark:bg-[#1e293b]/40 border border-slate-200 dark:border-white/5 rounded-2xl p-8 shadow-sm">
@@ -952,9 +1047,7 @@ I'd like to discuss this project further.`;
                {/* Total Estimate Card */}
                <div className="lg:col-span-1">
                   <div className="sticky top-24 bg-gradient-to-br from-[#0f172a] to-[#1e293b] dark:from-[#0f172a] dark:to-[#0f172a] text-white rounded-3xl p-8 shadow-2xl border border-white/10 relative overflow-hidden">
-                     {/* Theme-Adaptive Gradient Background for Light Mode */}
                      <div className="absolute inset-0 bg-gradient-to-br from-blue-900 to-slate-900 opacity-100 dark:opacity-0 transition-opacity duration-300 z-0"></div>
-                     
                      <div className="absolute top-0 right-0 w-32 h-32 bg-blue-500/20 rounded-full blur-3xl pointer-events-none z-0"></div>
                      
                      <div className="relative z-10">
