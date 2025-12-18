@@ -41,8 +41,10 @@ export interface GlobalLayoutConfig {
     address: string;
     officeHours: string;
     copyright: string;
-    socials: { platform: string; url: string }[];
-    legalLinks: { label: string; path: string }[];
+    socials: { id: string; platform: string; url: string }[];
+    quickLinks: { id: string; label: string; path: string }[];
+    serviceLinks: { id: string; label: string; path: string }[];
+    legalLinks: { id: string; label: string; path: string }[];
   };
 }
 
@@ -114,21 +116,37 @@ export const fetchGlobalLayoutConfig = async (): Promise<GlobalLayoutConfig> => 
       ]
     },
     footer: {
-      tagline: "Empowering businesses across Kenya and beyond with innovative technology solutions. We transform ideas into digital reality.",
+      tagline: "Empowering businesses across Kenya and beyond with innovative technology solutions. We transform ideas into digital reality through cutting-edge development and strategic consulting.",
       email: "info@techsafi.com",
       phone: "+254 751 380 948",
       address: "Nairobi, Kenya",
       officeHours: "Mon-Fri, 8am-6pm EAT",
       copyright: "© 2025 TechSafi - All rights reserved.",
       socials: [
-        { platform: 'LinkedIn', url: 'https://linkedin.com/company/techsafi' },
-        { platform: 'Twitter', url: 'https://twitter.com/techsafi' },
-        { platform: 'GitHub', url: 'https://github.com/techsafi' }
+        { id: 's1', platform: 'Facebook', url: '#' },
+        { id: 's2', platform: 'Twitter', url: '#' },
+        { id: 's3', platform: 'LinkedIn', url: '#' },
+        { id: 's4', platform: 'Instagram', url: '#' },
+        { id: 's5', platform: 'GitHub', url: '#' }
+      ],
+      quickLinks: [
+        { id: 'ql1', label: 'Home', path: '/' },
+        { id: 'ql2', label: 'About Us', path: '/company' },
+        { id: 'ql3', label: 'Services', path: '/services' },
+        { id: 'ql4', label: 'Portfolio', path: '/portfolio' },
+        { id: 'ql5', label: 'Pricing', path: '/pricing' }
+      ],
+      serviceLinks: [
+        { id: 'sl1', label: 'Web Apps', path: '/services' },
+        { id: 'sl2', label: 'Mobile Apps', path: '/services' },
+        { id: 'sl3', label: 'UI/UX Design', path: '/services' },
+        { id: 'sl4', label: 'AI Solutions', path: '/services' },
+        { id: 'sl5', label: 'Cloud Tech', path: '/services' }
       ],
       legalLinks: [
-        { label: 'Privacy Policy', path: '/privacy-policy' },
-        { label: 'Terms of Service', path: '/terms-of-service' },
-        { label: 'Cookie Policy', path: '/cookie-policy' }
+        { id: 'l1', label: 'Privacy Policy', path: '/privacy-policy' },
+        { id: 'l2', label: 'Terms of Service', path: '/terms-of-service' },
+        { id: 'l3', label: 'Cookie Policy', path: '/cookie-policy' }
       ]
     }
   };
