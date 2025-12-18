@@ -7,73 +7,88 @@ import {
   Menu, X, Sun, Moon, Search, Cpu, Zap, 
   ChevronRight, Globe, Image as ImageIcon, MessageSquare,
   Home as HomeIcon, Building2, Layers, CreditCard, Newspaper, Mail,
-  ChevronDown, PanelTop, PanelBottom, Briefcase, Brain, LayoutGrid
+  ChevronDown, PanelTop, PanelBottom, Briefcase, Brain, LayoutGrid,
+  Settings2, Palette
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { Overview } from './sections/Overview';
 import { PagesManager } from './sections/PagesManager';
 import { Button } from '../components/ui/Button';
 
-// Fix: Moved Info component definition before its usage in NAV_GROUPS to avoid Temporal Dead Zone error
-const Info = (props: any) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>;
+// Icons for nested items
+const InfoIcon = (props: any) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>;
 
-// --- SIDEBAR DATA STRUCTURE ---
+// --- REFINED SIDEBAR DATA STRUCTURE ---
 const NAV_GROUPS = [
   {
-    title: 'Core',
+    title: 'Monitor',
     items: [
-      { id: 'home', label: 'Overview', icon: LayoutDashboard, path: '/control-centre' },
+      { id: 'overview', label: 'Dashboard Home', icon: LayoutDashboard, path: '/control-centre' },
       { id: 'analytics', label: 'Live Analytics', icon: BarChart3, path: '/control-centre/analytics' },
     ]
   },
   {
-    title: 'Website Pages',
+    title: 'Management',
     items: [
-      { id: 'p-home', label: 'Home Page', icon: HomeIcon, path: '/control-centre/pages/home' },
       { 
-        id: 'p-company', 
-        label: 'Company', 
-        icon: Building2, 
+        id: 'pages-group', 
+        label: 'Website Pages', 
+        icon: FileText, 
         path: '#',
         children: [
-          { label: 'About Us', path: '/control-centre/pages/about', icon: Info },
-          { label: 'Careers', path: '/control-centre/pages/careers', icon: Users },
-          { label: 'Portfolio', path: '/control-centre/pages/portfolio', icon: Briefcase },
+          { label: 'Home Page', path: '/control-centre/pages/home', icon: HomeIcon },
+          { 
+            id: 'inner-company',
+            label: 'Company', 
+            icon: Building2,
+            path: '#',
+            children: [
+              { label: 'About Us', path: '/control-centre/pages/about', icon: InfoIcon },
+              { label: 'Careers', path: '/control-centre/pages/careers', icon: Users },
+              { label: 'Portfolio', path: '/control-centre/pages/portfolio', icon: Briefcase },
+            ]
+          },
+          { 
+            id: 'inner-services',
+            label: 'Services', 
+            icon: Layers,
+            path: '#',
+            children: [
+              { label: 'All Services', path: '/control-centre/pages/services', icon: LayoutGrid },
+              { label: 'AI Solutions', path: '/control-centre/pages/ai-solutions', icon: Brain },
+            ]
+          },
+          { label: 'Pricing', path: '/control-centre/pages/pricing', icon: CreditCard },
+          { label: 'Blog', path: '/control-centre/pages/blog', icon: Newspaper },
+          { label: 'Contact', path: '/control-centre/pages/contact', icon: Mail },
         ]
       },
       { 
-        id: 'p-services', 
-        label: 'Services', 
-        icon: Layers, 
+        id: 'layout-group', 
+        label: 'Global UI', 
+        icon: Palette, 
         path: '#',
         children: [
-          { label: 'All Services', path: '/control-centre/pages/services', icon: LayoutGrid },
-          { label: 'AI Solutions', path: '/control-centre/pages/ai-solutions', icon: Brain },
+          { label: 'Navbar Config', path: '/control-centre/manage/navbar', icon: PanelTop },
+          { label: 'Footer Config', path: '/control-centre/manage/footer', icon: PanelBottom },
+        ]
+      }
+    ]
+  },
+  {
+    title: 'Infrastructure',
+    items: [
+      { 
+        id: 'system-group', 
+        label: 'System Tools', 
+        icon: Settings2, 
+        path: '#',
+        children: [
+          { label: 'Media Library', path: '/control-centre/content', icon: ImageIcon },
+          { label: 'Activity Logs', path: '/control-centre/logs', icon: History },
+          { label: 'Security Alerts', path: '/control-centre/alerts', icon: ShieldAlert },
         ]
       },
-      { id: 'p-pricing', label: 'Pricing', icon: CreditCard, path: '/control-centre/pages/pricing' },
-      { id: 'p-blog', label: 'Blog', icon: Newspaper, path: '/control-centre/pages/blog' },
-      { id: 'p-contact', label: 'Contact', icon: Mail, path: '/control-centre/pages/contact' },
-    ]
-  },
-  {
-    title: 'Global Layout',
-    items: [
-      { id: 'm-navbar', label: 'Navbar Manager', icon: PanelTop, path: '/control-centre/manage/navbar' },
-      { id: 'm-footer', label: 'Footer Manager', icon: PanelBottom, path: '/control-centre/manage/footer' },
-    ]
-  },
-  {
-    title: 'System & Media',
-    items: [
-      { id: 'content', label: 'Media Manager', icon: ImageIcon, path: '/control-centre/content' },
-      { id: 'logs', label: 'Activity Logs', icon: History, path: '/control-centre/logs' },
-      { id: 'alerts', label: 'Security Alerts', icon: ShieldAlert, path: '/control-centre/alerts' },
-    ]
-  },
-  {
-    title: 'Future',
-    items: [
       { id: 'employees', label: 'Employee Hub', icon: Users, path: '/control-centre/employees', badge: 'Soon' },
       { id: 'settings', label: 'Global Settings', icon: Settings, path: '/control-centre/settings' },
     ]
@@ -83,7 +98,7 @@ const NAV_GROUPS = [
 export const Dashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedItems, setExpandedItems] = useState<string[]>(['p-company', 'p-services']);
+  const [expandedItems, setExpandedItems] = useState<string[]>([]); // Collapsed by default to save space
   const { theme, setTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -101,7 +116,72 @@ export const Dashboard: React.FC = () => {
     navigate('/login');
   };
 
-  const MotionDiv = motion.div as any;
+  // NavItem fixed to be explicitly typed as React.FC to allow 'key' prop when used in JSX
+  const NavItem: React.FC<{ item: any; depth?: number }> = ({ item, depth = 0 }) => {
+    const isExpanded = expandedItems.includes(item.id);
+    const isActive = location.pathname === item.path;
+    const hasChildren = item.children && item.children.length > 0;
+
+    return (
+      <div className="w-full">
+        {hasChildren ? (
+          <div className="w-full">
+            <button 
+              onClick={() => toggleExpand(item.id)}
+              className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all group ${
+                isExpanded ? 'text-primary bg-primary/5 dark:bg-primary/10' : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
+              }`}
+              style={{ paddingLeft: `${(depth * 12) + 12}px` }}
+            >
+              <item.icon size={18} className={`${isExpanded ? 'text-primary' : 'group-hover:text-primary transition-colors'}`} />
+              {sidebarOpen && (
+                <div className="flex-1 flex items-center justify-between text-left">
+                  <span className={`text-sm ${isExpanded ? 'font-bold' : 'font-medium'}`}>{item.label}</span>
+                  <ChevronDown size={14} className={`transition-transform duration-300 ${isExpanded ? 'rotate-180' : '-rotate-90'}`} />
+                </div>
+              )}
+            </button>
+            
+            <AnimatePresence initial={false}>
+              {isExpanded && sidebarOpen && (
+                <motion.div 
+                  initial={{ height: 0, opacity: 0 }}
+                  animate={{ height: 'auto', opacity: 1 }}
+                  exit={{ height: 0, opacity: 0 }}
+                  className="overflow-hidden border-l border-slate-100 dark:border-white/5 ml-4 my-1"
+                >
+                  {item.children.map((child: any, idx: number) => (
+                    // Recursive usage of NavItem with key
+                    <NavItem key={idx} item={{...child, id: `${item.id}-${idx}`}} depth={depth + 1} />
+                  ))}
+                </motion.div>
+              )}
+            </AnimatePresence>
+          </div>
+        ) : (
+          <Link 
+            to={item.path === '#' ? '#' : item.path}
+            className={`flex items-center gap-3 p-2.5 rounded-xl transition-all group ${
+              isActive 
+                ? 'bg-primary/10 text-primary border-r-2 border-primary' 
+                : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
+            }`}
+            style={{ paddingLeft: `${(depth * 12) + 12}px` }}
+          >
+            <item.icon size={18} className={`${isActive ? 'text-primary' : 'group-hover:text-primary transition-colors'}`} />
+            {sidebarOpen && (
+              <div className="flex-1 flex items-center justify-between">
+                <span className={`text-sm ${isActive ? 'font-bold' : 'font-medium'}`}>{item.label}</span>
+                {item.badge && (
+                  <span className="text-[8px] bg-slate-200 dark:bg-white/10 px-1.5 py-0.5 rounded-full text-slate-500 font-bold">{item.badge}</span>
+                )}
+              </div>
+            )}
+          </Link>
+        )}
+      </div>
+    );
+  };
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#020617] flex font-sans transition-colors duration-300">
@@ -130,75 +210,15 @@ export const Dashboard: React.FC = () => {
           {NAV_GROUPS.map((group, idx) => (
             <div key={idx} className="mb-6 px-4">
               {sidebarOpen && (
-                <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3 px-2">
+                <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-3 px-3">
                   {group.title}
                 </h5>
               )}
               <div className="space-y-1">
-                {group.items.map((item) => {
-                  const isExpanded = expandedItems.includes(item.id);
-                  const isActive = location.pathname === item.path;
-
-                  return (
-                    <div key={item.id}>
-                      {item.children ? (
-                        <div className="space-y-1">
-                          <button 
-                            onClick={() => toggleExpand(item.id)}
-                            className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all group ${
-                              isExpanded ? 'text-primary' : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
-                            }`}
-                          >
-                            <item.icon size={20} className={`${isExpanded ? 'text-primary' : 'group-hover:text-primary transition-colors'}`} />
-                            {sidebarOpen && (
-                              <div className="flex-1 flex items-center justify-between text-left">
-                                <span className="text-sm font-medium">{item.label}</span>
-                                <ChevronDown size={14} className={`transition-transform duration-200 ${isExpanded ? 'rotate-0' : '-rotate-90'}`} />
-                              </div>
-                            )}
-                          </button>
-                          
-                          {isExpanded && sidebarOpen && (
-                            <div className="ml-9 space-y-1 border-l border-slate-100 dark:border-white/5 pl-3">
-                              {item.children.map((child, cIdx) => (
-                                <Link 
-                                  key={cIdx} 
-                                  to={child.path}
-                                  className={`block py-2 text-xs font-medium transition-colors ${
-                                    location.pathname === child.path 
-                                      ? 'text-primary' 
-                                      : 'text-slate-400 hover:text-slate-900 dark:hover:text-white'
-                                  }`}
-                                >
-                                  {child.label}
-                                </Link>
-                              ))}
-                            </div>
-                          )}
-                        </div>
-                      ) : (
-                        <Link 
-                          to={item.path}
-                          className={`flex items-center gap-3 p-2.5 rounded-xl transition-all group ${
-                            isActive 
-                              ? 'bg-primary/10 text-primary font-bold' 
-                              : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
-                          }`}
-                        >
-                          <item.icon size={20} className={`${isActive ? 'text-primary' : 'group-hover:text-primary transition-colors'}`} />
-                          {sidebarOpen && (
-                            <div className="flex-1 flex items-center justify-between">
-                              <span className="text-sm font-medium">{item.label}</span>
-                              {item.badge && (
-                                <span className="text-[8px] bg-slate-200 dark:bg-white/10 px-1.5 py-0.5 rounded-full text-slate-500 font-bold">{item.badge}</span>
-                              )}
-                            </div>
-                          )}
-                        </Link>
-                      )}
-                    </div>
-                  );
-                })}
+                {group.items.map((item) => (
+                  // Usage of NavItem component with key
+                  <NavItem key={item.id} item={item} />
+                ))}
               </div>
             </div>
           ))}
@@ -209,14 +229,14 @@ export const Dashboard: React.FC = () => {
             onClick={() => navigate('/')}
             className="w-full flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-all group"
           >
-            <Globe size={20} className="group-hover:text-primary transition-colors" />
+            <Globe size={18} className="group-hover:text-primary transition-colors" />
             {sidebarOpen && <span className="text-sm font-bold">Public Website</span>}
           </button>
           <button 
             onClick={handleLogout}
             className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all group"
           >
-            <LogOut size={20} className="group-hover:scale-110 transition-transform" />
+            <LogOut size={18} className="group-hover:scale-110 transition-transform" />
             {sidebarOpen && <span className="text-sm font-bold">Sign Out</span>}
           </button>
         </div>
@@ -243,47 +263,14 @@ export const Dashboard: React.FC = () => {
                 <button onClick={() => setMobileMenuOpen(false)} className="p-2 dark:text-white bg-slate-100 dark:bg-white/5 rounded-full"><X size={20} /></button>
               </div>
               
-              <div className="space-y-8">
+              <div className="space-y-6">
                 {NAV_GROUPS.map((group, idx) => (
                   <div key={idx}>
-                    <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4">{group.title}</h5>
+                    <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4 px-2">{group.title}</h5>
                     <div className="space-y-1">
                       {group.items.map((item) => (
-                        <div key={item.id}>
-                          {item.children ? (
-                            <div className="space-y-2 mb-4">
-                              <div className="flex items-center gap-4 p-3 text-slate-500 font-semibold bg-slate-50 dark:bg-white/5 rounded-xl">
-                                 <item.icon size={20} className="text-primary" />
-                                 <span>{item.label}</span>
-                              </div>
-                              <div className="ml-10 space-y-1 border-l-2 border-slate-100 dark:border-white/5 pl-5">
-                                 {item.children.map((child, cIdx) => (
-                                    <Link 
-                                      key={cIdx} 
-                                      to={child.path} 
-                                      onClick={() => setMobileMenuOpen(false)}
-                                      className="block py-2.5 text-sm text-slate-500 dark:text-slate-400 hover:text-primary transition-colors font-medium"
-                                    >
-                                      {child.label}
-                                    </Link>
-                                 ))}
-                              </div>
-                            </div>
-                          ) : (
-                            <Link 
-                              key={item.id} to={item.path} 
-                              onClick={() => setMobileMenuOpen(false)}
-                              className={`flex items-center gap-4 p-3.5 rounded-xl transition-all ${
-                                location.pathname === item.path 
-                                  ? 'bg-primary/10 text-primary font-bold' 
-                                  : 'dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/5'
-                              }`}
-                            >
-                              <item.icon size={20} />
-                              <span className="font-medium">{item.label}</span>
-                            </Link>
-                          )}
-                        </div>
+                        // Usage of NavItem component with key in mobile view
+                        <NavItem key={item.id} item={item} />
                       ))}
                     </div>
                   </div>
@@ -295,14 +282,14 @@ export const Dashboard: React.FC = () => {
                   onClick={() => { setMobileMenuOpen(false); navigate('/'); }}
                   className="w-full flex items-center gap-4 p-4 rounded-xl text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-white/5 font-bold"
                 >
-                  <Globe size={20} />
+                  <Globe size={18} />
                   <span>Public Website</span>
                 </button>
                 <button 
                   onClick={handleLogout}
                   className="w-full flex items-center gap-4 p-4 rounded-xl text-red-500 bg-red-50 dark:bg-red-500/10 font-bold"
                 >
-                  <LogOut size={20} />
+                  <LogOut size={18} />
                   <span>Sign Out</span>
                 </button>
               </div>
