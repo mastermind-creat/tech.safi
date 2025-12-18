@@ -1,14 +1,61 @@
 
 /**
  * TechSafi Control Centre API Service
- * Centralized logic for data fetching. 
+ * Centralized logic for data fetching and management.
  */
+
+// --- DATA MODELS ---
 
 export interface NavLinkConfig {
   id: string;
   label: string;
   path: string;
   children?: NavLinkConfig[];
+}
+
+export interface ServiceItem {
+  id: string;
+  title: string;
+  slug: string;
+  shortDescription: string;
+  detailedDescription: string;
+  categoryId: string;
+  iconName: string;
+  isAiPowered: boolean;
+  displayOrder: number;
+  status: 'Published' | 'Draft';
+  ctaText: string;
+  ctaLink: string;
+  metaTitle: string;
+  metaDescription: string;
+  features: string[];
+  updatedAt: string;
+}
+
+export interface ServiceCategory {
+  id: string;
+  name: string;
+  slug: string;
+  displayOrder: number;
+  status: 'Active' | 'Disabled';
+}
+
+export interface MethodologyStep {
+  id: string;
+  title: string;
+  description: string;
+  iconName: string;
+  displayOrder: number;
+}
+
+export interface TechItem {
+  id: string;
+  name: string;
+  iconName: string;
+  color: string; // TailWind color class or hex
+  category: 'Frontend' | 'Backend' | 'Mobile' | 'AI' | 'Cloud' | 'Database';
+  isVisible: boolean;
+  displayOrder: number;
 }
 
 export interface SystemStats {
@@ -55,6 +102,9 @@ export interface GlobalLayoutConfig {
 }
 
 const CONFIG_STORAGE_KEY = 'techsafi_global_config';
+const SERVICES_STORAGE_KEY = 'techsafi_services_data';
+
+// --- MOCK INITIAL DATA ---
 
 const DEFAULT_CONFIG: GlobalLayoutConfig = {
   navbar: {
@@ -123,8 +173,10 @@ const DEFAULT_CONFIG: GlobalLayoutConfig = {
   }
 };
 
+// --- API METHODS ---
+
 export const fetchSystemStats = async (): Promise<SystemStats> => {
-  await new Promise(resolve => setTimeout(resolve, 800));
+  await new Promise(resolve => setTimeout(resolve, 300));
   return {
     visitors: 12450,
     visitorsChange: 12.5,
@@ -157,12 +209,10 @@ export const fetchServiceEngagement = async (): Promise<ChartDataPoint[]> => {
 };
 
 export const fetchActivityLogs = async (): Promise<ActivityLog[]> => {
-  await new Promise(resolve => setTimeout(resolve, 600));
   return [
     { id: '1', action: 'Published Homepage Update', user: 'Kennedy (CEO)', timestamp: '2 mins ago', status: 'success' },
-    { id: '2', action: 'Failed login attempt', user: 'Unknown IP (192.168.1.1)', timestamp: '15 mins ago', status: 'warning' },
+    { id: '2', action: 'Failed login attempt', user: 'Unknown IP', timestamp: '15 mins ago', status: 'warning' },
     { id: '3', action: 'New Portfolio Item: MediCare', user: 'Lewis (COO)', timestamp: '1 hour ago', status: 'success' },
-    { id: '4', action: 'Database backup failed', user: 'System', timestamp: '3 hours ago', status: 'error' },
   ];
 };
 
@@ -176,21 +226,62 @@ export const fetchPages = async () => {
 };
 
 export const fetchGlobalLayoutConfig = async (): Promise<GlobalLayoutConfig> => {
-  await new Promise(resolve => setTimeout(resolve, 300));
   const stored = localStorage.getItem(CONFIG_STORAGE_KEY);
-  if (stored) {
-    try {
-      return JSON.parse(stored);
-    } catch (e) {
-      return DEFAULT_CONFIG;
-    }
-  }
+  if (stored) return JSON.parse(stored);
   return DEFAULT_CONFIG;
 };
 
 export const saveGlobalLayoutConfig = async (config: GlobalLayoutConfig): Promise<boolean> => {
-  await new Promise(resolve => setTimeout(resolve, 1000));
   localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
   window.dispatchEvent(new Event('techsafi_config_updated'));
   return true;
+};
+
+// --- SERVICES COMMAND CENTRE METHODS ---
+
+export const fetchServices = async (): Promise<ServiceItem[]> => {
+  const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
+  if (stored) {
+    const data = JSON.parse(stored);
+    return data.services || [];
+  }
+  return [];
+};
+
+export const fetchCategories = async (): Promise<ServiceCategory[]> => {
+  const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
+  if (stored) {
+    const data = JSON.parse(stored);
+    return data.categories || [];
+  }
+  return [
+    { id: 'cat1', name: 'Web Apps', slug: 'web-apps', displayOrder: 1, status: 'Active' },
+    { id: 'cat2', name: 'Mobile Apps', slug: 'mobile-apps', displayOrder: 2, status: 'Active' },
+    { id: 'cat3', name: 'AI Solutions', slug: 'ai-solutions', displayOrder: 3, status: 'Active' },
+  ];
+};
+
+export const fetchMethodology = async (): Promise<MethodologyStep[]> => {
+  const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
+  if (stored) {
+    const data = JSON.parse(stored);
+    return data.methodology || [];
+  }
+  return [];
+};
+
+export const fetchTechStack = async (): Promise<TechItem[]> => {
+  const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
+  if (stored) {
+    const data = JSON.parse(stored);
+    return data.techStack || [];
+  }
+  return [];
+};
+
+export const saveServicesData = async (data: { services?: ServiceItem[], categories?: ServiceCategory[], methodology?: MethodologyStep[], techStack?: TechItem[] }): Promise<void> => {
+  const existing = localStorage.getItem(SERVICES_STORAGE_KEY);
+  const parsed = existing ? JSON.parse(existing) : {};
+  const updated = { ...parsed, ...data };
+  localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify(updated));
 };

@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
@@ -14,6 +15,7 @@ import { useTheme } from '../context/ThemeContext';
 import { Overview } from './sections/Overview';
 import { PagesManager } from './sections/PagesManager';
 import { GlobalLayoutManager } from './sections/GlobalLayoutManager';
+import { ServicesAdmin } from './sections/ServicesAdmin';
 import { Button } from '../components/ui/Button';
 
 // Icons for nested items
@@ -49,16 +51,7 @@ const NAV_GROUPS = [
               { label: 'Portfolio', path: '/control-centre/pages/portfolio', icon: Briefcase },
             ]
           },
-          { 
-            id: 'inner-services',
-            label: 'Services', 
-            icon: Layers,
-            path: '#',
-            children: [
-              { label: 'All Services', path: '/control-centre/pages/services', icon: LayoutGrid },
-              { label: 'AI Solutions', path: '/control-centre/pages/ai-solutions', icon: Brain },
-            ]
-          },
+          { label: 'Services Matrix', path: '/control-centre/pages/services', icon: Layers },
           { label: 'Pricing', path: '/control-centre/pages/pricing', icon: CreditCard },
           { label: 'Blog', path: '/control-centre/pages/blog', icon: Newspaper },
           { label: 'Contact', path: '/control-centre/pages/contact', icon: Mail },
@@ -99,7 +92,7 @@ const NAV_GROUPS = [
 export const Dashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedItems, setExpandedItems] = useState<string[]>(['layout-group']); // Expanded by default to help user find the current task
+  const [expandedItems, setExpandedItems] = useState<string[]>(['pages-group']); 
   const { theme, setTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -344,6 +337,7 @@ export const Dashboard: React.FC = () => {
         <div className="p-6 max-w-7xl mx-auto">
           <Routes>
             <Route path="/" element={<Overview />} />
+            <Route path="/pages/services" element={<ServicesAdmin />} />
             <Route path="/pages/*" element={<PagesManager />} />
             <Route path="/manage/navbar" element={<GlobalLayoutManager activeTab="navbar" />} />
             <Route path="/manage/footer" element={<GlobalLayoutManager activeTab="footer" />} />
@@ -365,15 +359,6 @@ export const Dashboard: React.FC = () => {
           </Routes>
         </div>
       </main>
-      <style>{`
-         @keyframes spin-slow {
-            from { transform: rotate(0deg); }
-            to { transform: rotate(360deg); }
-         }
-         .animate-spin-slow {
-            animation: spin-slow 12s linear infinite;
-         }
-      `}</style>
     </div>
   );
 };
