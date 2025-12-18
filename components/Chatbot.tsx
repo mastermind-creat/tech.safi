@@ -3,7 +3,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Minimize2, User, Sparkles, AlertCircle, WifiOff, ChevronRight, RefreshCw, Send, Bot } from 'lucide-react';
 import { Button } from './ui/Button';
-import { GoogleGenAI } from "@google/genai";
+import { GoogleGenAI, GenerateContentResponse } from "@google/genai";
 
 interface Message {
   id: string;
@@ -125,6 +125,7 @@ export const Chatbot: React.FC = () => {
           return;
         }
 
+        // Initialize GoogleGenAI client with API key from environment
         const ai = new GoogleGenAI({ apiKey });
         chatSessionRef.current = ai.chats.create({
           model: 'gemini-3-pro-preview',
@@ -219,7 +220,9 @@ export const Chatbot: React.FC = () => {
             
             let fullText = '';
             for await (const chunk of resultStream) {
-                const chunkText = (chunk as any).text;
+                // Correctly handle chunk from sendMessageStream as GenerateContentResponse
+                const response = chunk as GenerateContentResponse;
+                const chunkText = response.text;
                 if (chunkText) {
                     fullText += chunkText;
                     setMessages(prev => prev.map(m => 

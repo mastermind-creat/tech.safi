@@ -8,12 +8,91 @@ import {
   Layout, Cloud, ChevronRight, Star, ChevronLeft, Quote,
   Check, Zap, Database, CreditCard, Lock, Monitor, Laptop, Repeat,
   ShoppingCart, MessageSquare, Home as HomeIcon, Search, Terminal,
-  Activity, Layers, BarChart3, Wifi
+  Activity, Layers, BarChart3, Wifi, Sparkles
 } from 'lucide-react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/Button';
 import { Typewriter } from '../components/ui/Typewriter';
 import { PROJECTS } from '../constants';
+
+// --- NEW ENHANCEMENT COMPONENTS ---
+
+const HERO_IMAGES = [
+  "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1920&q=80", // AI / Neural
+  "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=80", // Cyber / Tech
+  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80", // Innovation / Network
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=1920&q=80"  // Hardware / Code
+];
+
+const BackgroundSlider = () => {
+  const [index, setIndex] = useState(0);
+  const { scrollY } = useScroll();
+  const y = useTransform(scrollY, [0, 800], [0, 200]);
+  const MotionDiv = motion.div as any;
+
+  useEffect(() => {
+    const timer = setInterval(() => {
+      setIndex((prev) => (prev + 1) % HERO_IMAGES.length);
+    }, 7000);
+    return () => clearInterval(timer);
+  }, []);
+
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      <AnimatePresence mode="wait">
+        <MotionDiv
+          key={index}
+          initial={{ opacity: 0, scale: 1.1 }}
+          animate={{ opacity: 1, scale: 1 }}
+          exit={{ opacity: 0, scale: 0.95 }}
+          transition={{ duration: 2, ease: "easeInOut" }}
+          style={{ y }}
+          className="absolute inset-0"
+        >
+          <img 
+            src={HERO_IMAGES[index]} 
+            alt="Hero Background" 
+            className="w-full h-full object-cover"
+          />
+          {/* Layered Overlays for depth and readability */}
+          <div className="absolute inset-0 bg-[#020617]/70 dark:bg-[#020617]/80" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-transparent to-[#020617]" />
+          <div className="absolute inset-0 bg-gradient-to-r from-blue-900/20 via-transparent to-purple-900/20 mix-blend-overlay" />
+        </MotionDiv>
+      </AnimatePresence>
+    </div>
+  );
+};
+
+const FloatingParticles = () => {
+  return (
+    <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+      {[...Array(15)].map((_, i) => (
+        <motion.div
+          key={i}
+          initial={{ 
+            x: Math.random() * 100 + "%", 
+            y: Math.random() * 100 + "%", 
+            opacity: 0,
+            scale: 0 
+          }}
+          animate={{ 
+            y: [null, (Math.random() * -100 - 50) + "px"],
+            opacity: [0, 0.4, 0],
+            scale: [0, 1, 0.5]
+          }}
+          transition={{ 
+            duration: Math.random() * 10 + 10, 
+            repeat: Infinity, 
+            ease: "linear",
+            delay: Math.random() * 5
+          }}
+          className="absolute w-1 h-1 bg-cyan-400/40 rounded-full blur-[1px]"
+        />
+      ))}
+    </div>
+  );
+};
 
 // --- ANIMATION COMPONENTS ---
 
@@ -87,7 +166,7 @@ const StarField = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  return <canvas ref={canvasRef} className="absolute inset-0 z-0 opacity-40 pointer-events-none" />;
+  return <canvas ref={canvasRef} className="absolute inset-0 z-10 opacity-30 pointer-events-none" />;
 };
 
 // 2. Magic Card (Spotlight Effect)
@@ -281,25 +360,27 @@ I'd like to discuss this project further.`;
       {/* --- HERO SECTION --- */}
       <section className="relative min-h-screen flex flex-col justify-center items-center px-4 sm:px-6 lg:px-8 pt-20 overflow-hidden">
           
-          {/* Star Field Background */}
+          {/* New Cinematic Enhancements */}
+          <BackgroundSlider />
+          <FloatingParticles />
           <StarField />
           
-          {/* Dynamic Gradient Blobs */}
-          <div className="absolute inset-0 overflow-hidden pointer-events-none">
-             <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-purple-500/20 dark:bg-purple-600/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow"></div>
-             <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-cyan-500/20 dark:bg-cyan-600/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow"></div>
+          {/* Dynamic Gradient Blobs (Updated to blend with backgrounds) */}
+          <div className="absolute inset-0 overflow-hidden pointer-events-none z-10">
+             <div className="absolute top-[-20%] left-[-10%] w-[600px] h-[600px] bg-purple-500/10 dark:bg-purple-600/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow"></div>
+             <div className="absolute bottom-[-20%] right-[-10%] w-[600px] h-[600px] bg-cyan-500/10 dark:bg-cyan-600/10 rounded-full blur-[120px] mix-blend-multiply dark:mix-blend-screen animate-pulse-slow"></div>
           </div>
 
-          <div className="relative z-10 max-w-5xl mx-auto text-center space-y-8">
+          <div className="relative z-20 max-w-5xl mx-auto text-center space-y-8">
              {/* Dynamic Greeting Badge */}
              <MotionDiv 
                initial={{ opacity: 0, y: -20 }} 
                animate={{ opacity: 1, y: 0 }} 
                transition={{ duration: 0.6 }}
-               className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/50 dark:bg-white/5 border border-slate-200 dark:border-white/10 backdrop-blur-md shadow-sm dark:shadow-lg group cursor-default hover:border-cyan-500/30 transition-colors"
+               className="inline-flex items-center px-4 py-1.5 rounded-full bg-white/20 dark:bg-white/5 border border-white/20 dark:border-white/10 backdrop-blur-md shadow-lg group cursor-default hover:border-cyan-500/30 transition-colors"
              >
                <span className="mr-2 text-lg animate-wave">👋</span>
-               <span className="text-sm font-medium tracking-wide text-slate-700 dark:text-cyan-100">
+               <span className="text-sm font-medium tracking-wide text-white dark:text-cyan-100">
                  {greeting}, welcome to TechSafi
                </span>
              </MotionDiv>
@@ -310,12 +391,12 @@ I'd like to discuss this project further.`;
                animate={{ opacity: 1, scale: 1 }} 
                transition={{ duration: 0.8, delay: 0.1 }}
              >
-                <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold font-display text-slate-900 dark:text-white leading-[1.1] tracking-tight drop-shadow-xl">
+                <h1 className="text-5xl md:text-7xl lg:text-9xl font-bold font-display text-white mb-6 leading-[1.1] tracking-tight drop-shadow-2xl">
                   Building Intelligent <br className="hidden md:block" />
-                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-500 via-blue-600 to-purple-600 dark:from-cyan-400 dark:via-blue-500 dark:to-purple-500">
+                  <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">
                     <Typewriter 
                       words={['Digital Solutions', 'AI Ecosystems', 'Future Tech']} 
-                      cursorClassName="text-cyan-500"
+                      cursorClassName="text-cyan-400"
                       typingSpeed={80}
                       deletingSpeed={50}
                       pauseTime={2500}
@@ -331,7 +412,7 @@ I'd like to discuss this project further.`;
                transition={{ duration: 0.8, delay: 0.2 }}
                className="max-w-2xl mx-auto"
              >
-                <p className="text-lg md:text-2xl text-slate-600 dark:text-slate-400 font-light leading-relaxed">
+                <p className="text-lg md:text-2xl text-slate-100 dark:text-slate-300 font-light leading-relaxed drop-shadow-md">
                    Empowering businesses with AI-enhanced software, custom mobile apps, and intelligent automation tailored for the modern digital era.
                 </p>
              </MotionDiv>
@@ -344,12 +425,12 @@ I'd like to discuss this project further.`;
                className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-8"
              >
                 <Link to="/contact" className="w-full sm:w-auto">
-                  <Button size="lg" className="w-full sm:w-auto bg-slate-900 dark:bg-white text-white dark:text-slate-900 hover:bg-slate-800 dark:hover:bg-slate-200 border-0 font-bold py-4 px-10 text-lg rounded-full shadow-[0_0_20px_rgba(0,0,0,0.2)] dark:shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all transform hover:scale-105">
+                  <Button size="lg" className="w-full sm:w-auto bg-white text-slate-900 hover:bg-slate-100 border-0 font-bold py-4 px-10 text-lg rounded-full shadow-[0_0_30px_rgba(255,255,255,0.3)] transition-all transform hover:scale-105">
                     Start Your Project
                   </Button>
                 </Link>
                 <Link to="/services" className="w-full sm:w-auto">
-                  <Button variant="outline" size="lg" className="w-full sm:w-auto border-slate-300 dark:border-white/20 text-slate-700 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 font-medium py-4 px-10 text-lg rounded-full backdrop-blur-md">
+                  <Button variant="outline" size="lg" className="w-full sm:w-auto border-white/20 text-white hover:bg-white/10 font-medium py-4 px-10 text-lg rounded-full backdrop-blur-md">
                     Explore Services <ArrowRight className="ml-2 w-5 h-5" />
                   </Button>
                 </Link>
@@ -361,9 +442,9 @@ I'd like to discuss this project further.`;
              initial={{ opacity: 0, y: 40 }}
              animate={{ opacity: 1, y: 0 }}
              transition={{ duration: 0.8, delay: 0.5 }}
-             className="absolute bottom-10 left-0 right-0 hidden md:flex justify-center"
+             className="absolute bottom-10 left-0 right-0 hidden md:flex justify-center z-20"
           >
-             <div className="flex divide-x divide-slate-200 dark:divide-white/10 bg-white/70 dark:bg-white/5 backdrop-blur-xl border border-slate-200 dark:border-white/10 rounded-2xl px-10 py-5 shadow-2xl">
+             <div className="flex divide-x divide-white/10 bg-white/5 backdrop-blur-xl border border-white/10 rounded-2xl px-10 py-5 shadow-2xl">
                {[
                  { label: "Projects Delivered", value: "50+" },
                  { label: "Client Satisfaction", value: "98%" },
@@ -371,8 +452,8 @@ I'd like to discuss this project further.`;
                  { label: "Countries Served", value: "3+" }
                ].map((stat, i) => (
                  <div key={i} className="px-10 text-center">
-                   <div className="text-3xl font-bold text-slate-900 dark:text-white mb-1">{stat.value}</div>
-                   <div className="text-[10px] uppercase tracking-widest text-slate-500 dark:text-slate-400 font-bold">{stat.label}</div>
+                   <div className="text-3xl font-bold text-white mb-1">{stat.value}</div>
+                   <div className="text-[10px] uppercase tracking-widest text-slate-300 font-bold">{stat.label}</div>
                  </div>
                ))}
              </div>
