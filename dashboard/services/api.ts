@@ -27,6 +27,25 @@ export interface ActivityLog {
   status: 'success' | 'warning' | 'error';
 }
 
+export interface GlobalLayoutConfig {
+  navbar: {
+    logoPrimary: string;
+    logoAccent: string;
+    ctaLabel: string;
+    links: { id: string; label: string; path: string }[];
+  };
+  footer: {
+    tagline: string;
+    email: string;
+    phone: string;
+    address: string;
+    officeHours: string;
+    copyright: string;
+    socials: { platform: string; url: string }[];
+    legalLinks: { label: string; path: string }[];
+  };
+}
+
 export const fetchSystemStats = async (): Promise<SystemStats> => {
   await new Promise(resolve => setTimeout(resolve, 800));
   return {
@@ -77,4 +96,46 @@ export const fetchPages = async () => {
     { id: 's1', name: 'Services', path: '/services', lastEdited: '2025-03-12', status: 'Draft' },
     { id: 'p1', name: 'Portfolio', path: '/portfolio', lastEdited: '2025-03-01', status: 'Published' },
   ];
+};
+
+export const fetchGlobalLayoutConfig = async (): Promise<GlobalLayoutConfig> => {
+  await new Promise(resolve => setTimeout(resolve, 500));
+  return {
+    navbar: {
+      logoPrimary: "Tech",
+      logoAccent: "Safi",
+      ctaLabel: "Get Started",
+      links: [
+        { id: '1', label: 'Home', path: '/' },
+        { id: '2', label: 'Company', path: '/company' },
+        { id: '3', label: 'Services', path: '/services' },
+        { id: '4', label: 'Portfolio', path: '/portfolio' },
+        { id: '5', label: 'Pricing', path: '/pricing' },
+      ]
+    },
+    footer: {
+      tagline: "Empowering businesses across Kenya and beyond with innovative technology solutions. We transform ideas into digital reality.",
+      email: "info@techsafi.com",
+      phone: "+254 751 380 948",
+      address: "Nairobi, Kenya",
+      officeHours: "Mon-Fri, 8am-6pm EAT",
+      copyright: "© 2025 TechSafi - All rights reserved.",
+      socials: [
+        { platform: 'LinkedIn', url: 'https://linkedin.com/company/techsafi' },
+        { platform: 'Twitter', url: 'https://twitter.com/techsafi' },
+        { platform: 'GitHub', url: 'https://github.com/techsafi' }
+      ],
+      legalLinks: [
+        { label: 'Privacy Policy', path: '/privacy-policy' },
+        { label: 'Terms of Service', path: '/terms-of-service' },
+        { label: 'Cookie Policy', path: '/cookie-policy' }
+      ]
+    }
+  };
+};
+
+export const saveGlobalLayoutConfig = async (config: GlobalLayoutConfig): Promise<boolean> => {
+  await new Promise(resolve => setTimeout(resolve, 1500));
+  console.log("Config saved to server:", config);
+  return true;
 };
