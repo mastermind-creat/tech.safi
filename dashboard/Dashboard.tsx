@@ -1,5 +1,4 @@
-
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -8,24 +7,27 @@ import {
   Menu, X, Sun, Moon, Search, Cpu, Zap, 
   ChevronRight, Globe, Image as ImageIcon, MessageSquare,
   Home as HomeIcon, Building2, Layers, CreditCard, Newspaper, Mail,
-  ChevronDown
+  ChevronDown, PanelTop, PanelBottom, Briefcase, Brain, LayoutGrid
 } from 'lucide-react';
 import { useTheme } from '../context/ThemeContext';
 import { Overview } from './sections/Overview';
 import { PagesManager } from './sections/PagesManager';
 import { Button } from '../components/ui/Button';
 
-// --- SIDEBAR DATA ---
+// Fix: Moved Info component definition before its usage in NAV_GROUPS to avoid Temporal Dead Zone error
+const Info = (props: any) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>;
+
+// --- SIDEBAR DATA STRUCTURE ---
 const NAV_GROUPS = [
   {
-    title: 'Overview',
+    title: 'Core',
     items: [
-      { id: 'home', label: 'Dashboard Home', icon: LayoutDashboard, path: '/control-centre' },
-      { id: 'analytics', label: 'Analytics', icon: BarChart3, path: '/control-centre/analytics' },
+      { id: 'home', label: 'Overview', icon: LayoutDashboard, path: '/control-centre' },
+      { id: 'analytics', label: 'Live Analytics', icon: BarChart3, path: '/control-centre/analytics' },
     ]
   },
   {
-    title: 'Website Content',
+    title: 'Website Pages',
     items: [
       { id: 'p-home', label: 'Home Page', icon: HomeIcon, path: '/control-centre/pages/home' },
       { 
@@ -34,9 +36,9 @@ const NAV_GROUPS = [
         icon: Building2, 
         path: '#',
         children: [
-          { label: 'About Us', path: '/control-centre/pages/about' },
-          { label: 'Careers', path: '/control-centre/pages/careers' },
-          { label: 'Portfolio', path: '/control-centre/pages/portfolio' },
+          { label: 'About Us', path: '/control-centre/pages/about', icon: Info },
+          { label: 'Careers', path: '/control-centre/pages/careers', icon: Users },
+          { label: 'Portfolio', path: '/control-centre/pages/portfolio', icon: Briefcase },
         ]
       },
       { 
@@ -45,8 +47,8 @@ const NAV_GROUPS = [
         icon: Layers, 
         path: '#',
         children: [
-          { label: 'All Services', path: '/control-centre/pages/services' },
-          { label: 'AI Solutions', path: '/control-centre/pages/ai-solutions' },
+          { label: 'All Services', path: '/control-centre/pages/services', icon: LayoutGrid },
+          { label: 'AI Solutions', path: '/control-centre/pages/ai-solutions', icon: Brain },
         ]
       },
       { id: 'p-pricing', label: 'Pricing', icon: CreditCard, path: '/control-centre/pages/pricing' },
@@ -55,18 +57,25 @@ const NAV_GROUPS = [
     ]
   },
   {
-    title: 'System',
+    title: 'Global Layout',
     items: [
-      { id: 'content', label: 'Media Manager', icon: ImageIcon, path: '/control-centre/content' },
-      { id: 'logs', label: 'Activity Logs', icon: History, path: '/control-centre/logs' },
-      { id: 'alerts', label: 'System Alerts', icon: ShieldAlert, path: '/control-centre/alerts' },
+      { id: 'm-navbar', label: 'Navbar Manager', icon: PanelTop, path: '/control-centre/manage/navbar' },
+      { id: 'm-footer', label: 'Footer Manager', icon: PanelBottom, path: '/control-centre/manage/footer' },
     ]
   },
   {
-    title: 'Future Modules',
+    title: 'System & Media',
+    items: [
+      { id: 'content', label: 'Media Manager', icon: ImageIcon, path: '/control-centre/content' },
+      { id: 'logs', label: 'Activity Logs', icon: History, path: '/control-centre/logs' },
+      { id: 'alerts', label: 'Security Alerts', icon: ShieldAlert, path: '/control-centre/alerts' },
+    ]
+  },
+  {
+    title: 'Future',
     items: [
       { id: 'employees', label: 'Employee Hub', icon: Users, path: '/control-centre/employees', badge: 'Soon' },
-      { id: 'global-settings', label: 'Global Settings', icon: Settings, path: '/control-centre/settings' },
+      { id: 'settings', label: 'Global Settings', icon: Settings, path: '/control-centre/settings' },
     ]
   }
 ];
@@ -88,9 +97,7 @@ export const Dashboard: React.FC = () => {
   };
 
   const handleLogout = () => {
-    // Clear auth state
     localStorage.removeItem('techsafi_auth');
-    // Redirect to login portal
     navigate('/login');
   };
 
@@ -174,7 +181,7 @@ export const Dashboard: React.FC = () => {
                           to={item.path}
                           className={`flex items-center gap-3 p-2.5 rounded-xl transition-all group ${
                             isActive 
-                              ? 'bg-primary/10 text-primary' 
+                              ? 'bg-primary/10 text-primary font-bold' 
                               : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
                           }`}
                         >
@@ -207,9 +214,9 @@ export const Dashboard: React.FC = () => {
           </button>
           <button 
             onClick={handleLogout}
-            className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all"
+            className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all group"
           >
-            <LogOut size={20} />
+            <LogOut size={20} className="group-hover:scale-110 transition-transform" />
             {sidebarOpen && <span className="text-sm font-bold">Sign Out</span>}
           </button>
         </div>
@@ -286,10 +293,10 @@ export const Dashboard: React.FC = () => {
               <div className="mt-12 pt-6 border-t border-slate-100 dark:border-white/5 space-y-3">
                  <button 
                   onClick={() => { setMobileMenuOpen(false); navigate('/'); }}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-white/5"
+                  className="w-full flex items-center gap-4 p-4 rounded-xl text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-white/5 font-bold"
                 >
                   <Globe size={20} />
-                  <span className="font-bold">Public Website</span>
+                  <span>Public Website</span>
                 </button>
                 <button 
                   onClick={handleLogout}
@@ -353,7 +360,7 @@ export const Dashboard: React.FC = () => {
         <div className="p-6 max-w-7xl mx-auto">
           <Routes>
             <Route path="/" element={<Overview />} />
-            <Route path="/pages" element={<PagesManager />} />
+            <Route path="/pages/*" element={<PagesManager />} />
             {/* Catch-all for non-implemented management routes */}
             <Route path="*" element={
               <div className="flex flex-col items-center justify-center py-32 text-center">
@@ -362,7 +369,7 @@ export const Dashboard: React.FC = () => {
                  </div>
                  <h2 className="text-2xl font-bold dark:text-white mb-2">Module Under Construction</h2>
                  <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-8 text-sm">
-                    This section is being synchronized with our Laravel core. Full management controls will be active in the next deployment cycle.
+                    This management interface is currently being synchronized with our production environment. Core tools will be active shortly.
                  </p>
                  <Button onClick={() => navigate('/control-centre')} variant="outline" className="rounded-full px-8">
                     Return to Overview
