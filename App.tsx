@@ -17,6 +17,7 @@ import { TermsOfService } from './pages/TermsOfService';
 import { CookiePolicy } from './pages/CookiePolicy';
 import { Sitemap } from './pages/Sitemap';
 import { ThemeProvider } from './context/ThemeContext';
+import { ConfigProvider } from './context/ConfigContext';
 import { Dashboard } from './dashboard/Dashboard';
 
 // Scroll to top on route change
@@ -33,35 +34,37 @@ const ScrollToTop = () => {
 const App: React.FC = () => {
   return (
     <ThemeProvider defaultTheme="dark" storageKey="techsafi-theme">
-      <Router>
-        <ScrollToTop />
-        <Routes>
-          {/* Main Website Routes */}
-          <Route path="/*" element={
-            <Layout>
-              <Routes>
-                <Route path="/" element={<Home />} />
-                <Route path="/company" element={<Company />} />
-                <Route path="/portfolio" element={<Portfolio />} />
-                <Route path="/services" element={<Services />} />
-                <Route path="/ai-solutions" element={<AiSolutions />} /> 
-                <Route path="/pricing" element={<Pricing />} />
-                <Route path="/careers" element={<Careers />} />
-                <Route path="/contact" element={<Contact />} />
-                <Route path="/blog" element={<Blog />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/privacy-policy" element={<PrivacyPolicy />} />
-                <Route path="/terms-of-service" element={<TermsOfService />} />
-                <Route path="/cookie-policy" element={<CookiePolicy />} />
-                <Route path="/sitemap" element={<Sitemap />} />
-              </Routes>
-            </Layout>
-          } />
-          
-          {/* Dashboard Route */}
-          <Route path="/control-centre/*" element={<Dashboard />} />
-        </Routes>
-      </Router>
+      <ConfigProvider>
+        <Router>
+          <ScrollToTop />
+          <Routes>
+            {/* Main Website Routes */}
+            <Route path="/*" element={
+              <Layout>
+                <Routes>
+                  <Route path="/" element={<Home />} />
+                  <Route path="/company" element={<Company />} />
+                  <Route path="/portfolio" element={<Portfolio />} />
+                  <Route path="/services" element={<Services />} />
+                  <Route path="/ai-solutions" element={<AiSolutions />} /> 
+                  <Route path="/pricing" element={<Pricing />} />
+                  <Route path="/careers" element={<Careers />} />
+                  <Route path="/contact" element={<Contact />} />
+                  <Route path="/blog" element={<Blog />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/privacy-policy" element={<PrivacyPolicy />} />
+                  <Route path="/terms-of-service" element={<TermsOfService />} />
+                  <Route path="/cookie-policy" element={<CookiePolicy />} />
+                  <Route path="/sitemap" element={<Sitemap />} />
+                </Routes>
+              </Layout>
+            } />
+            
+            {/* Dashboard Route */}
+            <Route path="/control-centre/*" element={<Dashboard />} />
+          </Routes>
+        </Router>
+      </ConfigProvider>
     </ThemeProvider>
   );
 };

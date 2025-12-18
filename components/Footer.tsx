@@ -1,14 +1,25 @@
 
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Twitter, Facebook, Instagram, Linkedin, MapPin, Phone, Mail, Clock, Lock, ShieldCheck, Send, Github, Snowflake, Gift } from 'lucide-react';
+import { 
+  Twitter, Facebook, Instagram, Linkedin, MapPin, Phone, Mail, 
+  Clock, Lock, ShieldCheck, Send, Github, Snowflake, Gift 
+} from 'lucide-react';
+import { useConfig } from '../context/ConfigContext';
+
+const SOCIAL_ICONS: Record<string, any> = {
+  // Fix: changed LinkedIn to Linkedin and GitHub to Github to match lucide-react imports
+  Facebook, Twitter, Linkedin, Instagram, Github
+};
 
 export const Footer: React.FC = () => {
+  const { config } = useConfig();
   const isDecember = new Date().getMonth() === 11;
+
+  if (!config) return null;
 
   return (
     <footer className="bg-slate-50 dark:bg-[#020617] border-t border-slate-200 dark:border-white/5 pt-16 pb-8 text-sm transition-colors duration-300 overflow-hidden relative">
-      {/* Festive Addon: Subtle animated background elements */}
       {isDecember && (
         <>
           <div className="absolute top-10 right-10 opacity-10 pointer-events-none">
@@ -23,7 +34,7 @@ export const Footer: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-x-8 gap-y-12 mb-16">
           
-          {/* Column 1: Brand & Socials - Full width on mobile */}
+          {/* Column 1: Brand & Socials */}
           <div className="col-span-2 lg:col-span-1 space-y-6">
              <div className="flex items-center space-x-2 mb-4">
                 <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-primary/20">
@@ -31,14 +42,14 @@ export const Footer: React.FC = () => {
                 </div>
                 <div className="flex flex-col">
                     <span className="text-xl font-bold font-display text-slate-900 dark:text-white leading-none">
-                    Tech<span className="text-primary">Safi</span>
+                    {config.navbar.logoPrimary}<span className="text-primary">{config.navbar.logoAccent}</span>
                     </span>
                     <span className="text-[10px] text-slate-500 tracking-widest uppercase mt-1">Innovation & Solutions</span>
                 </div>
              </div>
              
              <p className="text-slate-600 dark:text-slate-400 leading-relaxed text-sm max-w-sm">
-               Empowering businesses across Kenya and beyond with innovative technology solutions. We transform ideas into digital reality through cutting-edge development and strategic consulting.
+               {config.footer.tagline}
              </p>
 
              <div>
@@ -46,61 +57,55 @@ export const Footer: React.FC = () => {
                    <span className="w-2 h-2 rounded-full bg-blue-500 mr-2"></span> Connect With Us
                 </h5>
                 <div className="flex flex-wrap gap-3">
-                    {[Facebook, Twitter, Linkedin, Instagram, Github].map((Icon, i) => (
-                        <a key={i} href="#" className="w-9 h-9 rounded-lg bg-slate-200 dark:bg-[#1e293b] flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white transition-all duration-300">
-                            <Icon size={16} />
-                        </a>
-                    ))}
+                    {config.footer.socials.map((social) => {
+                        const Icon = SOCIAL_ICONS[social.platform] || social.platform.charAt(0);
+                        return (
+                          <a key={social.id} href={social.url} className="w-9 h-9 rounded-lg bg-slate-200 dark:bg-[#1e293b] flex items-center justify-center text-slate-600 dark:text-slate-400 hover:bg-primary hover:text-white transition-all duration-300">
+                              {typeof Icon === 'string' ? Icon : <Icon size={16} />}
+                          </a>
+                        );
+                    })}
                 </div>
              </div>
           </div>
 
-          {/* Column 2: Quick Links - 1 column on mobile (side-by-side with Services) */}
+          {/* Column 2: Quick Links */}
           <div className="col-span-1 space-y-6">
             <h4 className="text-slate-900 dark:text-white font-bold text-lg mb-6 pl-3 border-l-2 border-primary">Quick Links</h4>
             <ul className="space-y-3">
-              {[
-                  { name: 'Home', path: '/' },
-                  { name: 'About Us', path: '/company' },
-                  { name: 'Services', path: '/services' },
-                  { name: 'Portfolio', path: '/portfolio' },
-                  { name: 'Pricing', path: '/pricing' }
-              ].map((link) => (
-                  <li key={link.name}>
+              {config.footer.quickLinks.map((link) => (
+                  <li key={link.id}>
                       <NavLink 
                         to={link.path} 
                         className="text-slate-600 dark:text-slate-400 hover:text-primary hover:translate-x-1 transition-all duration-300 flex items-center"
                       >
                           <span className="w-1 h-1 rounded-full bg-slate-400 dark:bg-slate-600 mr-2"></span>
-                          {link.name}
+                          {link.label}
                       </NavLink>
                   </li>
               ))}
             </ul>
           </div>
 
-          {/* Column 3: Our Services - 1 column on mobile (side-by-side with Quick Links) */}
+          {/* Column 3: Our Services */}
           <div className="col-span-1 space-y-6">
             <h4 className="text-slate-900 dark:text-white font-bold text-lg mb-6 pl-3 border-l-2 border-primary">Our Services</h4>
             <ul className="space-y-3">
-              {[
-                  'Web Apps', 'Mobile Apps', 'UI/UX Design', 'AI Solutions', 
-                  'Cloud Tech'
-              ].map((service) => (
-                  <li key={service}>
+              {config.footer.serviceLinks.map((link) => (
+                  <li key={link.id}>
                       <NavLink 
-                        to="/services" 
+                        to={link.path} 
                         className="text-slate-600 dark:text-slate-400 hover:text-primary hover:translate-x-1 transition-all duration-300 flex items-center"
                       >
                           <span className="w-1.5 h-1.5 text-primary mr-2">›</span>
-                          {service}
+                          {link.label}
                       </NavLink>
                   </li>
               ))}
             </ul>
           </div>
 
-          {/* Column 4: Get In Touch - Full width on mobile for readability */}
+          {/* Column 4: Get In Touch */}
           <div className="col-span-2 lg:col-span-1 space-y-6">
              <h4 className="text-slate-900 dark:text-white font-bold text-lg mb-6 pl-3 border-l-2 border-primary">Get In Touch</h4>
              <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-1 gap-6">
@@ -110,7 +115,7 @@ export const Footer: React.FC = () => {
                      </div>
                      <div>
                          <span className="block text-xs text-slate-500 mb-0.5">Location</span>
-                         <span className="text-slate-700 dark:text-slate-300 font-medium">Nairobi, Kenya</span>
+                         <span className="text-slate-700 dark:text-slate-300 font-medium">{config.footer.address}</span>
                      </div>
                  </li>
                  <li className="flex items-start">
@@ -119,7 +124,7 @@ export const Footer: React.FC = () => {
                      </div>
                      <div>
                          <span className="block text-xs text-slate-500 mb-0.5">Call Us</span>
-                         <span className="text-slate-700 dark:text-slate-300 font-medium">+254 751 380 948</span>
+                         <span className="text-slate-700 dark:text-slate-300 font-medium">{config.footer.phone}</span>
                      </div>
                  </li>
                  <li className="flex items-start">
@@ -128,7 +133,7 @@ export const Footer: React.FC = () => {
                      </div>
                      <div>
                          <span className="block text-xs text-slate-500 mb-0.5">Email Us</span>
-                         <span className="text-slate-700 dark:text-slate-300 font-medium">info@techsafi.com</span>
+                         <span className="text-slate-700 dark:text-slate-300 font-medium">{config.footer.email}</span>
                      </div>
                  </li>
              </ul>
@@ -147,7 +152,7 @@ export const Footer: React.FC = () => {
         <div className="border-t border-slate-200 dark:border-white/5 pt-8 flex flex-col md:flex-row justify-between items-center gap-6">
           <div className="flex flex-col md:flex-row items-center text-slate-500 text-xs text-center md:text-left gap-2">
               <span className="flex items-center">
-                <span className="text-blue-500 mr-1 font-bold">© 2025 TechSafi</span> - All rights reserved.
+                <span className="text-blue-500 mr-1 font-bold">{config.footer.copyright.split(' - ')[0]}</span> - {config.footer.copyright.split(' - ')[1]}
               </span>
               {isDecember && (
                 <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full font-bold flex items-center border border-emerald-500/20">
@@ -156,9 +161,9 @@ export const Footer: React.FC = () => {
               )}
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-xs font-medium text-slate-500">
-             <NavLink to="/privacy-policy" className="hover:text-slate-900 dark:hover:text-white transition-colors">Privacy</NavLink>
-             <NavLink to="/terms-of-service" className="hover:text-slate-900 dark:hover:text-white transition-colors">Terms</NavLink>
-             <NavLink to="/cookie-policy" className="hover:text-slate-900 dark:hover:text-white transition-colors">Cookies</NavLink>
+             {config.footer.legalLinks.map((link) => (
+                <NavLink key={link.id} to={link.path} className="hover:text-slate-900 dark:hover:text-white transition-colors">{link.label.split(' ')[0]}</NavLink>
+             ))}
           </div>
           <div className="flex items-center gap-4">
              <div className="flex items-center text-[10px] text-slate-500 font-medium">

@@ -2,8 +2,14 @@
 /**
  * TechSafi Control Centre API Service
  * Centralized logic for data fetching. 
- * Placeholder implementations to be swapped with Laravel endpoints.
  */
+
+export interface NavLinkConfig {
+  id: string;
+  label: string;
+  path: string;
+  children?: NavLinkConfig[];
+}
 
 export interface SystemStats {
   visitors: number;
@@ -32,7 +38,7 @@ export interface GlobalLayoutConfig {
     logoPrimary: string;
     logoAccent: string;
     ctaLabel: string;
-    links: { id: string; label: string; path: string }[];
+    links: NavLinkConfig[];
   };
   footer: {
     tagline: string;
@@ -47,6 +53,75 @@ export interface GlobalLayoutConfig {
     legalLinks: { id: string; label: string; path: string }[];
   };
 }
+
+const CONFIG_STORAGE_KEY = 'techsafi_global_config';
+
+const DEFAULT_CONFIG: GlobalLayoutConfig = {
+  navbar: {
+    logoPrimary: "Tech",
+    logoAccent: "Safi",
+    ctaLabel: "Get Started",
+    links: [
+      { id: '1', label: 'Home', path: '/' },
+      { 
+        id: '2', 
+        label: 'Company', 
+        path: '/company',
+        children: [
+          { id: '2-1', label: 'About Us', path: '/company' },
+          { id: '2-2', label: 'Portfolio', path: '/portfolio' },
+          { id: '2-3', label: 'Careers', path: '/careers' }
+        ]
+      },
+      { 
+        id: '3', 
+        label: 'Services', 
+        path: '/services',
+        children: [
+          { id: '3-1', label: 'All Services', path: '/services' },
+          { id: '3-2', label: 'AI Solutions', path: '/ai-solutions' }
+        ]
+      },
+      { id: '4', label: 'Pricing', path: '/pricing' },
+      { id: '5', label: 'Blog', path: '/blog' },
+      { id: '6', label: 'Contact', path: '/contact' },
+    ]
+  },
+  footer: {
+    tagline: "Empowering businesses across Kenya and beyond with innovative technology solutions. We transform ideas into digital reality through cutting-edge development and strategic consulting.",
+    email: "info@techsafi.com",
+    phone: "+254 751 380 948",
+    address: "Nairobi, Kenya",
+    officeHours: "Mon-Fri, 8am-6pm EAT",
+    copyright: "© 2025 TechSafi - All rights reserved.",
+    socials: [
+      { id: 's1', platform: 'Facebook', url: '#' },
+      { id: 's2', platform: 'Twitter', url: '#' },
+      { id: 's3', platform: 'LinkedIn', url: '#' },
+      { id: 's4', platform: 'Instagram', url: '#' },
+      { id: 's5', platform: 'GitHub', url: '#' }
+    ],
+    quickLinks: [
+      { id: 'ql1', label: 'Home', path: '/' },
+      { id: 'ql2', label: 'About Us', path: '/company' },
+      { id: 'ql3', label: 'Services', path: '/services' },
+      { id: 'ql4', label: 'Portfolio', path: '/portfolio' },
+      { id: 'ql5', label: 'Pricing', path: '/pricing' }
+    ],
+    serviceLinks: [
+      { id: 'sl1', label: 'Web Apps', path: '/services' },
+      { id: 'sl2', label: 'Mobile Apps', path: '/services' },
+      { id: 'sl3', label: 'UI/UX Design', path: '/services' },
+      { id: 'sl4', label: 'AI Solutions', path: '/services' },
+      { id: 'sl5', label: 'Cloud Tech', path: '/services' }
+    ],
+    legalLinks: [
+      { id: 'l1', label: 'Privacy Policy', path: '/privacy-policy' },
+      { id: 'l2', label: 'Terms of Service', path: '/terms-of-service' },
+      { id: 'l3', label: 'Cookie Policy', path: '/cookie-policy' }
+    ]
+  }
+};
 
 export const fetchSystemStats = async (): Promise<SystemStats> => {
   await new Promise(resolve => setTimeout(resolve, 800));
@@ -101,59 +176,21 @@ export const fetchPages = async () => {
 };
 
 export const fetchGlobalLayoutConfig = async (): Promise<GlobalLayoutConfig> => {
-  await new Promise(resolve => setTimeout(resolve, 500));
-  return {
-    navbar: {
-      logoPrimary: "Tech",
-      logoAccent: "Safi",
-      ctaLabel: "Get Started",
-      links: [
-        { id: '1', label: 'Home', path: '/' },
-        { id: '2', label: 'Company', path: '/company' },
-        { id: '3', label: 'Services', path: '/services' },
-        { id: '4', label: 'Portfolio', path: '/portfolio' },
-        { id: '5', label: 'Pricing', path: '/pricing' },
-      ]
-    },
-    footer: {
-      tagline: "Empowering businesses across Kenya and beyond with innovative technology solutions. We transform ideas into digital reality through cutting-edge development and strategic consulting.",
-      email: "info@techsafi.com",
-      phone: "+254 751 380 948",
-      address: "Nairobi, Kenya",
-      officeHours: "Mon-Fri, 8am-6pm EAT",
-      copyright: "© 2025 TechSafi - All rights reserved.",
-      socials: [
-        { id: 's1', platform: 'Facebook', url: '#' },
-        { id: 's2', platform: 'Twitter', url: '#' },
-        { id: 's3', platform: 'LinkedIn', url: '#' },
-        { id: 's4', platform: 'Instagram', url: '#' },
-        { id: 's5', platform: 'GitHub', url: '#' }
-      ],
-      quickLinks: [
-        { id: 'ql1', label: 'Home', path: '/' },
-        { id: 'ql2', label: 'About Us', path: '/company' },
-        { id: 'ql3', label: 'Services', path: '/services' },
-        { id: 'ql4', label: 'Portfolio', path: '/portfolio' },
-        { id: 'ql5', label: 'Pricing', path: '/pricing' }
-      ],
-      serviceLinks: [
-        { id: 'sl1', label: 'Web Apps', path: '/services' },
-        { id: 'sl2', label: 'Mobile Apps', path: '/services' },
-        { id: 'sl3', label: 'UI/UX Design', path: '/services' },
-        { id: 'sl4', label: 'AI Solutions', path: '/services' },
-        { id: 'sl5', label: 'Cloud Tech', path: '/services' }
-      ],
-      legalLinks: [
-        { id: 'l1', label: 'Privacy Policy', path: '/privacy-policy' },
-        { id: 'l2', label: 'Terms of Service', path: '/terms-of-service' },
-        { id: 'l3', label: 'Cookie Policy', path: '/cookie-policy' }
-      ]
+  await new Promise(resolve => setTimeout(resolve, 300));
+  const stored = localStorage.getItem(CONFIG_STORAGE_KEY);
+  if (stored) {
+    try {
+      return JSON.parse(stored);
+    } catch (e) {
+      return DEFAULT_CONFIG;
     }
-  };
+  }
+  return DEFAULT_CONFIG;
 };
 
 export const saveGlobalLayoutConfig = async (config: GlobalLayoutConfig): Promise<boolean> => {
-  await new Promise(resolve => setTimeout(resolve, 1500));
-  console.log("Config saved to server:", config);
+  await new Promise(resolve => setTimeout(resolve, 1000));
+  localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
+  window.dispatchEvent(new Event('techsafi_config_updated'));
   return true;
 };
