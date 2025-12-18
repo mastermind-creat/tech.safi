@@ -7,7 +7,8 @@ import {
   Layers, CreditCard, Banknote, Wrench, Sliders, Users, 
   CheckCircle2, ArrowRight, Code2, Database, ShieldCheck,
   Search, ClipboardList, Rocket, Calendar, DollarSign,
-  Server, Globe, Cpu, Terminal, Shield, Zap, MousePointer2, Brain
+  Server, Globe, Cpu, Terminal, Shield, Zap, MousePointer2, Brain, 
+  Anchor, Box, Flame, LayoutGrid, Share2, Smile, Bot, Atom, Sparkles
 } from 'lucide-react';
 import { Button } from '../components/ui/Button';
 
@@ -28,6 +29,56 @@ const PerspectiveGrid = () => {
         @keyframes grid-move {
           0% { transform: rotateX(60deg) translateY(0); }
           100% { transform: rotateX(60deg) translateY(40px); }
+        }
+      `}</style>
+    </div>
+  );
+};
+
+const HeroBackgroundLoop = () => {
+  const keywords = ["WEB DEVELOPMENT", "MOBILE APPS", "AI SOLUTIONS", "CLOUD INFRA", "UI/UX DESIGN", "CYBERSECURITY", "BLOCKCHAIN", "IOT", "BIG DATA", "DEVOPS", "API INTEGRATION", "SAAS"];
+  return (
+    <div className="absolute inset-0 overflow-hidden pointer-events-none select-none z-0 opacity-[0.03] dark:opacity-[0.04]">
+      <div className="absolute top-1/4 left-[-10%] w-[120%] rotate-[-5deg]">
+        <div className="flex whitespace-nowrap animate-marquee-infinite text-[6rem] md:text-[10rem] font-black font-display text-slate-900 dark:text-white leading-none">
+          {[...Array(4)].map((_, i) => (
+            <React.Fragment key={i}>
+              {keywords.map((word, wIdx) => (
+                <span key={`${i}-${wIdx}`} className="mx-8">{word}</span>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+      <div className="absolute bottom-1/4 left-[-10%] w-[120%] rotate-[-5deg]">
+        <div className="flex whitespace-nowrap animate-marquee-infinite-reverse text-[6rem] md:text-[10rem] font-black font-display text-slate-900 dark:text-white leading-none">
+          {[...Array(4)].map((_, i) => (
+            <React.Fragment key={i}>
+              {keywords.reverse().map((word, wIdx) => (
+                <span key={`${i}-${wIdx}`} className="mx-8 text-stroke">{word}</span>
+              ))}
+            </React.Fragment>
+          ))}
+        </div>
+      </div>
+      <style>{`
+        @keyframes marquee-infinite {
+          0% { transform: translateX(0); }
+          100% { transform: translateX(-50%); }
+        }
+        @keyframes marquee-infinite-reverse {
+          0% { transform: translateX(-50%); }
+          100% { transform: translateX(0); }
+        }
+        .animate-marquee-infinite {
+          animation: marquee-infinite 80s linear infinite;
+        }
+        .animate-marquee-infinite-reverse {
+          animation: marquee-infinite-reverse 80s linear infinite;
+        }
+        .text-stroke {
+          -webkit-text-stroke: 1px currentColor;
+          color: transparent;
         }
       `}</style>
     </div>
@@ -161,14 +212,36 @@ const processSteps = [
 ];
 
 const techStack = [
-  { name: "React", icon: Globe, color: "text-cyan-400" },
-  { name: "Node.js", icon: Server, color: "text-green-500" },
-  { name: "Python", icon: Terminal, color: "text-yellow-400" },
-  { name: "AWS", icon: Cloud, color: "text-orange-500" },
-  { name: "Docker", icon: Layers, color: "text-blue-500" },
-  { name: "Flutter", icon: Smartphone, color: "text-cyan-500" },
-  { name: "TensorFlow", icon: Brain, color: "text-orange-600" },
-  { name: "GraphQL", icon: Database, color: "text-pink-600" },
+  // Frontend
+  { name: "React", icon: Atom, color: "text-cyan-400", category: "Frontend" },
+  { name: "Next.js", icon: Globe, color: "text-white", category: "Frontend" },
+  { name: "Tailwind", icon: Palette, color: "text-sky-400", category: "Frontend" },
+  { name: "TypeScript", icon: Code2, color: "text-blue-500", category: "Frontend" },
+  // Backend
+  { name: "Node.js", icon: Server, color: "text-green-500", category: "Backend" },
+  { name: "Python", icon: Terminal, color: "text-yellow-400", category: "Backend" },
+  { name: "Go", icon: Code2, color: "text-blue-400", category: "Backend" },
+  { name: "Django", icon: Box, color: "text-green-700", category: "Backend" },
+  // Mobile
+  { name: "Flutter", icon: Smartphone, color: "text-cyan-500", category: "Mobile" },
+  { name: "React Native", icon: Atom, color: "text-blue-500", category: "Mobile" },
+  { name: "Kotlin", icon: Smartphone, color: "text-purple-500", category: "Mobile" },
+  { name: "Swift", icon: Smartphone, color: "text-orange-500", category: "Mobile" },
+  // AI
+  { name: "TensorFlow", icon: Brain, color: "text-orange-600", category: "AI" },
+  { name: "PyTorch", icon: Flame, color: "text-red-500", category: "AI" },
+  { name: "OpenAI", icon: Bot, color: "text-green-400", category: "AI" },
+  { name: "Gemini", icon: Sparkles, color: "text-blue-400", category: "AI" },
+  // Cloud
+  { name: "AWS", icon: Cloud, color: "text-orange-500", category: "Cloud" },
+  { name: "Docker", icon: Box, color: "text-blue-500", category: "Cloud" },
+  { name: "Kubernetes", icon: Anchor, color: "text-blue-700", category: "Cloud" },
+  { name: "Azure", icon: LayoutGrid, color: "text-blue-600", category: "Cloud" },
+  // Database
+  { name: "PostgreSQL", icon: Database, color: "text-blue-300", category: "Database" },
+  { name: "MongoDB", icon: Database, color: "text-green-500", category: "Database" },
+  { name: "Redis", icon: Layers, color: "text-red-600", category: "Database" },
+  { name: "Firebase", icon: Flame, color: "text-yellow-500", category: "Database" }
 ];
 
 export const Services: React.FC = () => {
@@ -186,6 +259,9 @@ export const Services: React.FC = () => {
       {/* --- CINEMATIC HERO --- */}
       <div className="relative min-h-[80vh] flex items-center justify-center overflow-hidden">
         <PerspectiveGrid />
+        
+        {/* Animated Background Loop Text */}
+        <HeroBackgroundLoop />
         
         {/* Floating Orbs */}
         <div className="absolute top-1/4 left-1/4 w-64 h-64 bg-purple-500/20 rounded-full blur-[100px] animate-pulse-slow"></div>
@@ -314,6 +390,35 @@ export const Services: React.FC = () => {
             </MotionDiv>
 
             <div className="space-y-20">
+               {/* Payment Terms Card Inserted Here */}
+               <MotionDiv 
+                  initial={{ opacity: 0, scale: 0.9 }} 
+                  whileInView={{ opacity: 1, scale: 1 }} 
+                  viewport={{ once: true }}
+                  className="max-w-md mx-auto mb-16 relative z-20"
+               >
+                  <div className="bg-white/80 dark:bg-[#1e293b]/80 backdrop-blur-md border border-indigo-200 dark:border-indigo-500/20 p-6 rounded-2xl text-center shadow-2xl shadow-indigo-500/10 relative overflow-hidden group hover:border-indigo-500/40 transition-colors">
+                     <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500 via-indigo-500 to-purple-500"></div>
+                     <h3 className="text-sm font-bold text-slate-900 dark:text-white uppercase tracking-widest mb-4 flex items-center justify-center gap-2">
+                        <CreditCard size={14} className="text-indigo-500" /> Payment Structure
+                     </h3>
+                     <div className="flex justify-center gap-8 mb-4">
+                        <div>
+                           <span className="text-2xl font-bold text-indigo-600 dark:text-indigo-400">40%</span>
+                           <span className="block text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">Upfront</span>
+                        </div>
+                        <div className="h-10 w-px bg-slate-200 dark:bg-white/10"></div>
+                        <div>
+                           <span className="text-2xl font-bold text-emerald-600 dark:text-emerald-400">60%</span>
+                           <span className="block text-[10px] text-slate-500 dark:text-slate-400 uppercase tracking-wider font-bold">Delivery</span>
+                        </div>
+                     </div>
+                     <p className="text-xs text-slate-600 dark:text-slate-300">
+                        Secure milestone-based payments ensuring mutual commitment and project momentum.
+                     </p>
+                  </div>
+               </MotionDiv>
+
                {processSteps.map((step, idx) => (
                   <MotionDiv
                     key={idx}
@@ -373,22 +478,28 @@ export const Services: React.FC = () => {
                </p>
             </MotionDiv>
 
-            <div className="flex flex-wrap justify-center gap-6 max-w-5xl mx-auto">
-               {techStack.map((tech, idx) => (
-                  <MotionDiv
-                     key={idx}
-                     initial={{ opacity: 0, scale: 0 }}
-                     whileInView={{ opacity: 1, scale: 1 }}
-                     viewport={{ once: true }}
-                     transition={{ delay: idx * 0.05, type: "spring" }}
-                     whileHover={{ y: -10 }}
-                     className="relative group"
-                  >
-                     <div className="px-6 py-4 bg-white dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-white/5 shadow-lg dark:shadow-none flex items-center space-x-3 hover:border-blue-500/30 transition-colors">
-                        <tech.icon size={20} className={tech.color} />
-                        <span className="font-bold text-slate-700 dark:text-slate-200">{tech.name}</span>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl mx-auto">
+               {["Frontend", "Backend", "Mobile", "AI", "Cloud", "Database"].map((category, catIdx) => (
+                  <div key={catIdx} className="space-y-4">
+                     <h3 className="text-xs font-bold text-slate-400 uppercase tracking-widest border-b border-slate-200 dark:border-white/10 pb-2 mb-4">{category}</h3>
+                     <div className="grid gap-3">
+                        {techStack.filter(t => t.category === category).map((tech, idx) => (
+                           <MotionDiv
+                              key={idx}
+                              initial={{ opacity: 0, scale: 0.9 }}
+                              whileInView={{ opacity: 1, scale: 1 }}
+                              viewport={{ once: true }}
+                              transition={{ delay: idx * 0.05 }}
+                              className="group"
+                           >
+                              <div className="px-4 py-3 bg-white dark:bg-[#0f172a] rounded-xl border border-slate-200 dark:border-white/5 shadow-sm dark:shadow-none flex items-center space-x-3 hover:border-blue-500/30 hover:bg-slate-50 dark:hover:bg-[#1e293b] transition-all">
+                                 <tech.icon size={18} className={tech.color} />
+                                 <span className="text-sm font-bold text-slate-700 dark:text-slate-200">{tech.name}</span>
+                              </div>
+                           </MotionDiv>
+                        ))}
                      </div>
-                  </MotionDiv>
+                  </div>
                ))}
             </div>
          </div>

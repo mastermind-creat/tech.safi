@@ -77,3 +77,17 @@ export interface BlogPost {
   image: string;
   tags: string[];
 }
+
+declare module 'react-router-dom' {
+  export const NavLink: any;
+  export const Link: any;
+  export const useLocation: any;
+  export const useNavigate: any;
+  export const HashRouter: any;
+  export const BrowserRouter: any;
+  export const Routes: any;
+  export const Route: any;
+  export const Navigate: any;
+  export const Outlet: any;
+  export const useSearchParams: any;
+}
