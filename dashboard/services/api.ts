@@ -58,7 +58,6 @@ export interface TechItem {
   displayOrder: number;
 }
 
-// Added missing interface export for SystemStats
 export interface SystemStats {
   visitors: number;
   visitorsChange: number;
@@ -68,7 +67,6 @@ export interface SystemStats {
   latency: string;
 }
 
-// Added missing interface export for ActivityLog
 export interface ActivityLog {
   id: string;
   action: string;
@@ -77,10 +75,46 @@ export interface ActivityLog {
   status: 'success' | 'warning' | 'error';
 }
 
-// Added missing interface export for ChartDataPoint
 export interface ChartDataPoint {
   label: string;
   value: number;
+}
+
+// --- PORTFOLIO MODELS ---
+
+export interface ProjectItem {
+  id: string;
+  title: string;
+  category: string;
+  type: string;
+  image: string;
+  description: string;
+  technologies: string[];
+  client: string;
+  year: string;
+  stats: { label: string; value: string; iconName: string };
+  color: string;
+  iconName: string;
+  status: 'Published' | 'Draft';
+  displayOrder: number;
+}
+
+// --- PRICING MODELS ---
+
+export interface PricingFeature {
+  id: string;
+  text: string;
+}
+
+export interface PricingPlan {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  recommended: boolean;
+  category: 'Web' | 'Mobile' | 'AI Addon' | 'AI Project' | 'Maintenance';
+  displayOrder: number;
 }
 
 // --- AI SOLUTIONS SPECIFIC MODELS ---
@@ -143,75 +177,8 @@ export interface GlobalLayoutConfig {
 const CONFIG_STORAGE_KEY = 'techsafi_global_config';
 const SERVICES_STORAGE_KEY = 'techsafi_services_data';
 const AI_SOLUTIONS_STORAGE_KEY = 'techsafi_ai_solutions_data';
-
-// --- MOCK INITIAL DATA ---
-
-const DEFAULT_CONFIG: GlobalLayoutConfig = {
-  navbar: {
-    logoPrimary: "Tech",
-    logoAccent: "Safi",
-    ctaLabel: "Get Started",
-    links: [
-      { id: '1', label: 'Home', path: '/' },
-      { 
-        id: '2', 
-        label: 'Company', 
-        path: '/company',
-        children: [
-          { id: '2-1', label: 'About Us', path: '/company' },
-          { id: '2-2', label: 'Portfolio', path: '/portfolio' },
-          { id: '2-3', label: 'Careers', path: '/careers' }
-        ]
-      },
-      { 
-        id: '3', 
-        label: 'Services', 
-        path: '/services',
-        children: [
-          { id: '3-1', label: 'All Services', path: '/services' },
-          { id: '3-2', label: 'AI Solutions', path: '/ai-solutions' }
-        ]
-      },
-      { id: '4', label: 'Pricing', path: '/pricing' },
-      { id: '5', label: 'Blog', path: '/blog' },
-      { id: '6', label: 'Contact', path: '/contact' },
-    ]
-  },
-  footer: {
-    tagline: "Empowering businesses across Kenya and beyond with innovative technology solutions. We transform ideas into digital reality through cutting-edge development and strategic consulting.",
-    email: "info@techsafi.com",
-    phone: "+254 751 380 948",
-    address: "Nairobi, Kenya",
-    officeHours: "Mon-Fri, 8am-6pm EAT",
-    copyright: "© 2025 TechSafi - All rights reserved.",
-    socials: [
-      { id: 's1', platform: 'Facebook', url: '#' },
-      { id: 's2', platform: 'Twitter', url: '#' },
-      { id: 's3', platform: 'LinkedIn', url: '#' },
-      { id: 's4', platform: 'Instagram', url: '#' },
-      { id: 's5', platform: 'GitHub', url: '#' }
-    ],
-    quickLinks: [
-      { id: 'ql1', label: 'Home', path: '/' },
-      { id: 'ql2', label: 'About Us', path: '/company' },
-      { id: 'ql3', label: 'Services', path: '/services' },
-      { id: 'ql4', label: 'Portfolio', path: '/portfolio' },
-      { id: 'ql5', label: 'Pricing', path: '/pricing' }
-    ],
-    serviceLinks: [
-      { id: 'sl1', label: 'Web Apps', path: '/services' },
-      { id: 'sl2', label: 'Mobile Apps', path: '/services' },
-      { id: 'sl3', label: 'UI/UX Design', path: '/services' },
-      { id: 'sl4', label: 'AI Solutions', path: '/services' },
-      { id: 'sl5', label: 'Cloud Tech', path: '/services' }
-    ],
-    legalLinks: [
-      { id: 'l1', label: 'Privacy Policy', path: '/privacy-policy' },
-      { id: 'l2', label: 'Terms of Service', path: '/terms-of-service' },
-      { id: 'l3', label: 'Cookie Policy', path: '/cookie-policy' }
-    ]
-  }
-};
+const PORTFOLIO_STORAGE_KEY = 'techsafi_portfolio_data';
+const PRICING_STORAGE_KEY = 'techsafi_pricing_data';
 
 // --- API METHODS ---
 
@@ -227,7 +194,6 @@ export const saveGlobalLayoutConfig = async (config: GlobalLayoutConfig): Promis
   return true;
 };
 
-// Updated return type to SystemStats interface
 export const fetchSystemStats = async (): Promise<SystemStats> => {
   await new Promise(resolve => setTimeout(resolve, 300));
   return {
@@ -240,7 +206,6 @@ export const fetchSystemStats = async (): Promise<SystemStats> => {
   };
 };
 
-// Updated return type to ActivityLog array
 export const fetchActivityLogs = async (): Promise<ActivityLog[]> => {
   return [
     { id: '1', action: 'Published Homepage Update', user: 'Kennedy (CEO)', timestamp: '2 mins ago', status: 'success' },
@@ -249,7 +214,6 @@ export const fetchActivityLogs = async (): Promise<ActivityLog[]> => {
   ];
 };
 
-// Updated return type to ChartDataPoint array
 export const fetchTrafficData = async (): Promise<ChartDataPoint[]> => {
   return [
     { label: 'Mon', value: 3200 },
@@ -262,7 +226,6 @@ export const fetchTrafficData = async (): Promise<ChartDataPoint[]> => {
   ];
 };
 
-// Updated return type to ChartDataPoint array
 export const fetchServiceEngagement = async (): Promise<ChartDataPoint[]> => {
   return [
     { label: 'AI Solutions', value: 45 },
@@ -279,6 +242,30 @@ export const fetchPages = async () => {
     { id: 's1', name: 'Services', path: '/services', lastEdited: '2025-03-12', status: 'Draft' },
     { id: 'p1', name: 'Portfolio', path: '/portfolio', lastEdited: '2025-03-01', status: 'Published' },
   ];
+};
+
+// --- PORTFOLIO DATA ---
+
+export const fetchProjects = async (): Promise<ProjectItem[]> => {
+  const stored = localStorage.getItem(PORTFOLIO_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  return []; // Should return default projects if needed, or empty for production
+};
+
+export const saveProjectsData = async (projects: ProjectItem[]): Promise<void> => {
+  localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(projects));
+};
+
+// --- PRICING DATA ---
+
+export const fetchPricingPlans = async (): Promise<PricingPlan[]> => {
+  const stored = localStorage.getItem(PRICING_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  return [];
+};
+
+export const savePricingData = async (plans: PricingPlan[]): Promise<void> => {
+  localStorage.setItem(PRICING_STORAGE_KEY, JSON.stringify(plans));
 };
 
 // --- SERVICES DATA ---
@@ -336,19 +323,12 @@ export const fetchAiSolutionsData = async (): Promise<AiSolutionsConfig> => {
   const stored = localStorage.getItem(AI_SOLUTIONS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   
-  // Default data matching the public page
   return {
     heroTitle: "Custom Software with AI Integration",
-    heroSubtitle: "We build custom websites, software, and systems integrated with AI automation for your business. From chatbots to predictive analytics, we deliver intelligent solutions tailored to your needs.",
-    features: [
-        { id: '1', iconName: 'Brain', title: 'Machine Learning', description: 'We integrate predictive models into your applications.', subFeatures: ['Sales Forecasting', 'Fraud Detection'], color: 'blue', displayOrder: 1 }
-    ],
-    industryUseCases: [
-        { id: '1', iconName: 'Activity', title: 'Healthcare', description: 'Medical diagnosis and patient monitoring.', color: 'blue' }
-    ],
-    faqs: [
-        { id: '1', question: 'How long does it take?', answer: 'Depends on complexity, usually 2-4 weeks for simple integrations.' }
-    ],
+    heroSubtitle: "We build custom websites, software, and systems integrated with AI automation for your business.",
+    features: [],
+    industryUseCases: [],
+    faqs: [],
     metaTitle: "AI Solutions | TechSafi",
     metaDescription: "Next-gen AI integration for modern businesses."
   };
@@ -356,4 +336,71 @@ export const fetchAiSolutionsData = async (): Promise<AiSolutionsConfig> => {
 
 export const saveAiSolutionsData = async (data: AiSolutionsConfig): Promise<void> => {
   localStorage.setItem(AI_SOLUTIONS_STORAGE_KEY, JSON.stringify(data));
+};
+
+const DEFAULT_CONFIG: GlobalLayoutConfig = {
+  navbar: {
+    logoPrimary: "Tech",
+    logoAccent: "Safi",
+    ctaLabel: "Get Started",
+    links: [
+      { id: '1', label: 'Home', path: '/' },
+      { 
+        id: '2', 
+        label: 'Company', 
+        path: '/company',
+        children: [
+          { id: '2-1', label: 'About Us', path: '/company' },
+          { id: '2-2', label: 'Portfolio', path: '/portfolio' },
+          { id: '2-3', label: 'Careers', path: '/careers' }
+        ]
+      },
+      { 
+        id: '3', 
+        label: 'Services', 
+        path: '/services',
+        children: [
+          { id: '3-1', label: 'All Services', path: '/services' },
+          { id: '3-2', label: 'AI Solutions', path: '/ai-solutions' }
+        ]
+      },
+      { id: '4', label: 'Pricing', path: '/pricing' },
+      { id: '5', label: 'Blog', path: '/blog' },
+      { id: '6', label: 'Contact', path: '/contact' },
+    ]
+  },
+  footer: {
+    tagline: "Empowering businesses across Kenya and beyond with innovative technology solutions.",
+    email: "info@techsafi.com",
+    phone: "+254 751 380 948",
+    address: "Nairobi, Kenya",
+    officeHours: "Mon-Fri, 8am-6pm EAT",
+    copyright: "© 2025 TechSafi - All rights reserved.",
+    socials: [
+      { id: 's1', platform: 'Facebook', url: '#' },
+      { id: 's2', platform: 'Twitter', url: '#' },
+      { id: 's3', platform: 'LinkedIn', url: '#' },
+      { id: 's4', platform: 'Instagram', url: '#' },
+      { id: 's5', platform: 'GitHub', url: '#' }
+    ],
+    quickLinks: [
+      { id: 'ql1', label: 'Home', path: '/' },
+      { id: 'ql2', label: 'About Us', path: '/company' },
+      { id: 'ql3', label: 'Services', path: '/services' },
+      { id: 'ql4', label: 'Portfolio', path: '/portfolio' },
+      { id: 'ql5', label: 'Pricing', path: '/pricing' }
+    ],
+    serviceLinks: [
+      { id: 'sl1', label: 'Web Apps', path: '/services' },
+      { id: 'sl2', label: 'Mobile Apps', path: '/services' },
+      { id: 'sl3', label: 'UI/UX Design', path: '/services' },
+      { id: 'sl4', label: 'AI Solutions', path: '/services' },
+      { id: 'sl5', label: 'Cloud Tech', path: '/services' }
+    ],
+    legalLinks: [
+      { id: 'l1', label: 'Privacy Policy', path: '/privacy-policy' },
+      { id: 'l2', label: 'Terms of Service', path: '/terms-of-service' },
+      { id: 'l3', label: 'Cookie Policy', path: '/cookie-policy' }
+    ]
+  }
 };

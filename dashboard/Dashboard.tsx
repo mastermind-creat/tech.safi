@@ -17,6 +17,8 @@ import { PagesManager } from './sections/PagesManager';
 import { GlobalLayoutManager } from './sections/GlobalLayoutManager';
 import { ServicesAdmin } from './sections/ServicesAdmin';
 import { AiSolutionsAdmin } from './sections/AiSolutionsAdmin';
+import { PortfolioAdmin } from './sections/PortfolioAdmin';
+import { PricingAdmin } from './sections/PricingAdmin';
 import { Button } from '../components/ui/Button';
 
 // Icons for nested items
@@ -49,14 +51,14 @@ const NAV_GROUPS = [
             children: [
               { label: 'About Us', path: '/control-centre/pages/about', icon: InfoIcon },
               { label: 'Careers', path: '/control-centre/pages/careers', icon: Users },
-              { label: 'Portfolio', path: '/control-centre/pages/portfolio', icon: Briefcase },
+              { label: 'Portfolio Showcase', path: '/control-centre/pages/portfolio', icon: Briefcase },
             ]
           },
           { label: 'Services Matrix', path: '/control-centre/pages/services', icon: Layers },
           { label: 'AI Solutions', path: '/control-centre/pages/ai-solutions', icon: Brain },
-          { label: 'Pricing', path: '/control-centre/pages/pricing', icon: CreditCard },
-          { label: 'Blog', path: '/control-centre/pages/blog', icon: Newspaper },
-          { label: 'Contact', path: '/control-centre/pages/contact', icon: Mail },
+          { label: 'Pricing Matrix', path: '/control-centre/pages/pricing', icon: CreditCard },
+          { label: 'Blog Engine', path: '/control-centre/pages/blog', icon: Newspaper },
+          { label: 'Contact CRM', path: '/control-centre/pages/contact', icon: Mail },
         ]
       },
       { 
@@ -341,6 +343,8 @@ export const Dashboard: React.FC = () => {
             <Route path="/" element={<Overview />} />
             <Route path="/pages/services" element={<ServicesAdmin />} />
             <Route path="/pages/ai-solutions" element={<AiSolutionsAdmin />} />
+            <Route path="/pages/portfolio" element={<PortfolioAdmin />} />
+            <Route path="/pages/pricing" element={<PricingAdmin />} />
             <Route path="/pages/*" element={<PagesManager />} />
             <Route path="/manage/navbar" element={<GlobalLayoutManager activeTab="navbar" />} />
             <Route path="/manage/footer" element={<GlobalLayoutManager activeTab="footer" />} />
