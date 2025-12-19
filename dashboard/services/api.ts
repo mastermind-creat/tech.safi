@@ -1,8 +1,9 @@
-
 /**
  * TechSafi Control Centre API Service
  * Centralized logic for data fetching and management.
  */
+
+import { BlogPost } from '../../types';
 
 // --- DATA MODELS ---
 
@@ -122,6 +123,12 @@ export interface CoreValue {
   color: string;
 }
 
+export interface VisionarySocial {
+  id: string;
+  platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
+  url: string;
+}
+
 export interface VisionaryMember {
   id: string;
   name: string;
@@ -130,11 +137,14 @@ export interface VisionaryMember {
   image: string;
   desc: string;
   stats: { label: string; value: string }[];
-  socials: string[];
+  socials: VisionarySocial[];
+  expertise: string[];
   color: string;
   badgeColor: string;
   iconName: string;
   displayOrder: number;
+  tier: 'ceo' | 'executive' | 'strategic' | 'future';
+  status: 'Active' | 'Hidden';
 }
 
 export interface CompanyMilestone {
@@ -292,6 +302,7 @@ const PORTFOLIO_STORAGE_KEY = 'techsafi_portfolio_data';
 const PRICING_STORAGE_KEY = 'techsafi_pricing_data';
 const ABOUT_US_STORAGE_KEY = 'techsafi_about_us_data';
 const CAREERS_STORAGE_KEY = 'techsafi_careers_data';
+const BLOG_STORAGE_KEY = 'techsafi_blog_data';
 
 // --- API METHODS ---
 
@@ -383,7 +394,7 @@ export const fetchAboutUsData = async (): Promise<AboutUsConfig> => {
     visionaries: [],
     milestones: [],
     metaTitle: "About Us | TechSafi",
-    metaDescription: "Learn about TechSafi."
+    metaDescription: "Learn about TechSafi's journey."
   };
 };
 
@@ -397,37 +408,35 @@ export const fetchCareersData = async (): Promise<CareersConfig> => {
   const stored = localStorage.getItem(CAREERS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   
-  // Default fallback matching Careers.tsx
   return {
-    hero: {
-      title: "Build the Future With Us",
-      subtitle: "Work with a passionate team that values innovation, creativity, and making a real impact.",
-      stats: [
-        { label: "5+ Team Members", iconName: "Users" },
-        { label: "Remote / Hybrid", iconName: "MapPin" },
-        { label: "Great Culture", iconName: "Heart" }
-      ]
-    },
-    notice: {
-      title: "Building Together, Growing Together",
-      description: "Right now, TechSafi is still in its early growth phase, so we're not offering fixed salaries yet. We're building our client base and growing the brand so that we can eventually create stable, well-paying positions for the team.",
-      commissionDetails: "We offer commissions based on the clients you bring in — meaning you still earn as we grow together.",
-      isActive: true
-    },
+    hero: { title: "Build Future", subtitle: "Passion", stats: [] },
+    notice: { title: "Early Stage", description: "...", commissionDetails: "...", isActive: true },
     culture: [],
     benefits: [],
     jobs: [],
-    internship: { title: "Internship Program", duration: "3-6 Months", features: [], requirements: "" },
-    attachment: { title: "Industrial Attachment", duration: "3 Months", features: [], requirements: "" },
+    internship: { title: "Internship", duration: "3-6M", features: [], requirements: "" },
+    attachment: { title: "Attachment", duration: "3M", features: [], requirements: "" },
     applicationSteps: [],
     faqs: [],
-    metaTitle: "Careers | TechSafi - Join the Founding Team",
-    metaDescription: "Explore career opportunities, internships, and our unique startup culture at TechSafi."
+    metaTitle: "Careers | TechSafi",
+    metaDescription: "Join the team."
   };
 };
 
 export const saveCareersData = async (data: CareersConfig): Promise<void> => {
   localStorage.setItem(CAREERS_STORAGE_KEY, JSON.stringify(data));
+};
+
+// --- BLOG DATA ---
+
+export const fetchBlogPosts = async (): Promise<BlogPost[]> => {
+  const stored = localStorage.getItem(BLOG_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  return []; // Fallback to empty if nothing stored. Public page uses constants.tsx for defaults.
+};
+
+export const saveBlogPosts = async (posts: BlogPost[]): Promise<void> => {
+  localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(posts));
 };
 
 // --- PORTFOLIO DATA ---

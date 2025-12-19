@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
@@ -7,10 +6,12 @@ import {
   ShieldCheck, Linkedin, Twitter, Github, Globe, 
   ChevronRight, ArrowRight, Type, Image as ImageIcon,
   MessageSquare, LayoutGrid, List, GripVertical, PlusCircle,
-  MinusCircle, Globe2, Share2, Star, Diamond
+  MinusCircle, Globe2, Share2, Star, Diamond, ChevronDown,
+  Layout, Shield, ArrowUp, ArrowDown, Eye, EyeOff, Hash,
+  RefreshCw
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
-import { fetchAboutUsData, saveAboutUsData, AboutUsConfig, VisionaryMember, CoreValue, CompanyMilestone } from '../services/api';
+import { fetchAboutUsData, saveAboutUsData, AboutUsConfig, VisionaryMember, CoreValue, CompanyMilestone, VisionarySocial } from '../services/api';
 
 export const AboutUsAdmin: React.FC = () => {
   const [config, setConfig] = useState<AboutUsConfig | null>(null);
@@ -22,7 +23,15 @@ export const AboutUsAdmin: React.FC = () => {
     const load = async () => {
       setLoading(true);
       const data = await fetchAboutUsData();
-      setConfig(data);
+      // Ensure all members have the correct new properties
+      const visionaries = data.visionaries.map(v => ({
+        ...v,
+        tier: v.tier || 'executive',
+        expertise: v.expertise || [],
+        socials: v.socials || [],
+        status: v.status || 'Active'
+      }));
+      setConfig({ ...data, visionaries });
       setLoading(false);
     };
     load();
@@ -47,7 +56,7 @@ export const AboutUsAdmin: React.FC = () => {
 
   // --- VISIONARY HELPERS ---
 
-  const addVisionary = () => {
+  const addVisionary = (tier: VisionaryMember['tier'] = 'executive') => {
     const newMember: VisionaryMember = {
       id: Math.random().toString(36).substr(2, 9),
       name: 'New Leader',
@@ -55,19 +64,50 @@ export const AboutUsAdmin: React.FC = () => {
       shortRole: 'EXEC',
       image: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?fit=crop&w=400&h=400',
       desc: 'Short bio...',
-      stats: [{ label: 'Metric', value: '100%' }],
-      socials: ['linkedin', 'twitter'],
+      stats: [{ label: 'Impact', value: '100%' }],
+      socials: [],
+      expertise: [],
       color: 'from-blue-500 to-purple-600',
       badgeColor: 'bg-blue-600',
       iconName: 'Crown',
-      displayOrder: config.visionaries.length + 1
+      displayOrder: config.visionaries.filter(v => v.tier === tier).length + 1,
+      tier: tier,
+      status: 'Active'
     };
     setConfig({ ...config, visionaries: [...config.visionaries, newMember] });
+  };
+
+  const removeVisionary = (id: string) => {
+    if (window.confirm("Remove this leader from the hierarchy?")) {
+      setConfig({ ...config, visionaries: config.visionaries.filter(v => v.id !== id) });
+    }
   };
 
   const updateVisionary = (id: string, field: keyof VisionaryMember, value: any) => {
     const updated = config.visionaries.map(v => v.id === id ? { ...v, [field]: value } : v);
     setConfig({ ...config, visionaries: updated });
+  };
+
+  const moveVisionary = (id: string, direction: 'up' | 'down') => {
+    const member = config.visionaries.find(v => v.id === id);
+    if (!member) return;
+    
+    const tierMembers = config.visionaries
+      .filter(v => v.tier === member.tier)
+      .sort((a, b) => a.displayOrder - b.displayOrder);
+    
+    const currentIndex = tierMembers.findIndex(v => v.id === id);
+    const targetIndex = direction === 'up' ? currentIndex - 1 : currentIndex + 1;
+    
+    if (targetIndex < 0 || targetIndex >= tierMembers.length) return;
+    
+    const updatedTierMembers = [...tierMembers];
+    const temp = updatedTierMembers[currentIndex].displayOrder;
+    updatedTierMembers[currentIndex].displayOrder = updatedTierMembers[targetIndex].displayOrder;
+    updatedTierMembers[targetIndex].displayOrder = temp;
+    
+    const otherMembers = config.visionaries.filter(v => v.tier !== member.tier);
+    setConfig({ ...config, visionaries: [...otherMembers, ...updatedTierMembers] });
   };
 
   // --- MILESTONE HELPERS ---
@@ -92,6 +132,165 @@ export const AboutUsAdmin: React.FC = () => {
     setConfig({ ...config, milestones: updated });
   };
 
+  const renderMemberCard = (member: VisionaryMember) => (
+    <div key={member.id} className="bg-white dark:bg-[#0f172a] rounded-3xl border border-slate-200 dark:border-white/5 p-6 shadow-sm group relative flex flex-col h-full">
+       <div className="flex items-start justify-between mb-6">
+          <div className="flex items-center gap-4">
+             <div className="relative">
+                <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-slate-100 dark:border-white/10 flex-shrink-0 group/img shadow-md bg-slate-100 dark:bg-slate-800">
+                    <img src={member.image} className="w-full h-full object-cover transition-transform group-hover/img:scale-110" alt={member.name} />
+                    <div className="absolute inset-0 bg-black/40 opacity-0 group-hover/img:opacity-100 transition-opacity flex items-center justify-center cursor-pointer">
+                        <ImageIcon size={18} className="text-white" />
+                    </div>
+                </div>
+                <button 
+                   onClick={() => updateVisionary(member.id, 'status', member.status === 'Active' ? 'Hidden' : 'Active')}
+                   className={`absolute -top-1 -right-1 p-1.5 rounded-full border border-white dark:border-[#0f172a] shadow-sm z-10 ${member.status === 'Active' ? 'bg-emerald-500 text-white' : 'bg-slate-400 text-white'}`}
+                   title={member.status === 'Active' ? 'Currently Visible' : 'Hidden from Public'}
+                >
+                    {member.status === 'Active' ? <Eye size={10} /> : <EyeOff size={10} />}
+                </button>
+             </div>
+             <div>
+                <input value={member.name} onChange={e => updateVisionary(member.id, 'name', e.target.value)} className="w-full bg-transparent text-xl font-bold dark:text-white outline-none" placeholder="Executive Name" />
+                <div className="flex items-center gap-2 mt-1">
+                   <select value={member.tier} onChange={e => updateVisionary(member.id, 'tier', e.target.value)} className="bg-slate-100 dark:bg-white/5 text-[9px] font-bold text-primary uppercase rounded px-2 py-0.5 border-0 outline-none hover:bg-primary/10 transition-colors">
+                      <option value="ceo">Tier 1: CEO</option>
+                      <option value="executive">Tier 2: EXEC</option>
+                      <option value="strategic">Tier 3: STRAT</option>
+                      <option value="future">Tier 4: FUTURE</option>
+                   </select>
+                   <input value={member.shortRole} onChange={e => updateVisionary(member.id, 'shortRole', e.target.value)} className="bg-transparent text-[9px] font-bold text-slate-400 uppercase outline-none w-10" placeholder="CEO" />
+                </div>
+             </div>
+          </div>
+          <div className="flex flex-col gap-2">
+             <button onClick={() => removeVisionary(member.id)} className="p-2 text-slate-300 hover:text-red-500 transition-all opacity-0 group-hover:opacity-100"><Trash2 size={16} /></button>
+             <div className="flex flex-col opacity-0 group-hover:opacity-100 transition-opacity">
+                 <button onClick={() => moveVisionary(member.id, 'up')} className="p-1 text-slate-400 hover:text-primary"><ArrowUp size={14} /></button>
+                 <button onClick={() => moveVisionary(member.id, 'down')} className="p-1 text-slate-400 hover:text-primary"><ArrowDown size={14} /></button>
+             </div>
+          </div>
+       </div>
+
+       <div className="space-y-5 flex-1">
+          {/* Profile Picture & Role */}
+          <div className="space-y-3">
+              <div className="flex items-center gap-2 mb-1">
+                 <label className="text-[10px] font-bold uppercase text-slate-400">Profile Image URL</label>
+                 <RefreshCw size={10} className="text-slate-300 animate-spin-slow" />
+              </div>
+              <input value={member.image} onChange={e => updateVisionary(member.id, 'image', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-[10px] font-mono text-primary outline-none focus:border-primary" placeholder="https://..." />
+              
+              <div>
+                <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Full Corporate Role</label>
+                <input value={member.role} onChange={e => updateVisionary(member.id, 'role', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs font-bold dark:text-slate-300 outline-none" placeholder="Chief Executive Officer" />
+              </div>
+          </div>
+
+          {/* Social Handles */}
+          <div className="pt-2 border-t border-slate-100 dark:border-white/5">
+             <div className="flex items-center justify-between mb-3">
+                <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1"><Share2 size={12}/> Social Channels</label>
+                <button 
+                    onClick={() => updateVisionary(member.id, 'socials', [...member.socials, { id: Math.random().toString(36).substr(2, 9), platform: 'linkedin', url: '' }])}
+                    className="text-primary text-[10px] font-bold flex items-center gap-0.5 hover:underline"
+                >
+                    <Plus size={12} /> Add
+                </button>
+             </div>
+             <div className="space-y-2">
+                {member.socials.map((social, sIdx) => (
+                    <div key={social.id} className="flex items-center gap-2 bg-slate-50 dark:bg-white/5 p-1.5 rounded-lg border border-transparent hover:border-slate-200 dark:hover:border-white/10">
+                        <select 
+                            value={social.platform} 
+                            onChange={e => {
+                                const newSocials = [...member.socials];
+                                newSocials[sIdx].platform = e.target.value as any;
+                                updateVisionary(member.id, 'socials', newSocials);
+                            }}
+                            className="bg-transparent text-[10px] font-bold uppercase text-slate-500 outline-none border-0"
+                        >
+                            <option value="linkedin">LI</option>
+                            <option value="twitter">TW</option>
+                            <option value="github">GH</option>
+                            <option value="instagram">IG</option>
+                            <option value="facebook">FB</option>
+                            <option value="web">WEB</option>
+                        </select>
+                        <input 
+                            value={social.url} 
+                            onChange={e => {
+                                const newSocials = [...member.socials];
+                                newSocials[sIdx].url = e.target.value;
+                                updateVisionary(member.id, 'socials', newSocials);
+                            }}
+                            className="flex-1 bg-transparent text-[10px] font-mono text-primary outline-none" 
+                            placeholder="URL" 
+                        />
+                        <button 
+                            onClick={() => updateVisionary(member.id, 'socials', member.socials.filter(s => s.id !== social.id))}
+                            className="text-slate-300 hover:text-red-500"
+                        >
+                            <MinusCircle size={12} />
+                        </button>
+                    </div>
+                ))}
+                {member.socials.length === 0 && <p className="text-[9px] text-slate-400 italic text-center py-1">No socials linked.</p>}
+             </div>
+          </div>
+
+          {/* Bio & Expertise */}
+          <div className="space-y-4 pt-2 border-t border-slate-100 dark:border-white/5">
+             <div>
+                <label className="text-[10px] font-bold uppercase text-slate-400 block mb-1">Executive Summary</label>
+                <textarea rows={2} value={member.desc} onChange={e => updateVisionary(member.id, 'desc', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-xl px-3 py-2 text-xs text-slate-600 dark:text-slate-300 outline-none resize-none" placeholder="Bio..." />
+             </div>
+             
+             <div>
+                <div className="flex items-center justify-between mb-2">
+                    <label className="text-[10px] font-bold uppercase text-slate-400 flex items-center gap-1"><Hash size={12}/> Expertise Tags</label>
+                    <button 
+                        onClick={() => updateVisionary(member.id, 'expertise', [...member.expertise, 'New Skill'])}
+                        className="text-primary text-[10px] font-bold flex items-center gap-0.5 hover:underline"
+                    >
+                        <Plus size={12} />
+                    </button>
+                </div>
+                <div className="flex flex-wrap gap-1.5">
+                    {member.expertise.map((skill, i) => (
+                        <div key={i} className="flex items-center gap-1 bg-primary/5 border border-primary/20 rounded px-2 py-0.5 group/skill">
+                            <input 
+                                value={skill} 
+                                onChange={e => {
+                                    const newExp = [...member.expertise];
+                                    newExp[i] = e.target.value;
+                                    updateVisionary(member.id, 'expertise', newExp);
+                                }}
+                                className="bg-transparent text-[9px] font-bold text-primary outline-none w-16" 
+                            />
+                            <button onClick={() => updateVisionary(member.id, 'expertise', member.expertise.filter((_, idx) => idx !== i))} className="opacity-0 group-hover/skill:opacity-100 text-primary/50 hover:text-red-500"><X size={8} /></button>
+                        </div>
+                    ))}
+                </div>
+             </div>
+          </div>
+
+          {/* Icon Key & Order */}
+          <div className="grid grid-cols-2 gap-3 pt-2 border-t border-slate-100 dark:border-white/5">
+             <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase text-slate-400">Card Icon</label>
+                <input value={member.iconName} onChange={e => updateVisionary(member.id, 'iconName', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 text-[10px] font-mono text-primary" placeholder="Crown, User..." />
+             </div>
+             <div className="space-y-1">
+                <label className="text-[10px] font-bold uppercase text-slate-400">Card Gradient</label>
+                <input value={member.color} onChange={e => updateVisionary(member.id, 'color', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-2 py-1 text-[10px] font-mono text-slate-400" placeholder="from-blue-500..." />
+             </div>
+          </div>
+       </div>
+    </div>
+  );
+
   return (
     <div className="space-y-8 animate-in fade-in duration-500 pb-20">
       <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-6">
@@ -114,8 +313,8 @@ export const AboutUsAdmin: React.FC = () => {
            { id: 'hero', label: 'Hero & Stats', icon: Type },
            { id: 'story', label: 'Our Story', icon: MessageSquare },
            { id: 'values', label: 'Core Values', icon: Lightbulb },
-           { id: 'visionaries', label: 'Leadership', icon: Users },
-           { id: 'journey', label: 'Journey', icon: Rocket }
+           { id: 'visionaries', label: 'Leadership Hierarchy', icon: Users },
+           { id: 'journey', label: 'The Journey', icon: Rocket }
          ].map(tab => (
            <button 
              key={tab.id}
@@ -224,82 +423,66 @@ export const AboutUsAdmin: React.FC = () => {
           </MotionDiv>
         )}
 
-        {/* --- LEADERSHIP TAB --- */}
+        {/* --- LEADERSHIP TAB (TIERED HIERARCHY) --- */}
         {activeTab === 'visionaries' && (
-          <MotionDiv key="visionaries" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
-            <div className="flex justify-between items-center">
-               <h3 className="text-lg font-bold dark:text-white">Founding Team & Visionaries</h3>
-               <Button onClick={addVisionary} className="rounded-xl">Add Leadership Member</Button>
-            </div>
+          <MotionDiv key="visionaries" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-12">
             
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-               {config.visionaries.sort((a,b) => a.displayOrder - b.displayOrder).map(member => (
-                 <div key={member.id} className="bg-white dark:bg-[#0f172a] rounded-3xl border border-slate-200 dark:border-white/5 p-8 shadow-sm group relative overflow-hidden">
-                    <div className="flex items-center justify-between mb-8">
-                       <div className="flex items-center gap-4">
-                          <div className="w-20 h-20 rounded-full overflow-hidden border-2 border-slate-100 dark:border-white/10 flex-shrink-0">
-                             <img src={member.image} className="w-full h-full object-cover" />
-                          </div>
-                          <div>
-                             <input value={member.name} onChange={e => updateVisionary(member.id, 'name', e.target.value)} className="w-full bg-transparent text-xl font-bold dark:text-white outline-none" />
-                             <input value={member.role} onChange={e => updateVisionary(member.id, 'role', e.target.value)} className="w-full bg-transparent text-xs font-bold text-primary uppercase outline-none" />
-                          </div>
-                       </div>
-                       <div className="flex flex-col gap-2">
-                          <button onClick={() => setConfig({...config, visionaries: config.visionaries.filter(v => v.id !== member.id)})} className="p-2 text-slate-400 hover:text-red-500 transition-all"><Trash2 size={16} /></button>
-                          <div className="flex gap-1">
-                             <input value={member.displayOrder} type="number" onChange={e => updateVisionary(member.id, 'displayOrder', parseInt(e.target.value))} className="w-10 bg-slate-50 dark:bg-white/5 text-[10px] font-bold text-center rounded px-1 py-1" />
-                          </div>
-                       </div>
-                    </div>
-
-                    <div className="space-y-6">
-                       <div>
-                          <label className="text-[10px] font-bold uppercase text-slate-400 block mb-2 tracking-widest">Executive Bio</label>
-                          <textarea rows={4} value={member.desc} onChange={e => updateVisionary(member.id, 'desc', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-2xl px-4 py-3 text-sm text-slate-600 dark:text-slate-300 outline-none" />
-                       </div>
-
-                       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                          <div>
-                             <label className="text-[10px] font-bold uppercase text-slate-400 block mb-2 tracking-widest">Visual Style (Classes)</label>
-                             <div className="space-y-2">
-                                <input value={member.color} onChange={e => updateVisionary(member.id, 'color', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-[10px] font-mono" placeholder="Gradient Class" />
-                                <input value={member.badgeColor} onChange={e => updateVisionary(member.id, 'badgeColor', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-[10px] font-mono" placeholder="Badge BG Class" />
-                             </div>
-                          </div>
-                          <div>
-                             <label className="text-[10px] font-bold uppercase text-slate-400 block mb-2 tracking-widest">Icon & Short Role</label>
-                             <div className="space-y-2">
-                                <input value={member.iconName} onChange={e => updateVisionary(member.id, 'iconName', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-[10px] font-mono" placeholder="Lucide Icon Name" />
-                                <input value={member.shortRole} onChange={e => updateVisionary(member.id, 'shortRole', e.target.value)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-[10px] font-mono" placeholder="Acronym (e.g CEO)" />
-                             </div>
-                          </div>
-                       </div>
-
-                       <div>
-                          <label className="text-[10px] font-bold uppercase text-slate-400 block mb-2 tracking-widest">Key Performance Stats</label>
-                          <div className="grid grid-cols-2 gap-4">
-                             {member.stats.map((stat, i) => (
-                               <div key={i} className="flex gap-2">
-                                  <input value={stat.label} onChange={e => {
-                                    const newStats = [...member.stats];
-                                    newStats[i].label = e.target.value;
-                                    updateVisionary(member.id, 'stats', newStats);
-                                  }} className="flex-1 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-[10px] font-bold" placeholder="Stat Label" />
-                                  <input value={stat.value} onChange={e => {
-                                    const newStats = [...member.stats];
-                                    newStats[i].value = e.target.value;
-                                    updateVisionary(member.id, 'stats', newStats);
-                                  }} className="w-16 bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-[10px] font-bold text-center" placeholder="Value" />
-                               </div>
-                             ))}
-                             <button onClick={() => updateVisionary(member.id, 'stats', [...member.stats, { label: 'New', value: '0' }])} className="text-[10px] font-bold text-primary flex items-center gap-1"><Plus size={12} /> Add Stat</button>
-                          </div>
-                       </div>
-                    </div>
-                 </div>
-               ))}
+            {/* CEO TIER */}
+            <div className="space-y-6">
+               <div className="flex items-center justify-between border-l-4 border-primary pl-4">
+                  <div>
+                    <h3 className="text-xl font-bold dark:text-white">Tier 1: Strategic Vision (CEO)</h3>
+                    <p className="text-xs text-slate-500">The primary founding vision steering the company roadmap.</p>
+                  </div>
+                  <Button onClick={() => addVisionary('ceo')} size="sm" className="rounded-xl"><Plus size={16} /> Add CEO</Button>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  {config.visionaries.filter(v => v.tier === 'ceo').sort((a,b) => a.displayOrder - b.displayOrder).map(member => renderMemberCard(member))}
+               </div>
             </div>
+
+            {/* EXECUTIVE TIER */}
+            <div className="space-y-6">
+               <div className="flex items-center justify-between border-l-4 border-purple-500 pl-4">
+                  <div>
+                    <h3 className="text-xl font-bold dark:text-white">Tier 2: Core Executive Suite</h3>
+                    <p className="text-xs text-slate-500">Leaders driving product architecture and operational excellence.</p>
+                  </div>
+                  <Button onClick={() => addVisionary('executive')} size="sm" className="bg-purple-600 hover:bg-purple-700 rounded-xl"><Plus size={16} /> Add Executive</Button>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {config.visionaries.filter(v => v.tier === 'executive').sort((a,b) => a.displayOrder - b.displayOrder).map(member => renderMemberCard(member))}
+               </div>
+            </div>
+
+            {/* STRATEGIC TIER */}
+            <div className="space-y-6">
+               <div className="flex items-center justify-between border-l-4 border-emerald-500 pl-4">
+                  <div>
+                    <h3 className="text-xl font-bold dark:text-white">Tier 3: Specialized Intelligence</h3>
+                    <p className="text-xs text-slate-500">Specialists focused on security, infrastructure, and ecosystem integrity.</p>
+                  </div>
+                  <Button onClick={() => addVisionary('strategic')} size="sm" className="bg-emerald-600 hover:bg-emerald-700 rounded-xl"><Plus size={16} /> Add Strategic</Button>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                  {config.visionaries.filter(v => v.tier === 'strategic').sort((a,b) => a.displayOrder - b.displayOrder).map(member => renderMemberCard(member))}
+               </div>
+            </div>
+
+            {/* FUTURE TIER */}
+            <div className="space-y-6">
+               <div className="flex items-center justify-between border-l-4 border-slate-400 pl-4">
+                  <div>
+                    <h3 className="text-xl font-bold dark:text-white">Tier 4: Future Roadmap</h3>
+                    <p className="text-xs text-slate-500">Growth roles planned for scaling the organization.</p>
+                  </div>
+                  <Button onClick={() => addVisionary('future')} size="sm" variant="outline" className="rounded-xl"><Plus size={16} /> Add Future Role</Button>
+               </div>
+               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                  {config.visionaries.filter(v => v.tier === 'future').sort((a,b) => a.displayOrder - b.displayOrder).map(member => renderMemberCard(member))}
+               </div>
+            </div>
+
           </MotionDiv>
         )}
 

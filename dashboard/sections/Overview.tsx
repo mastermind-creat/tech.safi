@@ -1,13 +1,11 @@
-
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-// Add CheckCircle2 and Terminal to the imports from lucide-react
 import { 
   Users, Globe, Cpu, Zap, Activity, ShieldCheck, 
   ArrowUpRight, MoreVertical, RefreshCw, Search, 
   FileText, Image as ImageIcon, TrendingUp, 
   Database, Server, Gauge, MousePointer2,
-  CheckCircle2, Terminal
+  CheckCircle2, Terminal, AlertCircle
 } from 'lucide-react';
 import { StatsCard } from '../components/StatsCard';
 import { 
@@ -35,7 +33,6 @@ const TrafficLineChart = ({ data }: { data: ChartDataPoint[] }) => {
     <div className="relative w-full h-[180px] mt-4">
       <svg viewBox={`0 0 ${width} ${height}`} className="w-full h-full overflow-visible">
         <defs>
-          {/* Fix: Changed second x1="0" to y1="0" to avoid duplicate attribute error on line 38 */}
           <linearGradient id="lineGradient" x1="0" y1="0" x2="0" y2="1">
             <stop offset="0%" stopColor="#06b6d4" stopOpacity="0.4" />
             <stop offset="100%" stopColor="#06b6d4" stopOpacity="0" />
@@ -370,5 +367,3 @@ export const Overview: React.FC = () => {
     </div>
   );
 };
-
-const AlertCircle = (props: any) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>;
