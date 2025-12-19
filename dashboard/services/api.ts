@@ -101,11 +101,6 @@ export interface ProjectItem {
 
 // --- PRICING MODELS ---
 
-export interface PricingFeature {
-  id: string;
-  text: string;
-}
-
 export interface PricingPlan {
   id: string;
   name: string;
@@ -117,7 +112,123 @@ export interface PricingPlan {
   displayOrder: number;
 }
 
-// --- AI SOLUTIONS SPECIFIC MODELS ---
+// --- ABOUT US MODELS ---
+
+export interface CoreValue {
+  id: string;
+  iconName: string;
+  title: string;
+  description: string;
+  color: string;
+}
+
+export interface VisionaryMember {
+  id: string;
+  name: string;
+  role: string;
+  shortRole: string;
+  image: string;
+  desc: string;
+  stats: { label: string; value: string }[];
+  socials: string[];
+  color: string;
+  badgeColor: string;
+  iconName: string;
+  displayOrder: number;
+}
+
+export interface CompanyMilestone {
+  id: string;
+  year: string;
+  title: string;
+  description: string;
+  iconName: string;
+  color: string;
+  bg: string;
+  align: 'left' | 'right';
+  displayOrder: number;
+}
+
+export interface AboutUsConfig {
+  hero: {
+    establishedYear: string;
+    title: string;
+    subtitle: string;
+    stats: { label: string; value: string; iconName: string }[];
+  };
+  story: {
+    title: string;
+    paragraphs: string[];
+    stats: { label: string; value: string }[];
+  };
+  values: CoreValue[];
+  visionaries: VisionaryMember[];
+  milestones: CompanyMilestone[];
+  metaTitle: string;
+  metaDescription: string;
+}
+
+// --- CAREERS MODELS ---
+
+export interface CareerCultureValue {
+  id: string;
+  iconName: string;
+  title: string;
+  desc: string;
+  color: string;
+}
+
+export interface CareerBenefit {
+  id: string;
+  iconName: string;
+  title: string;
+  desc: string;
+  color: string;
+}
+
+export interface JobOpening {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  desc: string;
+  requirements: string[];
+  category: string;
+  status: 'Open' | 'Closed' | 'Hidden';
+}
+
+export interface InternshipProgram {
+  title: string;
+  duration: string;
+  features: string[];
+  requirements: string;
+}
+
+export interface CareersConfig {
+  hero: {
+    title: string;
+    subtitle: string;
+    stats: { label: string; iconName: string }[];
+  };
+  notice: {
+    title: string;
+    description: string;
+    commissionDetails: string;
+    isActive: boolean;
+  };
+  culture: CareerCultureValue[];
+  benefits: CareerBenefit[];
+  jobs: JobOpening[];
+  internship: InternshipProgram;
+  attachment: InternshipProgram;
+  applicationSteps: { step: string; title: string; desc: string; color: string }[];
+  faqs: { id: string; question: string; answer: string }[];
+  metaTitle: string;
+  metaDescription: string;
+}
+
+// --- AI SOLUTIONS MODELS ---
 
 export interface AiFeature {
   id: string;
@@ -179,6 +290,8 @@ const SERVICES_STORAGE_KEY = 'techsafi_services_data';
 const AI_SOLUTIONS_STORAGE_KEY = 'techsafi_ai_solutions_data';
 const PORTFOLIO_STORAGE_KEY = 'techsafi_portfolio_data';
 const PRICING_STORAGE_KEY = 'techsafi_pricing_data';
+const ABOUT_US_STORAGE_KEY = 'techsafi_about_us_data';
+const CAREERS_STORAGE_KEY = 'techsafi_careers_data';
 
 // --- API METHODS ---
 
@@ -244,12 +357,85 @@ export const fetchPages = async () => {
   ];
 };
 
+// --- ABOUT US DATA ---
+
+export const fetchAboutUsData = async (): Promise<AboutUsConfig> => {
+  const stored = localStorage.getItem(ABOUT_US_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  
+  return {
+    hero: {
+      establishedYear: "2024",
+      title: "About TechSafi",
+      subtitle: "Empowering businesses through innovative technology solutions.",
+      stats: [
+        { label: "Team Members", value: "5+", iconName: "Users" },
+        { label: "Projects Done", value: "50+", iconName: "Share2" },
+        { label: "Satisfaction", value: "98%", iconName: "Star" }
+      ]
+    },
+    story: {
+      title: "Our Story",
+      paragraphs: ["Founded in 2024..."],
+      stats: [{ label: "Projects Completed", value: "50+" }]
+    },
+    values: [],
+    visionaries: [],
+    milestones: [],
+    metaTitle: "About Us | TechSafi",
+    metaDescription: "Learn about TechSafi."
+  };
+};
+
+export const saveAboutUsData = async (data: AboutUsConfig): Promise<void> => {
+  localStorage.setItem(ABOUT_US_STORAGE_KEY, JSON.stringify(data));
+};
+
+// --- CAREERS DATA ---
+
+export const fetchCareersData = async (): Promise<CareersConfig> => {
+  const stored = localStorage.getItem(CAREERS_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  
+  // Default fallback matching Careers.tsx
+  return {
+    hero: {
+      title: "Build the Future With Us",
+      subtitle: "Work with a passionate team that values innovation, creativity, and making a real impact.",
+      stats: [
+        { label: "5+ Team Members", iconName: "Users" },
+        { label: "Remote / Hybrid", iconName: "MapPin" },
+        { label: "Great Culture", iconName: "Heart" }
+      ]
+    },
+    notice: {
+      title: "Building Together, Growing Together",
+      description: "Right now, TechSafi is still in its early growth phase, so we're not offering fixed salaries yet. We're building our client base and growing the brand so that we can eventually create stable, well-paying positions for the team.",
+      commissionDetails: "We offer commissions based on the clients you bring in — meaning you still earn as we grow together.",
+      isActive: true
+    },
+    culture: [],
+    benefits: [],
+    jobs: [],
+    internship: { title: "Internship Program", duration: "3-6 Months", features: [], requirements: "" },
+    attachment: { title: "Industrial Attachment", duration: "3 Months", features: [], requirements: "" },
+    applicationSteps: [],
+    faqs: [],
+    metaTitle: "Careers | TechSafi - Join the Founding Team",
+    metaDescription: "Explore career opportunities, internships, and our unique startup culture at TechSafi."
+  };
+};
+
+export const saveCareersData = async (data: CareersConfig): Promise<void> => {
+  localStorage.setItem(CAREERS_STORAGE_KEY, JSON.stringify(data));
+};
+
 // --- PORTFOLIO DATA ---
 
 export const fetchProjects = async (): Promise<ProjectItem[]> => {
   const stored = localStorage.getItem(PORTFOLIO_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
-  return []; // Should return default projects if needed, or empty for production
+  return [];
 };
 
 export const saveProjectsData = async (projects: ProjectItem[]): Promise<void> => {

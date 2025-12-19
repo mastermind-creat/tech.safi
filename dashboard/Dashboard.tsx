@@ -19,6 +19,8 @@ import { ServicesAdmin } from './sections/ServicesAdmin';
 import { AiSolutionsAdmin } from './sections/AiSolutionsAdmin';
 import { PortfolioAdmin } from './sections/PortfolioAdmin';
 import { PricingAdmin } from './sections/PricingAdmin';
+import { AboutUsAdmin } from './sections/AboutUsAdmin';
+import { CareersAdmin } from './sections/CareersAdmin';
 import { Button } from '../components/ui/Button';
 
 // Icons for nested items
@@ -345,6 +347,8 @@ export const Dashboard: React.FC = () => {
             <Route path="/pages/ai-solutions" element={<AiSolutionsAdmin />} />
             <Route path="/pages/portfolio" element={<PortfolioAdmin />} />
             <Route path="/pages/pricing" element={<PricingAdmin />} />
+            <Route path="/pages/about" element={<AboutUsAdmin />} />
+            <Route path="/pages/careers" element={<CareersAdmin />} />
             <Route path="/pages/*" element={<PagesManager />} />
             <Route path="/manage/navbar" element={<GlobalLayoutManager activeTab="navbar" />} />
             <Route path="/manage/footer" element={<GlobalLayoutManager activeTab="footer" />} />
