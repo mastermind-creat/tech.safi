@@ -52,12 +52,13 @@ export interface TechItem {
   id: string;
   name: string;
   iconName: string;
-  color: string; // TailWind color class or hex
+  color: string;
   category: 'Frontend' | 'Backend' | 'Mobile' | 'AI' | 'Cloud' | 'Database';
   isVisible: boolean;
   displayOrder: number;
 }
 
+// Added missing interface export for SystemStats
 export interface SystemStats {
   visitors: number;
   visitorsChange: number;
@@ -67,17 +68,55 @@ export interface SystemStats {
   latency: string;
 }
 
-export interface ChartDataPoint {
-  label: string;
-  value: number;
-}
-
+// Added missing interface export for ActivityLog
 export interface ActivityLog {
   id: string;
   action: string;
   user: string;
   timestamp: string;
   status: 'success' | 'warning' | 'error';
+}
+
+// Added missing interface export for ChartDataPoint
+export interface ChartDataPoint {
+  label: string;
+  value: number;
+}
+
+// --- AI SOLUTIONS SPECIFIC MODELS ---
+
+export interface AiFeature {
+  id: string;
+  iconName: string;
+  title: string;
+  description: string;
+  subFeatures: string[];
+  color: string;
+  displayOrder: number;
+}
+
+export interface AiUseCase {
+  id: string;
+  iconName: string;
+  title: string;
+  description: string;
+  color: string;
+}
+
+export interface AiFaq {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+export interface AiSolutionsConfig {
+  heroTitle: string;
+  heroSubtitle: string;
+  features: AiFeature[];
+  industryUseCases: AiUseCase[];
+  faqs: AiFaq[];
+  metaTitle: string;
+  metaDescription: string;
 }
 
 export interface GlobalLayoutConfig {
@@ -103,6 +142,7 @@ export interface GlobalLayoutConfig {
 
 const CONFIG_STORAGE_KEY = 'techsafi_global_config';
 const SERVICES_STORAGE_KEY = 'techsafi_services_data';
+const AI_SOLUTIONS_STORAGE_KEY = 'techsafi_ai_solutions_data';
 
 // --- MOCK INITIAL DATA ---
 
@@ -175,56 +215,6 @@ const DEFAULT_CONFIG: GlobalLayoutConfig = {
 
 // --- API METHODS ---
 
-export const fetchSystemStats = async (): Promise<SystemStats> => {
-  await new Promise(resolve => setTimeout(resolve, 300));
-  return {
-    visitors: 12450,
-    visitorsChange: 12.5,
-    activeUsers: 42,
-    serverLoad: 24,
-    uptime: "99.98%",
-    latency: "45ms"
-  };
-};
-
-export const fetchTrafficData = async (): Promise<ChartDataPoint[]> => {
-  return [
-    { label: 'Mon', value: 3200 },
-    { label: 'Tue', value: 4100 },
-    { label: 'Wed', value: 3800 },
-    { label: 'Thu', value: 5400 },
-    { label: 'Fri', value: 4900 },
-    { label: 'Sat', value: 6200 },
-    { label: 'Sun', value: 5800 },
-  ];
-};
-
-export const fetchServiceEngagement = async (): Promise<ChartDataPoint[]> => {
-  return [
-    { label: 'AI Solutions', value: 45 },
-    { label: 'Web Apps', value: 30 },
-    { label: 'Mobile Apps', value: 15 },
-    { label: 'Cloud Tech', value: 10 },
-  ];
-};
-
-export const fetchActivityLogs = async (): Promise<ActivityLog[]> => {
-  return [
-    { id: '1', action: 'Published Homepage Update', user: 'Kennedy (CEO)', timestamp: '2 mins ago', status: 'success' },
-    { id: '2', action: 'Failed login attempt', user: 'Unknown IP', timestamp: '15 mins ago', status: 'warning' },
-    { id: '3', action: 'New Portfolio Item: MediCare', user: 'Lewis (COO)', timestamp: '1 hour ago', status: 'success' },
-  ];
-};
-
-export const fetchPages = async () => {
-  return [
-    { id: 'h1', name: 'Home Page', path: '/', lastEdited: '2025-03-10', status: 'Published' },
-    { id: 'a1', name: 'About Us', path: '/company', lastEdited: '2025-03-08', status: 'Published' },
-    { id: 's1', name: 'Services', path: '/services', lastEdited: '2025-03-12', status: 'Draft' },
-    { id: 'p1', name: 'Portfolio', path: '/portfolio', lastEdited: '2025-03-01', status: 'Published' },
-  ];
-};
-
 export const fetchGlobalLayoutConfig = async (): Promise<GlobalLayoutConfig> => {
   const stored = localStorage.getItem(CONFIG_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
@@ -237,7 +227,61 @@ export const saveGlobalLayoutConfig = async (config: GlobalLayoutConfig): Promis
   return true;
 };
 
-// --- SERVICES COMMAND CENTRE METHODS ---
+// Updated return type to SystemStats interface
+export const fetchSystemStats = async (): Promise<SystemStats> => {
+  await new Promise(resolve => setTimeout(resolve, 300));
+  return {
+    visitors: 12450,
+    visitorsChange: 12.5,
+    activeUsers: 42,
+    serverLoad: 24,
+    uptime: "99.98%",
+    latency: "45ms"
+  };
+};
+
+// Updated return type to ActivityLog array
+export const fetchActivityLogs = async (): Promise<ActivityLog[]> => {
+  return [
+    { id: '1', action: 'Published Homepage Update', user: 'Kennedy (CEO)', timestamp: '2 mins ago', status: 'success' },
+    { id: '2', action: 'Failed login attempt', user: 'Unknown IP', timestamp: '15 mins ago', status: 'warning' },
+    { id: '3', action: 'New Portfolio Item: MediCare', user: 'Lewis (COO)', timestamp: '1 hour ago', status: 'success' },
+  ];
+};
+
+// Updated return type to ChartDataPoint array
+export const fetchTrafficData = async (): Promise<ChartDataPoint[]> => {
+  return [
+    { label: 'Mon', value: 3200 },
+    { label: 'Tue', value: 4100 },
+    { label: 'Wed', value: 3800 },
+    { label: 'Thu', value: 5400 },
+    { label: 'Fri', value: 4900 },
+    { label: 'Sat', value: 6200 },
+    { label: 'Sun', value: 5800 },
+  ];
+};
+
+// Updated return type to ChartDataPoint array
+export const fetchServiceEngagement = async (): Promise<ChartDataPoint[]> => {
+  return [
+    { label: 'AI Solutions', value: 45 },
+    { label: 'Web Apps', value: 30 },
+    { label: 'Mobile Apps', value: 15 },
+    { label: 'Cloud Tech', value: 10 },
+  ];
+};
+
+export const fetchPages = async () => {
+  return [
+    { id: 'h1', name: 'Home Page', path: '/', lastEdited: '2025-03-10', status: 'Published' },
+    { id: 'a1', name: 'About Us', path: '/company', lastEdited: '2025-03-08', status: 'Published' },
+    { id: 's1', name: 'Services', path: '/services', lastEdited: '2025-03-12', status: 'Draft' },
+    { id: 'p1', name: 'Portfolio', path: '/portfolio', lastEdited: '2025-03-01', status: 'Published' },
+  ];
+};
+
+// --- SERVICES DATA ---
 
 export const fetchServices = async (): Promise<ServiceItem[]> => {
   const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
@@ -284,4 +328,32 @@ export const saveServicesData = async (data: { services?: ServiceItem[], categor
   const parsed = existing ? JSON.parse(existing) : {};
   const updated = { ...parsed, ...data };
   localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify(updated));
+};
+
+// --- AI SOLUTIONS DATA ---
+
+export const fetchAiSolutionsData = async (): Promise<AiSolutionsConfig> => {
+  const stored = localStorage.getItem(AI_SOLUTIONS_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  
+  // Default data matching the public page
+  return {
+    heroTitle: "Custom Software with AI Integration",
+    heroSubtitle: "We build custom websites, software, and systems integrated with AI automation for your business. From chatbots to predictive analytics, we deliver intelligent solutions tailored to your needs.",
+    features: [
+        { id: '1', iconName: 'Brain', title: 'Machine Learning', description: 'We integrate predictive models into your applications.', subFeatures: ['Sales Forecasting', 'Fraud Detection'], color: 'blue', displayOrder: 1 }
+    ],
+    industryUseCases: [
+        { id: '1', iconName: 'Activity', title: 'Healthcare', description: 'Medical diagnosis and patient monitoring.', color: 'blue' }
+    ],
+    faqs: [
+        { id: '1', question: 'How long does it take?', answer: 'Depends on complexity, usually 2-4 weeks for simple integrations.' }
+    ],
+    metaTitle: "AI Solutions | TechSafi",
+    metaDescription: "Next-gen AI integration for modern businesses."
+  };
+};
+
+export const saveAiSolutionsData = async (data: AiSolutionsConfig): Promise<void> => {
+  localStorage.setItem(AI_SOLUTIONS_STORAGE_KEY, JSON.stringify(data));
 };
