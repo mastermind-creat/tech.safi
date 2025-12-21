@@ -396,7 +396,7 @@ export const Home: React.FC = () => {
 
                <div className="space-y-32 md:space-y-48">
                   {config.methodology.map((item, idx) => (
-                    <MotionDiv key={idx} initial={{ opacity: 0, y: 100 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 1 }} className={`flex flex-col md:flex-row items-center gap-12 md:gap-32 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''} relative`}>
+                    <MotionDiv key={idx} initial={{ opacity: 0, y: 100 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 1 }} className={`flex flex-col md:flex-row items-center gap-12 md:gap-32 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''} relative`}>
                        <div className="w-full md:w-1/2 pl-12 md:pl-0">
                           <TiltCard>
                              <MagicCard className="p-8 md:p-12 border border-slate-200 dark:border-white/5 hover:border-primary/50 transition-all duration-700">

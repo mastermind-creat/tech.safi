@@ -1,4 +1,3 @@
-
 /**
  * TechSafi Control Centre API Service
  * Centralized logic for data fetching and management.
@@ -179,7 +178,16 @@ export interface GlobalLayoutConfig {
   };
 }
 
-// Added missing interfaces for administrative modules
+// --- NEW DATA MODELS FOR DASHBOARD SECTIONS ---
+
+export interface PageItem {
+  id: string;
+  name: string;
+  path: string;
+  status: 'Published' | 'Draft';
+  lastEdited: string;
+}
+
 export interface ServiceItem {
   id: string;
   title: string;
@@ -213,7 +221,6 @@ export interface MethodologyStep {
   description: string;
   iconName: string;
   displayOrder: number;
-  color?: string;
 }
 
 export interface TechItem {
@@ -224,6 +231,16 @@ export interface TechItem {
   category: string;
   isVisible: boolean;
   displayOrder: number;
+}
+
+export interface AiSolutionsConfig {
+  heroTitle: string;
+  heroSubtitle: string;
+  metaTitle: string;
+  metaDescription: string;
+  features: AiFeature[];
+  industryUseCases: AiUseCase[];
+  faqs: AiFaq[];
 }
 
 export interface AiFeature {
@@ -250,16 +267,6 @@ export interface AiFaq {
   answer: string;
 }
 
-export interface AiSolutionsConfig {
-  heroTitle: string;
-  heroSubtitle: string;
-  metaTitle: string;
-  metaDescription: string;
-  features: AiFeature[];
-  industryUseCases: AiUseCase[];
-  faqs: AiFaq[];
-}
-
 export interface ProjectItem {
   id: string;
   title: string;
@@ -283,15 +290,9 @@ export interface PricingPlan {
   price: string;
   description: string;
   features: string[];
-  recommended: boolean;
+  recommended?: boolean;
   category: 'Web' | 'Mobile' | 'AI Addon' | 'AI Project' | 'Maintenance';
   displayOrder: number;
-}
-
-export interface VisionarySocial {
-  id: string;
-  platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
-  url: string;
 }
 
 export interface VisionaryMember {
@@ -312,6 +313,12 @@ export interface VisionaryMember {
   status: 'Active' | 'Hidden';
 }
 
+export interface VisionarySocial {
+  id: string;
+  platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
+  url: string;
+}
+
 export interface CoreValue {
   id: string;
   iconName: string;
@@ -328,15 +335,15 @@ export interface CompanyMilestone {
   iconName: string;
   color: string;
   bg: string;
-  align: string;
+  align: 'left' | 'right';
   displayOrder: number;
 }
 
 export interface AboutUsConfig {
   hero: {
-    establishedYear: string;
     title: string;
     subtitle: string;
+    establishedYear: string;
     stats: { label: string; value: string }[];
   };
   story: {
@@ -345,6 +352,38 @@ export interface AboutUsConfig {
   values: CoreValue[];
   visionaries: VisionaryMember[];
   milestones: CompanyMilestone[];
+}
+
+export interface CareersConfig {
+  hero: {
+    title: string;
+    subtitle: string;
+  };
+  notice: {
+    isActive: boolean;
+    title: string;
+    description: string;
+    commissionDetails: string;
+  };
+  culture: CareerCultureValue[];
+  benefits: CareerBenefit[];
+  jobs: JobOpening[];
+  internship: {
+    title: string;
+    duration: string;
+    features: string[];
+  };
+  attachment: {
+    title: string;
+    duration: string;
+    features: string[];
+  };
+  applicationSteps: {
+    step: string;
+    title: string;
+    desc: string;
+    color: string;
+  }[];
 }
 
 export interface JobOpening {
@@ -375,72 +414,36 @@ export interface CareerBenefit {
   color: string;
 }
 
-export interface CareersConfig {
-  hero: {
-    title: string;
-    subtitle: string;
-  };
-  notice: {
-    isActive: boolean;
-    title: string;
-    description: string;
-    commissionDetails: string;
-  };
-  culture: CareerCultureValue[];
-  jobs: JobOpening[];
-  internship: {
-    title: string;
-    duration: string;
-    features: string[];
-  };
-  attachment: {
-    title: string;
-    duration: string;
-    features: string[];
-  };
-  applicationSteps: {
-    step: string;
-    title: string;
-    desc: string;
-    color: string;
-  }[];
-}
-
-export interface Page {
-  id: string;
-  name: string;
-  path: string;
-  status: 'Published' | 'Draft';
-  lastEdited: string;
-}
-
 // --- STORAGE KEYS ---
 const HOME_PAGE_STORAGE_KEY = 'techsafi_home_page_config';
 const CONFIG_STORAGE_KEY = 'techsafi_global_config';
 const CONTACT_PAGE_STORAGE_KEY = 'techsafi_contact_page_config';
 const CONTACT_SUBMISSIONS_STORAGE_KEY = 'techsafi_contact_submissions';
-const SERVICES_STORAGE_KEY = 'techsafi_services_config';
-const AI_SOLUTIONS_STORAGE_KEY = 'techsafi_ai_solutions_config';
+const SERVICES_STORAGE_KEY = 'techsafi_services_data';
+const AI_SOLUTIONS_STORAGE_KEY = 'techsafi_ai_solutions_data';
 const PROJECTS_STORAGE_KEY = 'techsafi_portfolio_projects';
-const PRICING_STORAGE_KEY = 'techsafi_pricing_config';
-const ABOUT_US_STORAGE_KEY = 'techsafi_about_us_config';
-const CAREERS_STORAGE_KEY = 'techsafi_careers_config';
-const BLOG_POSTS_STORAGE_KEY = 'techsafi_blog_posts';
-const PAGES_STORAGE_KEY = 'techsafi_site_pages';
+const PRICING_STORAGE_KEY = 'techsafi_pricing_data';
+const ABOUT_US_STORAGE_KEY = 'techsafi_about_us_data';
+const CAREERS_STORAGE_KEY = 'techsafi_careers_data';
+const BLOG_STORAGE_KEY = 'techsafi_blog_posts';
 
 // --- API METHODS ---
 
-export const fetchPages = async (): Promise<Page[]> => {
-  const stored = localStorage.getItem(PAGES_STORAGE_KEY);
-  if (stored) return JSON.parse(stored);
+/**
+ * Fetch and manage structural pages.
+ */
+export const fetchPages = async (): Promise<PageItem[]> => {
   return [
     { id: '1', name: 'Home', path: '/', status: 'Published', lastEdited: '2025-03-10' },
-    { id: '2', name: 'Services', path: '/services', status: 'Published', lastEdited: '2025-03-05' },
-    { id: '3', name: 'Pricing', path: '/pricing', status: 'Published', lastEdited: '2025-03-12' },
-    { id: '4', name: 'Contact', path: '/contact', status: 'Published', lastEdited: '2025-03-15' }
+    { id: '2', name: 'About Us', path: '/company', status: 'Published', lastEdited: '2025-03-08' },
+    { id: '3', name: 'Portfolio', path: '/portfolio', status: 'Published', lastEdited: '2025-03-05' },
+    { id: '4', name: 'Services', path: '/services', status: 'Published', lastEdited: '2025-03-12' },
   ];
 };
 
+/**
+ * Service Matrix Data
+ */
 export const fetchServices = async (): Promise<ServiceItem[]> => {
   const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
   if (stored) return JSON.parse(stored).services;
@@ -450,10 +453,7 @@ export const fetchServices = async (): Promise<ServiceItem[]> => {
 export const fetchCategories = async (): Promise<ServiceCategory[]> => {
   const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
   if (stored) return JSON.parse(stored).categories;
-  return [
-    { id: 'cat1', name: 'Web Development', slug: 'web-dev', displayOrder: 1, status: 'Active' },
-    { id: 'cat2', name: 'Mobile Apps', slug: 'mobile-apps', displayOrder: 2, status: 'Active' }
-  ];
+  return [];
 };
 
 export const fetchMethodology = async (): Promise<MethodologyStep[]> => {
@@ -468,53 +468,75 @@ export const fetchTechStack = async (): Promise<TechItem[]> => {
   return [];
 };
 
-export const saveServicesData = async (data: { services: ServiceItem[], categories: ServiceCategory[], methodology: MethodologyStep[], techStack: TechItem[] }): Promise<void> => {
+export const saveServicesData = async (data: { 
+  services: ServiceItem[], 
+  categories: ServiceCategory[], 
+  methodology: MethodologyStep[], 
+  techStack: TechItem[] 
+}) => {
   localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify(data));
 };
 
+/**
+ * AI Solutions Configuration
+ */
 export const fetchAiSolutionsData = async (): Promise<AiSolutionsConfig> => {
   const stored = localStorage.getItem(AI_SOLUTIONS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return {
-    heroTitle: 'Custom Software with AI Integration',
-    heroSubtitle: 'We build custom websites and systems integrated with AI automation.',
-    metaTitle: 'AI Solutions | TechSafi',
-    metaDescription: 'Empowering businesses through intelligent AI integrations.',
+    heroTitle: "Custom Software with AI Integration",
+    heroSubtitle: "Transform your business with intelligence.",
+    metaTitle: "AI Solutions | TechSafi",
+    metaDescription: "Expert AI integration and custom software.",
     features: [],
     industryUseCases: [],
     faqs: []
   };
 };
 
-export const saveAiSolutionsData = async (config: AiSolutionsConfig): Promise<void> => {
+export const saveAiSolutionsData = async (config: AiSolutionsConfig) => {
   localStorage.setItem(AI_SOLUTIONS_STORAGE_KEY, JSON.stringify(config));
 };
 
+/**
+ * Portfolio Project Management
+ */
 export const fetchProjects = async (): Promise<ProjectItem[]> => {
   const stored = localStorage.getItem(PROJECTS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return [];
 };
 
-export const saveProjectsData = async (projects: ProjectItem[]): Promise<void> => {
+export const saveProjectsData = async (projects: ProjectItem[]) => {
   localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
 };
 
+/**
+ * Pricing Engine Management
+ */
 export const fetchPricingPlans = async (): Promise<PricingPlan[]> => {
   const stored = localStorage.getItem(PRICING_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return [];
 };
 
-export const savePricingData = async (plans: PricingPlan[]): Promise<void> => {
+export const savePricingData = async (plans: PricingPlan[]) => {
   localStorage.setItem(PRICING_STORAGE_KEY, JSON.stringify(plans));
 };
 
+/**
+ * Corporate About Us Content
+ */
 export const fetchAboutUsData = async (): Promise<AboutUsConfig> => {
   const stored = localStorage.getItem(ABOUT_US_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return {
-    hero: { establishedYear: '2024', title: 'About TechSafi', subtitle: 'Innovation elevated.', stats: [] },
+    hero: {
+      title: "About TechSafi",
+      subtitle: "Empowering businesses through innovation.",
+      establishedYear: "2024",
+      stats: []
+    },
     story: { paragraphs: [] },
     values: [],
     visionaries: [],
@@ -522,38 +544,48 @@ export const fetchAboutUsData = async (): Promise<AboutUsConfig> => {
   };
 };
 
-export const saveAboutUsData = async (config: AboutUsConfig): Promise<void> => {
+export const saveAboutUsData = async (config: AboutUsConfig) => {
   localStorage.setItem(ABOUT_US_STORAGE_KEY, JSON.stringify(config));
 };
 
+/**
+ * Careers & Talent Management
+ */
 export const fetchCareersData = async (): Promise<CareersConfig> => {
   const stored = localStorage.getItem(CAREERS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return {
-    hero: { title: 'Build the Future With Us', subtitle: 'Join our passionate team.' },
-    notice: { isActive: true, title: 'Growth Phase', description: '', commissionDetails: '' },
+    hero: { title: "Join Our Team", subtitle: "Build the future." },
+    notice: { isActive: false, title: "", description: "", commissionDetails: "" },
     culture: [],
+    benefits: [],
     jobs: [],
-    internship: { title: 'Internship', duration: '3-6 Months', features: [] },
-    attachment: { title: 'Industrial Attachment', duration: '3 Months', features: [] },
+    internship: { title: "Internship", duration: "3-6 months", features: [] },
+    attachment: { title: "Attachment", duration: "3 months", features: [] },
     applicationSteps: []
   };
 };
 
-export const saveCareersData = async (config: CareersConfig): Promise<void> => {
+export const saveCareersData = async (config: CareersConfig) => {
   localStorage.setItem(CAREERS_STORAGE_KEY, JSON.stringify(config));
 };
 
+/**
+ * Blog Content Repository
+ */
 export const fetchBlogPosts = async (): Promise<BlogPost[]> => {
-  const stored = localStorage.getItem(BLOG_POSTS_STORAGE_KEY);
+  const stored = localStorage.getItem(BLOG_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return [];
 };
 
-export const saveBlogPosts = async (posts: BlogPost[]): Promise<void> => {
-  localStorage.setItem(BLOG_POSTS_STORAGE_KEY, JSON.stringify(posts));
+export const saveBlogPosts = async (posts: BlogPost[]) => {
+  localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(posts));
 };
 
+/**
+ * Existing Methods
+ */
 export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
   const stored = localStorage.getItem(HOME_PAGE_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
@@ -570,7 +602,8 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
       subtitle: "Empowering businesses with AI-enhanced software, tailored automation, and scalable architectures designed for the next era of digital dominance.",
       images: [
         "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1920&q=80",
-        "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=80"
+        "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=80",
+        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80"
       ],
       stats: [
         { label: "Projects Delivered", value: "50+" },
@@ -581,7 +614,9 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
     partners: [
       { id: 'p1', name: 'Vercel', description: 'Next-gen deployment infrastructure.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/vercel.svg' },
       { id: 'p2', name: 'Stripe', description: 'Financial infrastructure for global business.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/stripe-2.svg' },
-      { id: 'p3', name: 'Google Cloud', description: 'AI and computing backbone.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/google-cloud-1.svg' }
+      { id: 'p3', name: 'Google Cloud', description: 'AI and computing backbone.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/google-cloud-1.svg' },
+      { id: 'p4', name: 'AWS', description: 'Cloud scalability and DevOps tooling.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/aws-2.svg' },
+      { id: 'p5', name: 'Nvidia', description: 'Compute power for custom LLM training.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/nvidia.svg' }
     ],
     servicesPreview: [
       { id: 's1', title: 'Web Development', description: 'High-performance applications.', iconName: 'Globe', color: 'blue' },
@@ -612,11 +647,13 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
       ]
     },
     bento: [
-      { id: 'b1', title: 'Neural Logic', description: 'Custom models for your domain.', iconName: 'Brain', color: 'purple', animationType: 'orbit' },
-      { id: 'b2', title: 'Global Sync', description: 'Real-time data parity.', iconName: 'Zap', color: 'blue', animationType: 'glitch' }
+      { id: 'b1', title: 'Neural Logic', description: 'Custom models for your domain.', iconName: 'Brain', color: 'purple', animationType: 'orbit', badge: 'Intelligence' },
+      { id: 'b2', title: 'Global Sync', description: 'Real-time data parity.', iconName: 'Zap', color: 'blue', animationType: 'glitch', badge: 'Latency' },
+      { id: 'b3', title: 'Deep Edge', description: 'Computing at the source.', iconName: 'Cpu', color: 'emerald', animationType: 'pulse', badge: 'Edge' }
     ],
     testimonials: [
-      { id: 't1', name: "James D.", role: "CTO", text: "TechSafi is the standard for AI implementation.", color: "blue" }
+      { id: 't1', name: "James D.", role: "CTO", text: "TechSafi is the standard for AI implementation in the region.", color: "blue" },
+      { id: 't2', name: "Sarah M.", role: "Founder", text: "Our systems have never been faster or more reliable.", color: "purple" }
     ],
     estimator: {
       baseWeb: 50000,
@@ -626,7 +663,8 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
       fastMultiplier: 1.25,
       features: [
         { id: 'ai', label: 'AI Integration', price: 100000 },
-        { id: 'auth', label: 'User Auth', price: 30000 }
+        { id: 'auth', label: 'User Auth', price: 30000 },
+        { id: 'payments', label: 'Payments', price: 40000 }
       ]
     }
   };

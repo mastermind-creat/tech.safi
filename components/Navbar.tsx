@@ -1,11 +1,9 @@
-
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Sun, Moon, Lock } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useTheme } from '../context/ThemeContext';
 import { useConfig } from '../context/ConfigContext';
-// Added missing import for Button component
 import { Button } from './ui/Button';
 
 export const Navbar: React.FC = () => {
