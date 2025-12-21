@@ -8,7 +8,32 @@ import { BlogPost } from '../../types';
 
 // --- DATA MODELS ---
 
-// Add missing AiFeature interface
+export interface GeoDataPoint {
+  country: string;
+  count: number;
+  percentage: number;
+}
+
+export interface FunnelStep {
+  label: string;
+  value: number;
+  conversion: number;
+}
+
+export interface SessionData {
+  hour: number;
+  day: string;
+  intensity: number; // 0 to 1
+}
+
+export interface AiPerformanceStats {
+  accuracy: number;
+  latency: number;
+  tokenUsage: number;
+  satisfaction: number;
+}
+
+// ... existing interfaces ...
 export interface AiFeature {
   id: string;
   iconName: string;
@@ -19,7 +44,6 @@ export interface AiFeature {
   displayOrder: number;
 }
 
-// Add missing AiUseCase interface
 export interface AiUseCase {
   id: string;
   iconName: string;
@@ -28,21 +52,18 @@ export interface AiUseCase {
   color: string;
 }
 
-// Add missing AiFaq interface
 export interface AiFaq {
   id: string;
   question: string;
   answer: string;
 }
 
-// Add missing VisionarySocial interface
 export interface VisionarySocial {
   id: string;
   platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
   url: string;
 }
 
-// Add missing VisionaryMember interface
 export interface VisionaryMember {
   id: string;
   name: string;
@@ -61,7 +82,6 @@ export interface VisionaryMember {
   status: 'Active' | 'Hidden';
 }
 
-// Add missing CoreValue interface
 export interface CoreValue {
   id: string;
   iconName: string;
@@ -70,7 +90,6 @@ export interface CoreValue {
   color: string;
 }
 
-// Add missing CompanyMilestone interface
 export interface CompanyMilestone {
   id: string;
   year: string;
@@ -83,7 +102,6 @@ export interface CompanyMilestone {
   displayOrder: number;
 }
 
-// Add missing JobOpening interface
 export interface JobOpening {
   id: string;
   title: string;
@@ -96,7 +114,6 @@ export interface JobOpening {
   status: 'Open' | 'Closed' | 'Hidden';
 }
 
-// Add missing CareerCultureValue interface
 export interface CareerCultureValue {
   id: string;
   iconName: string;
@@ -105,7 +122,6 @@ export interface CareerCultureValue {
   color: string;
 }
 
-// Add missing CareerBenefit interface
 export interface CareerBenefit {
   id: string;
   iconName: string;
@@ -351,7 +367,6 @@ export interface TechItem {
   displayOrder: number;
 }
 
-// Update AiSolutionsConfig to use typed arrays
 export interface AiSolutionsConfig {
   heroTitle: string;
   heroSubtitle: string;
@@ -390,7 +405,6 @@ export interface PricingPlan {
   displayOrder: number;
 }
 
-// Update AboutUsConfig to use typed arrays
 export interface AboutUsConfig {
   hero: {
     establishedYear: string;
@@ -406,7 +420,6 @@ export interface AboutUsConfig {
   milestones: CompanyMilestone[];
 }
 
-// Update CareersConfig to use typed arrays
 export interface CareersConfig {
   hero: {
     title: string;
@@ -455,6 +468,27 @@ const BLOG_POSTS_STORAGE_KEY = 'techsafi_blog_posts';
 const MEDIA_LIBRARY_STORAGE_KEY = 'techsafi_media_library';
 
 // --- API METHODS ---
+
+export const fetchGeoData = async (): Promise<GeoDataPoint[]> => [
+  { country: 'Kenya', count: 4200, percentage: 65 },
+  { country: 'Nigeria', count: 1200, percentage: 18 },
+  { country: 'USA', count: 850, percentage: 12 },
+  { country: 'United Kingdom', count: 320, percentage: 5 }
+];
+
+export const fetchFunnelData = async (): Promise<FunnelStep[]> => [
+  { label: 'Visits', value: 12500, conversion: 100 },
+  { label: 'Services View', value: 8400, conversion: 67 },
+  { label: 'Pricing View', value: 3200, conversion: 38 },
+  { label: 'Contact Initiation', value: 450, conversion: 14 }
+];
+
+export const fetchAiAnalytics = async (): Promise<AiPerformanceStats> => ({
+  accuracy: 98.4,
+  latency: 1.2,
+  tokenUsage: 452000,
+  satisfaction: 94
+});
 
 export const fetchMedia = async (): Promise<MediaItem[]> => {
   const stored = localStorage.getItem(MEDIA_LIBRARY_STORAGE_KEY);

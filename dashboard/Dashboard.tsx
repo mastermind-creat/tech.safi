@@ -28,6 +28,7 @@ import { MediaLibrary } from './sections/MediaLibrary';
 import { ActivityLogs } from './sections/ActivityLogs';
 import { SecurityAlerts } from './sections/SecurityAlerts';
 import { GlobalSettings } from './sections/GlobalSettings';
+import { LiveAnalytics } from './sections/LiveAnalytics';
 import { Button } from '../components/ui/Button';
 
 // Icons for nested items
@@ -350,6 +351,7 @@ export const Dashboard: React.FC = () => {
         <div className="p-6 max-w-7xl mx-auto">
           <Routes>
             <Route path="/" element={<Overview />} />
+            <Route path="/analytics" element={<LiveAnalytics />} />
             <Route path="/pages/home" element={<HomeAdmin />} />
             <Route path="/pages/services" element={<ServicesAdmin />} />
             <Route path="/pages/ai-solutions" element={<AiSolutionsAdmin />} />
