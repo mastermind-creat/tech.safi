@@ -23,6 +23,7 @@ import { AboutUsAdmin } from './sections/AboutUsAdmin';
 import { CareersAdmin } from './sections/CareersAdmin';
 import { BlogAdmin } from './sections/BlogAdmin';
 import { ContactAdmin } from './sections/ContactAdmin';
+import { HomeAdmin } from './sections/HomeAdmin';
 import { Button } from '../components/ui/Button';
 
 // Icons for nested items
@@ -345,6 +346,7 @@ export const Dashboard: React.FC = () => {
         <div className="p-6 max-w-7xl mx-auto">
           <Routes>
             <Route path="/" element={<Overview />} />
+            <Route path="/pages/home" element={<HomeAdmin />} />
             <Route path="/pages/services" element={<ServicesAdmin />} />
             <Route path="/pages/ai-solutions" element={<AiSolutionsAdmin />} />
             <Route path="/pages/portfolio" element={<PortfolioAdmin />} />

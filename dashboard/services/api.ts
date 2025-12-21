@@ -60,6 +60,38 @@ export interface ContactPageConfig {
   }[];
 }
 
+export interface HomePageConfig {
+  hero: {
+    typewriterWords: string[];
+    subtitle: string;
+    images: string[];
+    stats: { label: string; value: string }[];
+  };
+  bento: {
+    id: string;
+    title: string;
+    description: string;
+    iconName: string;
+    color: string;
+    badge?: string;
+  }[];
+  testimonials: {
+    id: string;
+    name: string;
+    role: string;
+    text: string;
+    color: string;
+  }[];
+  estimator: {
+    baseWeb: number;
+    baseMobile: number;
+    baseBoth: number;
+    rushMultiplier: number;
+    fastMultiplier: number;
+    features: { id: string; label: string; price: number }[];
+  };
+}
+
 export interface NavLinkConfig {
   id: string;
   label: string;
@@ -134,39 +166,47 @@ export interface ChartDataPoint {
   value: number;
 }
 
-// --- PORTFOLIO MODELS ---
-
-export interface ProjectItem {
-  id: string;
-  title: string;
-  category: string;
-  type: string;
-  image: string;
-  description: string;
-  technologies: string[];
-  client: string;
-  year: string;
-  stats: { label: string; value: string; iconName: string };
-  color: string;
-  iconName: string;
-  status: 'Published' | 'Draft';
-  displayOrder: number;
+// Added GlobalLayoutConfig interface
+export interface GlobalLayoutConfig {
+  navbar: {
+    logoPrimary: string;
+    logoAccent: string;
+    ctaLabel: string;
+    links: NavLinkConfig[];
+  };
+  footer: {
+    tagline: string;
+    email: string;
+    phone: string;
+    address: string;
+    officeHours: string;
+    copyright: string;
+    socials: { id: string; platform: string; url: string }[];
+    quickLinks: { id: string; label: string; path: string }[];
+    serviceLinks: { id: string; label: string; path: string }[];
+    legalLinks: { id: string; label: string; path: string }[];
+  };
 }
 
-// --- PRICING MODELS ---
-
-export interface PricingPlan {
-  id: string;
-  name: string;
-  price: string;
-  description: string;
-  features: string[];
-  recommended: boolean;
-  category: 'Web' | 'Mobile' | 'AI Addon' | 'AI Project' | 'Maintenance';
-  displayOrder: number;
+// Added AboutUsConfig and related interfaces
+export interface AboutUsConfig {
+  hero: {
+    establishedYear: string;
+    title: string;
+    subtitle: string;
+    stats: { label: string; value: string; iconName: string }[];
+  };
+  story: {
+    title: string;
+    paragraphs: string[];
+    stats: { label: string; value: string }[];
+  };
+  values: CoreValue[];
+  visionaries: VisionaryMember[];
+  milestones: CompanyMilestone[];
+  metaTitle: string;
+  metaDescription: string;
 }
-
-// --- ABOUT US MODELS ---
 
 export interface CoreValue {
   id: string;
@@ -174,12 +214,6 @@ export interface CoreValue {
   title: string;
   description: string;
   color: string;
-}
-
-export interface VisionarySocial {
-  id: string;
-  platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
-  url: string;
 }
 
 export interface VisionaryMember {
@@ -200,6 +234,12 @@ export interface VisionaryMember {
   status: 'Active' | 'Hidden';
 }
 
+export interface VisionarySocial {
+  id: string;
+  platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
+  url: string;
+}
+
 export interface CompanyMilestone {
   id: string;
   year: string;
@@ -208,30 +248,24 @@ export interface CompanyMilestone {
   iconName: string;
   color: string;
   bg: string;
-  align: 'left' | 'right';
+  align: string;
   displayOrder: number;
 }
 
-export interface AboutUsConfig {
-  hero: {
-    establishedYear: string;
-    title: string;
-    subtitle: string;
-    stats: { label: string; value: string; iconName: string }[];
-  };
-  story: {
-    title: string;
-    paragraphs: string[];
-    stats: { label: string; value: string }[];
-  };
-  values: CoreValue[];
-  visionaries: VisionaryMember[];
-  milestones: CompanyMilestone[];
+// Added CareersConfig and related interfaces
+export interface CareersConfig {
+  hero: { title: string; subtitle: string; stats: { iconName: string; label: string }[] };
+  notice: { title: string; description: string; commissionDetails: string; isActive: boolean };
+  culture: CareerCultureValue[];
+  benefits: CareerBenefit[];
+  jobs: JobOpening[];
+  internship: { title: string; duration: string; features: string[]; requirements: string };
+  attachment: { title: string; duration: string; features: string[]; requirements: string };
+  applicationSteps: { step: string; title: string; desc: string; color: string }[];
+  faqs: { id: string; question: string; answer: string }[];
   metaTitle: string;
   metaDescription: string;
 }
-
-// --- CAREERS MODELS ---
 
 export interface CareerCultureValue {
   id: string;
@@ -258,40 +292,49 @@ export interface JobOpening {
   desc: string;
   requirements: string[];
   category: string;
-  status: 'Open' | 'Closed' | 'Hidden';
+  status: string;
 }
 
-export interface InternshipProgram {
+// Added ProjectItem interface
+export interface ProjectItem {
+  id: string;
   title: string;
-  duration: string;
-  features: string[];
-  requirements: string;
+  category: string;
+  type: string;
+  image: string;
+  description: string;
+  technologies: string[];
+  client: string;
+  year: string;
+  stats: { label: string; value: string; iconName: string };
+  color: string;
+  iconName: string;
+  status: 'Published' | 'Draft';
+  displayOrder: number;
 }
 
-export interface CareersConfig {
-  hero: {
-    title: string;
-    subtitle: string;
-    stats: { label: string; iconName: string }[];
-  };
-  notice: {
-    title: string;
-    description: string;
-    commissionDetails: string;
-    isActive: boolean;
-  };
-  culture: CareerCultureValue[];
-  benefits: CareerBenefit[];
-  jobs: JobOpening[];
-  internship: InternshipProgram;
-  attachment: InternshipProgram;
-  applicationSteps: { step: string; title: string; desc: string; color: string }[];
-  faqs: { id: string; question: string; answer: string }[];
+// Added PricingPlan interface
+export interface PricingPlan {
+  id: string;
+  name: string;
+  price: string;
+  description: string;
+  features: string[];
+  recommended: boolean;
+  category: 'Web' | 'Mobile' | 'AI Addon' | 'AI Project' | 'Maintenance';
+  displayOrder: number;
+}
+
+// Added AiSolutionsConfig and related interfaces
+export interface AiSolutionsConfig {
+  heroTitle: string;
+  heroSubtitle: string;
+  features: AiFeature[];
+  industryUseCases: AiUseCase[];
+  faqs: AiFaq[];
   metaTitle: string;
   metaDescription: string;
 }
-
-// --- AI SOLUTIONS MODELS ---
 
 export interface AiFeature {
   id: string;
@@ -317,37 +360,7 @@ export interface AiFaq {
   answer: string;
 }
 
-export interface AiSolutionsConfig {
-  heroTitle: string;
-  heroSubtitle: string;
-  features: AiFeature[];
-  industryUseCases: AiUseCase[];
-  faqs: AiFaq[];
-  metaTitle: string;
-  metaDescription: string;
-}
-
-export interface GlobalLayoutConfig {
-  navbar: {
-    logoPrimary: string;
-    logoAccent: string;
-    ctaLabel: string;
-    links: NavLinkConfig[];
-  };
-  footer: {
-    tagline: string;
-    email: string;
-    phone: string;
-    address: string;
-    officeHours: string;
-    copyright: string;
-    socials: { id: string; platform: string; url: string }[];
-    quickLinks: { id: string; label: string; path: string }[];
-    serviceLinks: { id: string; label: string; path: string }[];
-    legalLinks: { id: string; label: string; path: string }[];
-  };
-}
-
+// --- STORAGE KEYS ---
 const CONFIG_STORAGE_KEY = 'techsafi_global_config';
 const SERVICES_STORAGE_KEY = 'techsafi_services_data';
 const AI_SOLUTIONS_STORAGE_KEY = 'techsafi_ai_solutions_data';
@@ -358,15 +371,70 @@ const CAREERS_STORAGE_KEY = 'techsafi_careers_data';
 const BLOG_STORAGE_KEY = 'techsafi_blog_data';
 const CONTACT_STORAGE_KEY = 'techsafi_contact_leads';
 const CONTACT_PAGE_STORAGE_KEY = 'techsafi_contact_page_config';
+const HOME_PAGE_STORAGE_KEY = 'techsafi_home_page_config';
 
 // --- API METHODS ---
 
+export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
+  const stored = localStorage.getItem(HOME_PAGE_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  
+  const defaultConfig: HomePageConfig = {
+    hero: {
+      typewriterWords: ['Digital Solutions', 'AI Ecosystems', 'Future Tech'],
+      subtitle: "Empowering businesses with AI-enhanced software, custom mobile apps, and intelligent automation tailored for the modern digital era.",
+      images: [
+        "https://images.unsplash.com/photo-1677442136019-21780ecad995?auto=format&fit=crop&w=1920&q=80",
+        "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?auto=format&fit=crop&w=1920&q=80",
+        "https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&w=1920&q=80"
+      ],
+      stats: [
+        { label: "Projects Delivered", value: "50+" },
+        { label: "Client Satisfaction", value: "98%" },
+        { label: "Years Innovation", value: "5+" },
+        { label: "Countries Served", value: "3+" }
+      ]
+    },
+    bento: [
+      { id: 'b1', title: 'Neural Processing', description: 'Advanced AI models integrated into business logic.', iconName: 'Brain', color: 'purple', badge: 'AI Integration' },
+      { id: 'b2', title: 'Global Scale', description: 'Deploy anywhere with edge-optimized architecture.', iconName: 'Globe', color: 'blue' },
+      { id: 'b3', title: 'Bank-Grade Security', description: 'Advanced encryption and security protocols.', iconName: 'Shield', color: 'emerald' },
+      { id: 'b4', title: 'Real-time Sync', description: 'Live data processing for instant responses.', iconName: 'Activity', color: 'orange' }
+    ],
+    testimonials: [
+      { id: 't1', name: "James D.", role: "CTO, RetailTech", text: "TechSafi's AI recommendation engine transformed our e-commerce platform.", color: "blue" }
+    ],
+    estimator: {
+      baseWeb: 50000,
+      baseMobile: 250000,
+      baseBoth: 450000,
+      rushMultiplier: 1.5,
+      fastMultiplier: 1.25,
+      features: [
+        { id: 'ai', label: 'AI Integration', price: 100000 },
+        { id: 'auth', label: 'User Auth', price: 30000 },
+        { id: 'payments', label: 'Payments', price: 40000 },
+        { id: 'cms', label: 'Custom CMS', price: 50000 },
+        { id: 'analytics', label: 'Analytics', price: 30000 },
+        { id: 'chat', label: 'Live Chat', price: 60000 }
+      ]
+    }
+  };
+  return defaultConfig;
+};
+
+export const saveHomePageConfig = async (config: HomePageConfig): Promise<void> => {
+  localStorage.setItem(HOME_PAGE_STORAGE_KEY, JSON.stringify(config));
+};
+
+// Fixed GlobalLayoutConfig reference
 export const fetchGlobalLayoutConfig = async (): Promise<GlobalLayoutConfig> => {
   const stored = localStorage.getItem(CONFIG_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return DEFAULT_CONFIG;
 };
 
+// Fixed GlobalLayoutConfig reference
 export const saveGlobalLayoutConfig = async (config: GlobalLayoutConfig): Promise<boolean> => {
   localStorage.setItem(CONFIG_STORAGE_KEY, JSON.stringify(config));
   window.dispatchEvent(new Event('techsafi_config_updated'));
@@ -425,6 +493,7 @@ export const fetchPages = async () => {
 
 // --- ABOUT US DATA ---
 
+// Fixed AboutUsConfig reference
 export const fetchAboutUsData = async (): Promise<AboutUsConfig> => {
   const stored = localStorage.getItem(ABOUT_US_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
@@ -453,12 +522,14 @@ export const fetchAboutUsData = async (): Promise<AboutUsConfig> => {
   };
 };
 
+// Fixed AboutUsConfig reference
 export const saveAboutUsData = async (data: AboutUsConfig): Promise<void> => {
   localStorage.setItem(ABOUT_US_STORAGE_KEY, JSON.stringify(data));
 };
 
 // --- CAREERS DATA ---
 
+// Fixed CareersConfig reference
 export const fetchCareersData = async (): Promise<CareersConfig> => {
   const stored = localStorage.getItem(CAREERS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
@@ -478,6 +549,7 @@ export const fetchCareersData = async (): Promise<CareersConfig> => {
   };
 };
 
+// Fixed CareersConfig reference
 export const saveCareersData = async (data: CareersConfig): Promise<void> => {
   localStorage.setItem(CAREERS_STORAGE_KEY, JSON.stringify(data));
 };
@@ -565,24 +637,28 @@ export const saveContactPageConfig = async (config: ContactPageConfig): Promise<
 
 // --- PORTFOLIO DATA ---
 
+// Fixed ProjectItem reference
 export const fetchProjects = async (): Promise<ProjectItem[]> => {
   const stored = localStorage.getItem(PORTFOLIO_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return [];
 };
 
+// Fixed ProjectItem reference
 export const saveProjectsData = async (projects: ProjectItem[]): Promise<void> => {
   localStorage.setItem(PORTFOLIO_STORAGE_KEY, JSON.stringify(projects));
 };
 
 // --- PRICING DATA ---
 
+// Fixed PricingPlan reference
 export const fetchPricingPlans = async (): Promise<PricingPlan[]> => {
   const stored = localStorage.getItem(PRICING_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return [];
 };
 
+// Fixed PricingPlan reference
 export const savePricingData = async (plans: PricingPlan[]): Promise<void> => {
   localStorage.setItem(PRICING_STORAGE_KEY, JSON.stringify(plans));
 };
@@ -638,6 +714,7 @@ export const saveServicesData = async (data: { services?: ServiceItem[], categor
 
 // --- AI SOLUTIONS DATA ---
 
+// Fixed AiSolutionsConfig reference
 export const fetchAiSolutionsData = async (): Promise<AiSolutionsConfig> => {
   const stored = localStorage.getItem(AI_SOLUTIONS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
@@ -653,10 +730,12 @@ export const fetchAiSolutionsData = async (): Promise<AiSolutionsConfig> => {
   };
 };
 
+// Fixed AiSolutionsConfig reference
 export const saveAiSolutionsData = async (data: AiSolutionsConfig): Promise<void> => {
   localStorage.setItem(AI_SOLUTIONS_STORAGE_KEY, JSON.stringify(data));
 };
 
+// Fixed GlobalLayoutConfig reference
 const DEFAULT_CONFIG: GlobalLayoutConfig = {
   navbar: {
     logoPrimary: "Tech",
