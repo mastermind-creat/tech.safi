@@ -7,6 +7,26 @@ import { BlogPost } from '../../types';
 
 // --- DATA MODELS ---
 
+export interface SystemStats {
+  latency: string;
+  uptime: string;
+  activeLeads: number;
+  pendingDeploys: number;
+}
+
+export interface ActivityLog {
+  id: string;
+  action: string;
+  user: string;
+  timestamp: string;
+  status: 'success' | 'warning' | 'error' | 'danger';
+}
+
+export interface ChartDataPoint {
+  label: string;
+  value: number;
+}
+
 export interface ContactSubmission {
   id: string;
   firstName: string;
@@ -61,6 +81,10 @@ export interface ContactPageConfig {
 }
 
 export interface HomePageConfig {
+  settings: {
+    animationIntensity: 'low' | 'medium' | 'high';
+    marqueeSpeed: number;
+  };
   hero: {
     typewriterWords: string[];
     subtitle: string;
@@ -71,6 +95,7 @@ export interface HomePageConfig {
     id: string;
     name: string;
     logoUrl: string;
+    description: string;
   }[];
   servicesPreview: {
     id: string;
@@ -79,6 +104,24 @@ export interface HomePageConfig {
     iconName: string;
     color: string;
   }[];
+  aiSpeedShowcase: {
+    title: string;
+    subtitle: string;
+    metrics: { label: string; traditional: number; techsafi: number; unit: string }[];
+  };
+  methodology: {
+    id: string;
+    title: string;
+    description: string;
+    iconName: string;
+    color: string;
+  }[];
+  aiPreview: {
+    badge: string;
+    title: string;
+    subtitle: string;
+    stats: { label: string; value: string }[];
+  };
   bento: {
     id: string;
     title: string;
@@ -86,6 +129,7 @@ export interface HomePageConfig {
     iconName: string;
     color: string;
     badge?: string;
+    animationType: 'float' | 'pulse' | 'orbit' | 'glitch';
   }[];
   testimonials: {
     id: string;
@@ -177,28 +221,6 @@ export interface GlobalLayoutConfig {
   };
 }
 
-// --- DASHBOARD MISSING TYPES ---
-
-export interface SystemStats {
-  latency: string;
-  uptime: string;
-  activeLeads: number;
-  pendingDeploys: number;
-}
-
-export interface ActivityLog {
-  id: string;
-  action: string;
-  user: string;
-  timestamp: string;
-  status: 'success' | 'warning' | 'error';
-}
-
-export interface ChartDataPoint {
-  label: string;
-  value: number;
-}
-
 export interface AiFeature {
   id: string;
   iconName: string;
@@ -256,7 +278,7 @@ export interface PricingPlan {
   price: string;
   description: string;
   features: string[];
-  recommended?: boolean;
+  recommended: boolean;
   category: 'Web' | 'Mobile' | 'AI Addon' | 'AI Project' | 'Maintenance';
   displayOrder: number;
 }
@@ -381,9 +403,9 @@ export interface CareersConfig {
 }
 
 // --- STORAGE KEYS ---
+const HOME_PAGE_STORAGE_KEY = 'techsafi_home_page_config';
 const CONFIG_STORAGE_KEY = 'techsafi_global_config';
 const SERVICES_STORAGE_KEY = 'techsafi_services_data';
-const HOME_PAGE_STORAGE_KEY = 'techsafi_home_page_config';
 const CONTACT_PAGE_STORAGE_KEY = 'techsafi_contact_page_config';
 const CONTACT_SUBMISSIONS_STORAGE_KEY = 'techsafi_contact_submissions';
 const PROJECTS_STORAGE_KEY = 'techsafi_portfolio_projects';
@@ -400,6 +422,10 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
   if (stored) return JSON.parse(stored);
   
   const defaultConfig: HomePageConfig = {
+    settings: {
+      animationIntensity: 'medium',
+      marqueeSpeed: 20
+    },
     hero: {
       typewriterWords: ['Digital Solutions', 'AI Ecosystems', 'Future Tech'],
       subtitle: "Empowering businesses with AI-enhanced software, custom mobile apps, and intelligent automation tailored for the modern digital era.",
@@ -416,11 +442,11 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
       ]
     },
     partners: [
-      { id: 'p1', name: 'Vercel', logoUrl: 'https://cdn.worldvectorlogo.com/logos/vercel.svg' },
-      { id: 'p2', name: 'Stripe', logoUrl: 'https://cdn.worldvectorlogo.com/logos/stripe-2.svg' },
-      { id: 'p3', name: 'Google Cloud', logoUrl: 'https://cdn.worldvectorlogo.com/logos/google-cloud-1.svg' },
-      { id: 'p4', name: 'AWS', logoUrl: 'https://cdn.worldvectorlogo.com/logos/aws-2.svg' },
-      { id: 'p5', name: 'Nvidia', logoUrl: 'https://cdn.worldvectorlogo.com/logos/nvidia.svg' }
+      { id: 'p1', name: 'Vercel', description: 'Next-gen hosting and deployment infrastructure.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/vercel.svg' },
+      { id: 'p2', name: 'Stripe', description: 'Financial infrastructure for the internet.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/stripe-2.svg' },
+      { id: 'p3', name: 'Google Cloud', description: 'Global computing and AI resources.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/google-cloud-1.svg' },
+      { id: 'p4', name: 'AWS', description: 'Cloud scalability and DevOps tooling.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/aws-2.svg' },
+      { id: 'p5', name: 'Nvidia', description: 'Compute power for our custom LLM training.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/nvidia.svg' }
     ],
     servicesPreview: [
       { id: 's1', title: 'Web Development', description: 'Modern, high-performance websites and PWAs.', iconName: 'Globe', color: 'blue' },
@@ -430,11 +456,37 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
       { id: 's5', title: 'ERP Systems', description: 'Bespoke enterprise resource planning tools.', iconName: 'Layers', color: 'indigo' },
       { id: 's6', title: 'UI/UX Design', description: 'Bespoke digital experiences with impact.', iconName: 'Palette', color: 'pink' }
     ],
+    aiSpeedShowcase: {
+      title: 'The AI Advantage',
+      subtitle: 'Quantifying the impact of autonomous engineering on your product roadmap.',
+      metrics: [
+        { label: 'Prototyping', traditional: 14, techsafi: 2, unit: 'Days' },
+        { label: 'Deployment', traditional: 8, techsafi: 1, unit: 'Hours' },
+        { label: 'Logic Sync', traditional: 48, techsafi: 4, unit: 'Hours' }
+      ]
+    },
+    methodology: [
+      { id: 'm1', title: 'Discovery', description: 'Deep-dive into infrastructure and user needs to identify technical opportunities.', iconName: 'Search', color: 'blue' },
+      { id: 'm2', title: 'Architecture', description: 'Scalable blueprint using modern microservices and AI-ready logic.', iconName: 'Layers', color: 'purple' },
+      { id: 'm3', title: 'Intelligence', description: 'Integrating core AI models and autonomous systems tailored for your domain.', iconName: 'Brain', color: 'emerald' },
+      { id: 'm4', title: 'Deployment', description: 'Continuous integration and delivery with bank-grade security protocols.', iconName: 'Rocket', color: 'orange' }
+    ],
+    aiPreview: {
+      badge: 'Adaptive Intelligence',
+      title: 'Engineering Autonomous Future',
+      subtitle: 'Our proprietary AI integration layer allows legacy systems to harness the power of LLMs and machine learning in weeks, not months.',
+      stats: [
+        { label: 'NLP Engines', value: 'Customized' },
+        { label: 'ML Training', value: 'Private Data' },
+        { label: 'Automation', value: 'Zero-Human' },
+        { label: 'Security', value: 'Encrypted' }
+      ]
+    },
     bento: [
-      { id: 'b1', title: 'Neural Processing', description: 'Advanced AI models integrated into business logic.', iconName: 'Brain', color: 'purple', badge: 'AI Integration' },
-      { id: 'b2', title: 'Global Scale', description: 'Deploy anywhere with edge-optimized architecture.', iconName: 'Globe', color: 'blue' },
-      { id: 'b3', title: 'Bank-Grade Security', description: 'Advanced encryption and security protocols.', iconName: 'Shield', color: 'emerald' },
-      { id: 'b4', title: 'Real-time Sync', description: 'Live data processing for instant responses.', iconName: 'Activity', color: 'orange' }
+      { id: 'b1', title: 'Neural Processing', description: 'Advanced AI models integrated into business logic.', iconName: 'Brain', color: 'purple', badge: 'AI Integration', animationType: 'orbit' },
+      { id: 'b2', title: 'Global Scale', description: 'Deploy anywhere with edge-optimized architecture.', iconName: 'Globe', color: 'blue', animationType: 'pulse' },
+      { id: 'b3', title: 'Bank-Grade Security', description: 'Advanced encryption and security protocols.', iconName: 'Shield', color: 'emerald', animationType: 'float' },
+      { id: 'b4', title: 'Real-time Sync', description: 'Live data processing for instant responses.', iconName: 'Activity', color: 'orange', animationType: 'glitch' }
     ],
     testimonials: [
       { id: 't1', name: "James D.", role: "CTO, RetailTech", text: "TechSafi's AI recommendation engine transformed our e-commerce platform.", color: "blue" },
@@ -505,8 +557,6 @@ export const fetchTechStack = async (): Promise<TechItem[]> => {
 export const saveServicesData = async (data: any): Promise<void> => {
   localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify(data));
 };
-
-// --- NEW API IMPLEMENTATIONS ---
 
 export const fetchContactPageConfig = async (): Promise<ContactPageConfig> => {
   const stored = localStorage.getItem(CONTACT_PAGE_STORAGE_KEY);

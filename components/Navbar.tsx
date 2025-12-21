@@ -1,4 +1,3 @@
-
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { Menu, X, ChevronDown, Sun, Moon, Monitor, ChevronRight, Lock } from 'lucide-react';
@@ -10,7 +9,6 @@ export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  const [themeDropdownOpen, setThemeDropdownOpen] = useState(false);
   const [mobileExpanded, setMobileExpanded] = useState<string[]>([]);
   const { theme, setTheme } = useTheme();
   const { config } = useConfig();
@@ -27,16 +25,13 @@ export const Navbar: React.FC = () => {
   useEffect(() => {
     setIsOpen(false);
     setActiveDropdown(null);
-    setThemeDropdownOpen(false);
   }, [location]);
 
-  const MotionDiv = motion.div as any;
-
-  const ThemeIcon = () => {
-    if (theme === 'light') return <Sun size={20} />;
-    if (theme === 'dark') return <Moon size={20} />;
-    return <Monitor size={20} />;
+  const toggleTheme = () => {
+    setTheme(theme === 'dark' ? 'light' : 'dark');
   };
+
+  const MotionDiv = motion.div as any;
 
   const toggleMobileExpanded = (id: string) => {
     setMobileExpanded(prev => 
@@ -155,8 +150,22 @@ export const Navbar: React.FC = () => {
               <Lock size={18} />
             </NavLink>
 
-            <button onClick={() => setThemeDropdownOpen(!themeDropdownOpen)} className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors">
-              <ThemeIcon />
+            <button 
+              onClick={toggleTheme} 
+              className="p-2 rounded-full text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+              aria-label="Toggle Theme"
+            >
+              <AnimatePresence mode="wait">
+                {theme === 'dark' ? (
+                  <motion.div key="moon" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                    <Moon size={20} />
+                  </motion.div>
+                ) : (
+                  <motion.div key="sun" initial={{ rotate: 90, opacity: 0 }} animate={{ rotate: 0, opacity: 1 }} exit={{ rotate: -90, opacity: 0 }} transition={{ duration: 0.2 }}>
+                    <Sun size={20} />
+                  </motion.div>
+                )}
+              </AnimatePresence>
             </button>
             
             <NavLink to="/contact" className="hidden md:block">
