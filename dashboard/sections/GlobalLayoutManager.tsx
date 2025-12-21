@@ -7,7 +7,7 @@ import {
   Globe, Mail, Phone, MapPin, Share2,
   ChevronRight, ArrowRight, Type,
   Zap, Building2, Clock, Scale, ShieldCheck, Loader2,
-  ChevronDown, Layers, CornerDownRight, X
+  ChevronDown, Layers, CornerDownRight, X, LayoutTemplate
 } from 'lucide-react';
 import { Button } from '../../components/ui/Button';
 import { fetchGlobalLayoutConfig, saveGlobalLayoutConfig, GlobalLayoutConfig, NavLinkConfig } from '../services/api';
@@ -301,6 +301,10 @@ export const GlobalLayoutManager: React.FC<GlobalLayoutManagerProps> = ({ active
                        {/* Sub-links (Dropdown items) */}
                        {link.children && link.children.length > 0 && (
                           <div className="pl-12 space-y-3 border-l-2 border-slate-100 dark:border-white/5 ml-4">
+                             <div className="flex items-center gap-2 mb-2">
+                                <ChevronDown size={12} className="text-slate-400" />
+                                <span className="text-[10px] font-bold uppercase text-slate-400 tracking-wider">Dropdown Elements</span>
+                             </div>
                              {link.children.map(child => (
                                <div key={child.id} className="flex items-center gap-4 group">
                                   <CornerDownRight size={14} className="text-slate-400" />
@@ -320,7 +324,7 @@ export const GlobalLayoutManager: React.FC<GlobalLayoutManagerProps> = ({ active
                                      onClick={() => removeSubLink(link.id, child.id)} 
                                      className="p-1.5 text-slate-400 hover:text-red-500 transition-colors"
                                   >
-                                     <Trash2 size={14} />
+                                     <X size={14} />
                                   </button>
                                </div>
                              ))}
@@ -333,7 +337,6 @@ export const GlobalLayoutManager: React.FC<GlobalLayoutManagerProps> = ({ active
           </MotionDiv>
         ) : (
           <MotionDiv key="footer" initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -10 }} className="space-y-8">
-            
             {/* 1. Brand Profile & Socials */}
             <div className="bg-white dark:bg-[#0f172a] rounded-2xl border border-slate-200 dark:border-white/5 p-8 shadow-sm">
                <h3 className="text-lg font-bold dark:text-white mb-6 flex items-center gap-2"><Building2 size={18} className="text-primary" /> Column 1: Brand & Social Matrix</h3>

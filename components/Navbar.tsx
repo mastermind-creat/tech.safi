@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { Menu, X, ChevronDown, Sun, Moon, Lock, ArrowRight, Github, Linkedin, Twitter } from 'lucide-react';
@@ -10,10 +11,8 @@ export const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
-  /* Added local state for mobile menu expansion to fix identifier errors and comply with React hook rules */
   const [expandedId, setExpandedId] = useState<string | null>(null);
-  const toggleExpand = (id: string) => setExpandedId(expandedId === id ? null : id);
-
+  
   const { theme, setTheme } = useTheme();
   const { config } = useConfig();
   const location = useLocation();
@@ -25,13 +24,19 @@ export const Navbar: React.FC = () => {
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
+  // Close mobile menu on route change
   useEffect(() => {
     setIsOpen(false);
+    setExpandedId(null);
     setActiveDropdown(null);
   }, [location]);
 
   const toggleTheme = () => {
     setTheme(theme === 'dark' ? 'light' : 'dark');
+  };
+
+  const toggleExpand = (id: string) => {
+    setExpandedId(expandedId === id ? null : id);
   };
 
   if (!config) return null;
@@ -67,11 +72,12 @@ export const Navbar: React.FC = () => {
               <div 
                 key={link.id} 
                 className="relative group/navitem"
-                onMouseEnter={() => setActiveDropdown(link.id)}
+                onMouseEnter={() => link.children && setActiveDropdown(link.id)}
                 onMouseLeave={() => setActiveDropdown(null)}
               >
                 <NavLink 
                   to={link.children ? '#' : link.path} 
+                  onClick={(e) => link.children && e.preventDefault()}
                   className={({ isActive }) => `
                     px-4 py-2 rounded-full text-xs font-bold uppercase tracking-widest transition-all flex items-center gap-1.5
                     ${isActive && !link.children ? 'text-primary' : 'text-slate-600 dark:text-slate-400 hover:text-primary dark:hover:text-white'}
@@ -79,9 +85,6 @@ export const Navbar: React.FC = () => {
                 >
                   {link.label}
                   {link.children && <ChevronDown size={14} className={`transition-transform duration-300 ${activeDropdown === link.id ? 'rotate-180' : ''}`} />}
-                  {location.pathname === link.path && !link.children && (
-                    <motion.div layoutId="nav-pill" className="absolute bottom-0 left-1/2 -translate-x-1/2 w-1 h-1 bg-primary rounded-full shadow-[0_0_8px_#06b6d4]" />
-                  )}
                 </NavLink>
 
                 {/* Desktop Dropdown */}
@@ -112,7 +115,7 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* Actions Section */}
-          <div className="flex items-center space-x-3">
+          <div className="flex items-center space-x-2">
             <button 
               onClick={toggleTheme} 
               className="p-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-white/5 transition-all"
@@ -134,7 +137,7 @@ export const Navbar: React.FC = () => {
             {/* Executive Login Lock Icon */}
             <NavLink 
               to="/login" 
-              className="hidden sm:flex p-2.5 rounded-xl text-slate-400 hover:text-primary hover:bg-primary/5 transition-all"
+              className="flex p-2.5 rounded-xl text-slate-400 hover:text-primary hover:bg-primary/5 transition-all"
               title="Executive Access"
             >
               <Lock size={18} />
@@ -148,7 +151,7 @@ export const Navbar: React.FC = () => {
 
             <button 
               onClick={() => setIsOpen(true)} 
-              className="md:hidden p-2.5 rounded-xl text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10"
+              className="md:hidden p-2.5 rounded-xl text-slate-600 dark:text-slate-300 bg-slate-100 dark:bg-white/5 border border-slate-200 dark:border-white/10 ml-2"
             >
               <Menu size={24} />
             </button>
@@ -160,7 +163,6 @@ export const Navbar: React.FC = () => {
       <AnimatePresence>
         {isOpen && (
           <>
-            {/* Backdrop */}
             <motion.div 
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
@@ -179,21 +181,23 @@ export const Navbar: React.FC = () => {
               <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-white/5">
                  <div className="flex items-center gap-3">
                    <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-2xl shadow-lg">T</div>
-                   <span className="text-xl font-bold font-display">{config.navbar.logoPrimary}<span className="text-primary">{config.navbar.logoAccent}</span></span>
+                   <span className="text-xl font-bold font-display text-slate-900 dark:text-white">
+                      {config.navbar.logoPrimary}<span className="text-primary">{config.navbar.logoAccent}</span>
+                   </span>
                  </div>
-                 <button onClick={() => setIsOpen(false)} className="p-3 bg-slate-100 dark:bg-white/5 rounded-2xl hover:rotate-90 transition-transform"><X size={24} /></button>
+                 <button onClick={() => setIsOpen(false)} className="p-3 bg-slate-100 dark:bg-white/5 rounded-2xl hover:rotate-90 transition-transform dark:text-white"><X size={24} /></button>
               </div>
 
-              <div className="flex-1 overflow-y-auto p-6 space-y-6">
+              <div className="flex-1 overflow-y-auto p-6 space-y-4">
+                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Navigation Menu</p>
                  <div className="space-y-2">
-                    <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.2em] mb-4">Navigation Menu</p>
                     {config.navbar.links.map((link) => (
                       <div key={link.id} className="space-y-1">
                         {link.children ? (
                           <div className="space-y-1">
                             <button 
                               onClick={() => toggleExpand(link.id)}
-                              className="w-full flex items-center justify-between p-4 rounded-2xl text-xl font-bold text-slate-900 dark:text-white bg-slate-50 dark:bg-white/5"
+                              className={`w-full flex items-center justify-between p-4 rounded-2xl text-xl font-bold transition-all ${expandedId === link.id ? 'bg-primary/5 text-primary' : 'text-slate-900 dark:text-white bg-slate-50 dark:bg-white/5'}`}
                             >
                               {link.label}
                               <ChevronDown size={20} className={`transition-transform duration-300 ${expandedId === link.id ? 'rotate-180' : ''}`} />
@@ -210,7 +214,7 @@ export const Navbar: React.FC = () => {
                                     <NavLink 
                                       key={child.id} 
                                       to={child.path}
-                                      className="block p-4 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-primary"
+                                      className="block p-4 text-sm font-bold text-slate-600 dark:text-slate-400 hover:text-primary transition-colors"
                                     >
                                       {child.label}
                                     </NavLink>
@@ -237,7 +241,7 @@ export const Navbar: React.FC = () => {
                  {/* Socials & Login Section */}
                  <div className="pt-8 border-t border-slate-100 dark:border-white/5 space-y-6">
                     <div className="grid grid-cols-2 gap-4">
-                       <NavLink to="/login" onClick={() => setIsOpen(false)} className="flex items-center justify-center gap-3 p-4 rounded-2xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold hover:bg-primary/5 hover:text-primary transition-all">
+                       <NavLink to="/login" className="flex items-center justify-center gap-3 p-4 rounded-2xl border border-slate-200 dark:border-white/10 text-slate-600 dark:text-slate-300 font-bold hover:bg-primary/5 hover:text-primary transition-all">
                           <Lock size={18} />
                           <span>Executive</span>
                        </NavLink>
