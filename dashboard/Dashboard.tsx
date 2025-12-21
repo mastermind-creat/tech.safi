@@ -24,6 +24,10 @@ import { CareersAdmin } from './sections/CareersAdmin';
 import { BlogAdmin } from './sections/BlogAdmin';
 import { ContactAdmin } from './sections/ContactAdmin';
 import { HomeAdmin } from './sections/HomeAdmin';
+import { MediaLibrary } from './sections/MediaLibrary';
+import { ActivityLogs } from './sections/ActivityLogs';
+import { SecurityAlerts } from './sections/SecurityAlerts';
+import { GlobalSettings } from './sections/GlobalSettings';
 import { Button } from '../components/ui/Button';
 
 // Icons for nested items
@@ -101,7 +105,7 @@ const NAV_GROUPS = [
 export const Dashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedItems, setExpandedItems] = useState<string[]>(['pages-group']); 
+  const [expandedItems, setExpandedItems] = useState<string[]>(['pages-group', 'system-group']); 
   const { theme, setTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
@@ -358,6 +362,11 @@ export const Dashboard: React.FC = () => {
             <Route path="/pages/*" element={<PagesManager />} />
             <Route path="/manage/navbar" element={<GlobalLayoutManager activeTab="navbar" />} />
             <Route path="/manage/footer" element={<GlobalLayoutManager activeTab="footer" />} />
+            <Route path="/content" element={<MediaLibrary />} />
+            <Route path="/logs" element={<ActivityLogs />} />
+            <Route path="/alerts" element={<SecurityAlerts />} />
+            <Route path="/settings" element={<GlobalSettings />} />
+            
             {/* Catch-all for non-implemented management routes */}
             <Route path="*" element={
               <div className="flex flex-col items-center justify-center py-32 text-center">

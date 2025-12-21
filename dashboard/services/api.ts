@@ -1,3 +1,4 @@
+
 /**
  * TechSafi Control Centre API Service
  * Centralized logic for data fetching and management.
@@ -6,6 +7,111 @@
 import { BlogPost } from '../../types';
 
 // --- DATA MODELS ---
+
+// Add missing AiFeature interface
+export interface AiFeature {
+  id: string;
+  iconName: string;
+  title: string;
+  description: string;
+  subFeatures: string[];
+  color: string;
+  displayOrder: number;
+}
+
+// Add missing AiUseCase interface
+export interface AiUseCase {
+  id: string;
+  iconName: string;
+  title: string;
+  description: string;
+  color: string;
+}
+
+// Add missing AiFaq interface
+export interface AiFaq {
+  id: string;
+  question: string;
+  answer: string;
+}
+
+// Add missing VisionarySocial interface
+export interface VisionarySocial {
+  id: string;
+  platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
+  url: string;
+}
+
+// Add missing VisionaryMember interface
+export interface VisionaryMember {
+  id: string;
+  name: string;
+  role: string;
+  shortRole: string;
+  image: string;
+  desc: string;
+  stats: { label: string; value: string }[];
+  socials: VisionarySocial[];
+  expertise: string[];
+  color: string;
+  badgeColor: string;
+  iconName: string;
+  displayOrder: number;
+  tier: 'ceo' | 'executive' | 'strategic' | 'future';
+  status: 'Active' | 'Hidden';
+}
+
+// Add missing CoreValue interface
+export interface CoreValue {
+  id: string;
+  iconName: string;
+  title: string;
+  description: string;
+  color: string;
+}
+
+// Add missing CompanyMilestone interface
+export interface CompanyMilestone {
+  id: string;
+  year: string;
+  title: string;
+  description: string;
+  iconName: string;
+  color: string;
+  bg: string;
+  align: 'left' | 'right';
+  displayOrder: number;
+}
+
+// Add missing JobOpening interface
+export interface JobOpening {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  desc: string;
+  requirements: string[];
+  category: 'Regular' | 'Management' | 'Strategic';
+  status: 'Open' | 'Closed' | 'Hidden';
+}
+
+// Add missing CareerCultureValue interface
+export interface CareerCultureValue {
+  id: string;
+  iconName: string;
+  title: string;
+  desc: string;
+  color: string;
+}
+
+// Add missing CareerBenefit interface
+export interface CareerBenefit {
+  id: string;
+  iconName: string;
+  title: string;
+  desc: string;
+}
 
 export interface SystemStats {
   latency: string;
@@ -20,6 +126,27 @@ export interface ActivityLog {
   user: string;
   timestamp: string;
   status: 'success' | 'warning' | 'error' | 'danger';
+  details?: string;
+  ip?: string;
+}
+
+export interface SecurityThreat {
+  id: string;
+  type: 'Brute Force' | 'SQL Injection' | 'DDoS' | 'Unauthorized Access';
+  severity: 'Low' | 'Medium' | 'High' | 'Critical';
+  status: 'Blocked' | 'Mitigated' | 'Investigating';
+  timestamp: string;
+  origin: string;
+}
+
+export interface MediaItem {
+  id: string;
+  url: string;
+  name: string;
+  size: string;
+  type: string;
+  dimensions?: string;
+  createdAt: string;
 }
 
 export interface ChartDataPoint {
@@ -178,8 +305,6 @@ export interface GlobalLayoutConfig {
   };
 }
 
-// --- NEW DATA MODELS FOR ADMIN SECTIONS ---
-
 export interface ServiceItem {
   id: string;
   title: string;
@@ -226,30 +351,7 @@ export interface TechItem {
   displayOrder: number;
 }
 
-export interface AiFeature {
-  id: string;
-  iconName: string;
-  title: string;
-  description: string;
-  subFeatures: string[];
-  color: string;
-  displayOrder: number;
-}
-
-export interface AiUseCase {
-  id: string;
-  iconName: string;
-  title: string;
-  description: string;
-  color: string;
-}
-
-export interface AiFaq {
-  id: string;
-  question: string;
-  answer: string;
-}
-
+// Update AiSolutionsConfig to use typed arrays
 export interface AiSolutionsConfig {
   heroTitle: string;
   heroSubtitle: string;
@@ -288,50 +390,7 @@ export interface PricingPlan {
   displayOrder: number;
 }
 
-export interface VisionarySocial {
-  id: string;
-  platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
-  url: string;
-}
-
-export interface VisionaryMember {
-  id: string;
-  name: string;
-  role: string;
-  shortRole: string;
-  image: string;
-  desc: string;
-  stats: { label: string; value: string }[];
-  socials: VisionarySocial[];
-  expertise: string[];
-  color: string;
-  badgeColor: string;
-  iconName: string;
-  displayOrder: number;
-  tier: 'ceo' | 'executive' | 'strategic' | 'future';
-  status: 'Active' | 'Hidden';
-}
-
-export interface CoreValue {
-  id: string;
-  iconName: string;
-  title: string;
-  description: string;
-  color: string;
-}
-
-export interface CompanyMilestone {
-  id: string;
-  year: string;
-  title: string;
-  description: string;
-  iconName: string;
-  color: string;
-  bg: string;
-  align: 'left' | 'right';
-  displayOrder: number;
-}
-
+// Update AboutUsConfig to use typed arrays
 export interface AboutUsConfig {
   hero: {
     establishedYear: string;
@@ -347,34 +406,7 @@ export interface AboutUsConfig {
   milestones: CompanyMilestone[];
 }
 
-export interface CareerCultureValue {
-  id: string;
-  iconName: string;
-  title: string;
-  desc: string;
-  color: string;
-}
-
-export interface CareerBenefit {
-  id: string;
-  iconName: string;
-  title: string;
-  desc: string;
-  color: string;
-}
-
-export interface JobOpening {
-  id: string;
-  title: string;
-  department: string;
-  location: string;
-  type: string;
-  desc: string;
-  requirements: string[];
-  category: 'Regular' | 'Executive';
-  status: 'Open' | 'Closed' | 'Hidden';
-}
-
+// Update CareersConfig to use typed arrays
 export interface CareersConfig {
   hero: {
     title: string;
@@ -420,8 +452,29 @@ const PRICING_STORAGE_KEY = 'techsafi_pricing_plans';
 const ABOUT_US_STORAGE_KEY = 'techsafi_about_us_config';
 const CAREERS_STORAGE_KEY = 'techsafi_careers_config';
 const BLOG_POSTS_STORAGE_KEY = 'techsafi_blog_posts';
+const MEDIA_LIBRARY_STORAGE_KEY = 'techsafi_media_library';
 
 // --- API METHODS ---
+
+export const fetchMedia = async (): Promise<MediaItem[]> => {
+  const stored = localStorage.getItem(MEDIA_LIBRARY_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  return [
+    { id: '1', name: 'Hero Banner', url: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?w=400', size: '2.4MB', type: 'image/webp', dimensions: '1920x1080', createdAt: '2025-03-10' },
+    { id: '2', name: 'CEO Profile', url: 'https://images.unsplash.com/photo-1506794778202-cad84cf45f1d?w=400', size: '450KB', type: 'image/jpeg', dimensions: '800x800', createdAt: '2025-03-11' },
+    { id: '3', name: 'Mobile App Mockup', url: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=400', size: '1.1MB', type: 'image/png', dimensions: '1200x900', createdAt: '2025-03-12' }
+  ];
+};
+
+export const saveMedia = async (items: MediaItem[]): Promise<void> => {
+  localStorage.setItem(MEDIA_LIBRARY_STORAGE_KEY, JSON.stringify(items));
+};
+
+export const fetchSecurityAlerts = async (): Promise<SecurityThreat[]> => [
+  { id: '1', type: 'Brute Force', severity: 'High', status: 'Blocked', timestamp: '2025-03-15T10:30:00', origin: '192.168.1.45 (Nairobi)' },
+  { id: '2', type: 'SQL Injection', severity: 'Critical', status: 'Mitigated', timestamp: '2025-03-14T22:15:00', origin: '45.12.14.8 (Ukraine)' },
+  { id: '3', type: 'Unauthorized Access', severity: 'Medium', status: 'Investigating', timestamp: '2025-03-15T08:45:00', origin: 'Internal Cluster' }
+];
 
 export const fetchPages = async (): Promise<any[]> => {
   const stored = localStorage.getItem(PAGES_STORAGE_KEY);
@@ -553,11 +606,7 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
   if (stored) return JSON.parse(stored);
   
   const defaultConfig: HomePageConfig = {
-    settings: {
-      animationIntensity: 'medium',
-      marqueeSpeed: 20,
-      showGrid: true
-    },
+    settings: { animationIntensity: 'medium', marqueeSpeed: 20, showGrid: true },
     hero: {
       badge: 'TechSafi Intelligence Protocol v1.4',
       typewriterWords: ['Digital Ecosystems', 'AI Integration', 'Modern Logic'],
@@ -632,8 +681,7 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
 };
 
 export const saveHomePageConfig = async (config: HomePageConfig): Promise<void> => {
-  // Simulate network delay for progress bar effect
-  await new Promise(resolve => setTimeout(resolve, 2000));
+  await new Promise(resolve => setTimeout(resolve, 1000));
   localStorage.setItem(HOME_PAGE_STORAGE_KEY, JSON.stringify(config));
 };
 
@@ -716,7 +764,9 @@ export const saveContactPageConfig = async (config: ContactPageConfig): Promise<
 export const fetchContactSubmissions = async (): Promise<ContactSubmission[]> => {
   const stored = localStorage.getItem(CONTACT_SUBMISSIONS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
-  return [];
+  return [
+    { id: '1', firstName: 'John', lastName: 'Doe', email: 'john@example.com', subject: 'Project Proposal', budget: 'KES 150k - 500k', message: 'Hello, looking for a mobile app.', status: 'New', priority: 'High', timestamp: '2025-03-15T12:00:00', source: 'Web Form' }
+  ];
 };
 
 export const saveContactSubmissions = async (submissions: ContactSubmission[]): Promise<void> => {
@@ -728,7 +778,9 @@ export const fetchSystemStats = async (): Promise<SystemStats> => ({
 });
 
 export const fetchActivityLogs = async (): Promise<ActivityLog[]> => [
-  { id: '1', action: 'Matrix Sync', user: 'System', timestamp: 'Just now', status: 'success' }
+  { id: '1', action: 'Matrix Sync', user: 'System', timestamp: '2025-03-15T14:20:00', status: 'success', ip: '127.0.0.1' },
+  { id: '2', action: 'Auth Success', user: 'Wambia K.', timestamp: '2025-03-15T10:15:00', status: 'success', ip: '192.168.1.1' },
+  { id: '3', action: 'Resource Deleted', user: 'Admin', timestamp: '2025-03-15T09:45:00', status: 'warning', ip: '10.0.0.5' }
 ];
 
 export const fetchTrafficData = async (): Promise<ChartDataPoint[]> => [
