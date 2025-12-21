@@ -7,6 +7,59 @@ import { BlogPost } from '../../types';
 
 // --- DATA MODELS ---
 
+export interface ContactSubmission {
+  id: string;
+  firstName: string;
+  lastName: string;
+  email: string;
+  subject: string;
+  budget?: string;
+  message: string;
+  status: 'New' | 'In Progress' | 'Contacted' | 'Closed' | 'Archived';
+  priority: 'Low' | 'Medium' | 'High' | 'Urgent';
+  timestamp: string;
+  internalNotes?: string;
+  source: 'Web Form' | 'Estimator' | 'Direct';
+}
+
+export interface ContactPageConfig {
+  hero: {
+    badge: string;
+    title: string;
+    subtitle: string;
+  };
+  cards: {
+    id: string;
+    type: 'email' | 'phone' | 'address';
+    title: string;
+    desc: string;
+    primaryDetail: string;
+    secondaryDetail: string;
+    link: string;
+    color: string;
+  }[];
+  form: {
+    title: string;
+    subjects: string[];
+    budgets: string[];
+    success: {
+      title: string;
+      message: string;
+    };
+  };
+  whatsapp: {
+    title: string;
+    description: string;
+    number: string;
+    isActive: boolean;
+  };
+  faqs: {
+    id: string;
+    question: string;
+    answer: string;
+  }[];
+}
+
 export interface NavLinkConfig {
   id: string;
   label: string;
@@ -303,6 +356,8 @@ const PRICING_STORAGE_KEY = 'techsafi_pricing_data';
 const ABOUT_US_STORAGE_KEY = 'techsafi_about_us_data';
 const CAREERS_STORAGE_KEY = 'techsafi_careers_data';
 const BLOG_STORAGE_KEY = 'techsafi_blog_data';
+const CONTACT_STORAGE_KEY = 'techsafi_contact_leads';
+const CONTACT_PAGE_STORAGE_KEY = 'techsafi_contact_page_config';
 
 // --- API METHODS ---
 
@@ -432,11 +487,80 @@ export const saveCareersData = async (data: CareersConfig): Promise<void> => {
 export const fetchBlogPosts = async (): Promise<BlogPost[]> => {
   const stored = localStorage.getItem(BLOG_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
-  return []; // Fallback to empty if nothing stored. Public page uses constants.tsx for defaults.
+  return []; 
 };
 
 export const saveBlogPosts = async (posts: BlogPost[]): Promise<void> => {
   localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(posts));
+};
+
+// --- CONTACT CRM DATA ---
+
+export const fetchContactSubmissions = async (): Promise<ContactSubmission[]> => {
+  const stored = localStorage.getItem(CONTACT_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  
+  const mock: ContactSubmission[] = [
+    {
+      id: 'L1',
+      firstName: 'Sarah',
+      lastName: 'Jenkins',
+      email: 'sarah.j@innovate.com',
+      subject: 'AI Integration Solution',
+      budget: '150k - 500k',
+      message: 'We are looking to implement a custom AI recommendation engine for our retail platform.',
+      status: 'New',
+      priority: 'High',
+      timestamp: new Date(Date.now() - 3600000).toISOString(),
+      source: 'Web Form'
+    }
+  ];
+  return mock;
+};
+
+export const saveContactSubmissions = async (submissions: ContactSubmission[]): Promise<void> => {
+  localStorage.setItem(CONTACT_STORAGE_KEY, JSON.stringify(submissions));
+};
+
+export const fetchContactPageConfig = async (): Promise<ContactPageConfig> => {
+  const stored = localStorage.getItem(CONTACT_PAGE_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
+  
+  const defaultConfig: ContactPageConfig = {
+    hero: {
+      badge: "We're Here to Help",
+      title: "Get in Touch",
+      subtitle: "Have a question or need assistance? Our dedicated team is ready to help you succeed."
+    },
+    cards: [
+      { id: 'c1', type: 'email', title: 'Email Us', desc: 'Our support team is here to help you.', primaryDetail: 'info@techsafi.com', secondaryDetail: 'We respond within 24 hours', link: 'mailto:info@techsafi.com', color: 'blue' },
+      { id: 'c2', type: 'phone', title: 'Call Us', desc: 'Speak directly with our team.', primaryDetail: '+254 751 380 948', secondaryDetail: '+254 110 046 523', link: 'tel:+254751380948', color: 'purple' },
+      { id: 'c3', type: 'address', title: 'Visit Us', desc: 'Stop by our office.', primaryDetail: 'Nairobi, Kenya', secondaryDetail: 'East Africa', link: '#', color: 'green' }
+    ],
+    form: {
+      title: "Send Us a Message",
+      subjects: ["General Inquiry", "Project Inquiry", "Web Development", "Mobile Apps", "AI Solutions", "Other"],
+      budgets: ["< KES 50k", "50k - 150k", "150k - 500k", "500k+"],
+      success: {
+        title: "Message Sent!",
+        message: "Thank you for reaching out. We will get back to you within 24 hours."
+      }
+    },
+    whatsapp: {
+      title: "Reach Us Directly on WhatsApp",
+      description: "Get instant responses to your queries. Chat with our team anytime!",
+      number: "254751380948",
+      isActive: true
+    },
+    faqs: [
+      { id: 'f1', question: 'What services does TechSafi offer?', answer: 'We offer Custom Web Development, Mobile App Development, AI Integration, and more.' }
+    ]
+  };
+  return defaultConfig;
+};
+
+export const saveContactPageConfig = async (config: ContactPageConfig): Promise<void> => {
+  localStorage.setItem(CONTACT_PAGE_STORAGE_KEY, JSON.stringify(config));
 };
 
 // --- PORTFOLIO DATA ---
