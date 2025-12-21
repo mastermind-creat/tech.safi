@@ -178,15 +178,7 @@ export interface GlobalLayoutConfig {
   };
 }
 
-// --- NEW DATA MODELS FOR DASHBOARD SECTIONS ---
-
-export interface PageItem {
-  id: string;
-  name: string;
-  path: string;
-  status: 'Published' | 'Draft';
-  lastEdited: string;
-}
+// --- NEW DATA MODELS FOR ADMIN SECTIONS ---
 
 export interface ServiceItem {
   id: string;
@@ -198,7 +190,7 @@ export interface ServiceItem {
   iconName: string;
   isAiPowered: boolean;
   displayOrder: number;
-  status: 'Published' | 'Draft';
+  status: 'Draft' | 'Published';
   ctaText: string;
   ctaLink: string;
   metaTitle: string;
@@ -221,6 +213,7 @@ export interface MethodologyStep {
   description: string;
   iconName: string;
   displayOrder: number;
+  color?: string;
 }
 
 export interface TechItem {
@@ -231,16 +224,6 @@ export interface TechItem {
   category: string;
   isVisible: boolean;
   displayOrder: number;
-}
-
-export interface AiSolutionsConfig {
-  heroTitle: string;
-  heroSubtitle: string;
-  metaTitle: string;
-  metaDescription: string;
-  features: AiFeature[];
-  industryUseCases: AiUseCase[];
-  faqs: AiFaq[];
 }
 
 export interface AiFeature {
@@ -267,6 +250,16 @@ export interface AiFaq {
   answer: string;
 }
 
+export interface AiSolutionsConfig {
+  heroTitle: string;
+  heroSubtitle: string;
+  metaTitle: string;
+  metaDescription: string;
+  features: AiFeature[];
+  industryUseCases: AiUseCase[];
+  faqs: AiFaq[];
+}
+
 export interface ProjectItem {
   id: string;
   title: string;
@@ -280,7 +273,7 @@ export interface ProjectItem {
   stats: { label: string; value: string; iconName: string };
   color: string;
   iconName: string;
-  status: 'Published' | 'Draft';
+  status: 'Draft' | 'Published';
   displayOrder: number;
 }
 
@@ -290,9 +283,15 @@ export interface PricingPlan {
   price: string;
   description: string;
   features: string[];
-  recommended?: boolean;
+  recommended: boolean;
   category: 'Web' | 'Mobile' | 'AI Addon' | 'AI Project' | 'Maintenance';
   displayOrder: number;
+}
+
+export interface VisionarySocial {
+  id: string;
+  platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
+  url: string;
 }
 
 export interface VisionaryMember {
@@ -311,12 +310,6 @@ export interface VisionaryMember {
   displayOrder: number;
   tier: 'ceo' | 'executive' | 'strategic' | 'future';
   status: 'Active' | 'Hidden';
-}
-
-export interface VisionarySocial {
-  id: string;
-  platform: 'linkedin' | 'twitter' | 'github' | 'instagram' | 'facebook' | 'web';
-  url: string;
 }
 
 export interface CoreValue {
@@ -341,9 +334,9 @@ export interface CompanyMilestone {
 
 export interface AboutUsConfig {
   hero: {
+    establishedYear: string;
     title: string;
     subtitle: string;
-    establishedYear: string;
     stats: { label: string; value: string }[];
   };
   story: {
@@ -354,16 +347,44 @@ export interface AboutUsConfig {
   milestones: CompanyMilestone[];
 }
 
+export interface CareerCultureValue {
+  id: string;
+  iconName: string;
+  title: string;
+  desc: string;
+  color: string;
+}
+
+export interface CareerBenefit {
+  id: string;
+  iconName: string;
+  title: string;
+  desc: string;
+  color: string;
+}
+
+export interface JobOpening {
+  id: string;
+  title: string;
+  department: string;
+  location: string;
+  type: string;
+  desc: string;
+  requirements: string[];
+  category: 'Regular' | 'Executive';
+  status: 'Open' | 'Closed' | 'Hidden';
+}
+
 export interface CareersConfig {
   hero: {
     title: string;
     subtitle: string;
   };
   notice: {
-    isActive: boolean;
     title: string;
     description: string;
     commissionDetails: string;
+    isActive: boolean;
   };
   culture: CareerCultureValue[];
   benefits: CareerBenefit[];
@@ -386,206 +407,147 @@ export interface CareersConfig {
   }[];
 }
 
-export interface JobOpening {
-  id: string;
-  title: string;
-  department: string;
-  location: string;
-  type: string;
-  desc: string;
-  requirements: string[];
-  category: 'Regular' | 'Strategic';
-  status: 'Open' | 'Closed' | 'Hidden';
-}
-
-export interface CareerCultureValue {
-  id: string;
-  iconName: string;
-  title: string;
-  desc: string;
-  color: string;
-}
-
-export interface CareerBenefit {
-  id: string;
-  iconName: string;
-  title: string;
-  desc: string;
-  color: string;
-}
-
 // --- STORAGE KEYS ---
 const HOME_PAGE_STORAGE_KEY = 'techsafi_home_page_config';
 const CONFIG_STORAGE_KEY = 'techsafi_global_config';
 const CONTACT_PAGE_STORAGE_KEY = 'techsafi_contact_page_config';
 const CONTACT_SUBMISSIONS_STORAGE_KEY = 'techsafi_contact_submissions';
+const PAGES_STORAGE_KEY = 'techsafi_pages';
 const SERVICES_STORAGE_KEY = 'techsafi_services_data';
-const AI_SOLUTIONS_STORAGE_KEY = 'techsafi_ai_solutions_data';
+const AI_SOLUTIONS_STORAGE_KEY = 'techsafi_ai_solutions_config';
 const PROJECTS_STORAGE_KEY = 'techsafi_portfolio_projects';
-const PRICING_STORAGE_KEY = 'techsafi_pricing_data';
-const ABOUT_US_STORAGE_KEY = 'techsafi_about_us_data';
-const CAREERS_STORAGE_KEY = 'techsafi_careers_data';
-const BLOG_STORAGE_KEY = 'techsafi_blog_posts';
+const PRICING_STORAGE_KEY = 'techsafi_pricing_plans';
+const ABOUT_US_STORAGE_KEY = 'techsafi_about_us_config';
+const CAREERS_STORAGE_KEY = 'techsafi_careers_config';
+const BLOG_POSTS_STORAGE_KEY = 'techsafi_blog_posts';
 
 // --- API METHODS ---
 
-/**
- * Fetch and manage structural pages.
- */
-export const fetchPages = async (): Promise<PageItem[]> => {
+export const fetchPages = async (): Promise<any[]> => {
+  const stored = localStorage.getItem(PAGES_STORAGE_KEY);
+  if (stored) return JSON.parse(stored);
   return [
-    { id: '1', name: 'Home', path: '/', status: 'Published', lastEdited: '2025-03-10' },
-    { id: '2', name: 'About Us', path: '/company', status: 'Published', lastEdited: '2025-03-08' },
-    { id: '3', name: 'Portfolio', path: '/portfolio', status: 'Published', lastEdited: '2025-03-05' },
-    { id: '4', name: 'Services', path: '/services', status: 'Published', lastEdited: '2025-03-12' },
+    { id: '1', name: 'Home', path: '/', status: 'Published', lastEdited: '2025-03-15' },
+    { id: '2', name: 'Company', path: '/company', status: 'Published', lastEdited: '2025-03-14' },
+    { id: '3', name: 'Services', path: '/services', status: 'Published', lastEdited: '2025-03-12' },
+    { id: '4', name: 'Contact', path: '/contact', status: 'Published', lastEdited: '2025-03-15' }
   ];
 };
 
-/**
- * Service Matrix Data
- */
 export const fetchServices = async (): Promise<ServiceItem[]> => {
   const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
-  if (stored) return JSON.parse(stored).services;
+  if (stored) return JSON.parse(stored).services || [];
   return [];
 };
 
 export const fetchCategories = async (): Promise<ServiceCategory[]> => {
   const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
-  if (stored) return JSON.parse(stored).categories;
-  return [];
+  if (stored) return JSON.parse(stored).categories || [];
+  return [
+    { id: 'c1', name: 'Web Development', slug: 'web-development', displayOrder: 1, status: 'Active' },
+    { id: 'c2', name: 'AI Integration', slug: 'ai-integration', displayOrder: 2, status: 'Active' }
+  ];
 };
 
 export const fetchMethodology = async (): Promise<MethodologyStep[]> => {
   const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
-  if (stored) return JSON.parse(stored).methodology;
+  if (stored) return JSON.parse(stored).methodology || [];
   return [];
 };
 
 export const fetchTechStack = async (): Promise<TechItem[]> => {
   const stored = localStorage.getItem(SERVICES_STORAGE_KEY);
-  if (stored) return JSON.parse(stored).techStack;
+  if (stored) return JSON.parse(stored).techStack || [];
   return [];
 };
 
-export const saveServicesData = async (data: { 
-  services: ServiceItem[], 
-  categories: ServiceCategory[], 
-  methodology: MethodologyStep[], 
-  techStack: TechItem[] 
-}) => {
+export const saveServicesData = async (data: { services: ServiceItem[], categories: ServiceCategory[], methodology: MethodologyStep[], techStack: TechItem[] }): Promise<void> => {
   localStorage.setItem(SERVICES_STORAGE_KEY, JSON.stringify(data));
 };
 
-/**
- * AI Solutions Configuration
- */
 export const fetchAiSolutionsData = async (): Promise<AiSolutionsConfig> => {
   const stored = localStorage.getItem(AI_SOLUTIONS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return {
-    heroTitle: "Custom Software with AI Integration",
-    heroSubtitle: "Transform your business with intelligence.",
-    metaTitle: "AI Solutions | TechSafi",
-    metaDescription: "Expert AI integration and custom software.",
+    heroTitle: 'Custom Software with AI Integration',
+    heroSubtitle: 'We build custom websites, software, and systems integrated with AI automation for your business.',
+    metaTitle: 'AI Solutions | TechSafi',
+    metaDescription: 'Custom AI integrations designed specifically for your business requirements',
     features: [],
     industryUseCases: [],
     faqs: []
   };
 };
 
-export const saveAiSolutionsData = async (config: AiSolutionsConfig) => {
+export const saveAiSolutionsData = async (config: AiSolutionsConfig): Promise<void> => {
   localStorage.setItem(AI_SOLUTIONS_STORAGE_KEY, JSON.stringify(config));
 };
 
-/**
- * Portfolio Project Management
- */
 export const fetchProjects = async (): Promise<ProjectItem[]> => {
   const stored = localStorage.getItem(PROJECTS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return [];
 };
 
-export const saveProjectsData = async (projects: ProjectItem[]) => {
+export const saveProjectsData = async (projects: ProjectItem[]): Promise<void> => {
   localStorage.setItem(PROJECTS_STORAGE_KEY, JSON.stringify(projects));
 };
 
-/**
- * Pricing Engine Management
- */
 export const fetchPricingPlans = async (): Promise<PricingPlan[]> => {
   const stored = localStorage.getItem(PRICING_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return [];
 };
 
-export const savePricingData = async (plans: PricingPlan[]) => {
+export const savePricingData = async (plans: PricingPlan[]): Promise<void> => {
   localStorage.setItem(PRICING_STORAGE_KEY, JSON.stringify(plans));
 };
 
-/**
- * Corporate About Us Content
- */
 export const fetchAboutUsData = async (): Promise<AboutUsConfig> => {
   const stored = localStorage.getItem(ABOUT_US_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return {
-    hero: {
-      title: "About TechSafi",
-      subtitle: "Empowering businesses through innovation.",
-      establishedYear: "2024",
-      stats: []
-    },
-    story: { paragraphs: [] },
+    hero: { establishedYear: '2024', title: 'About TechSafi', subtitle: 'Empowering businesses through innovative technology solutions.', stats: [] },
+    story: { paragraphs: ['Founded in 2024...'] },
     values: [],
     visionaries: [],
     milestones: []
   };
 };
 
-export const saveAboutUsData = async (config: AboutUsConfig) => {
+export const saveAboutUsData = async (config: AboutUsConfig): Promise<void> => {
   localStorage.setItem(ABOUT_US_STORAGE_KEY, JSON.stringify(config));
 };
 
-/**
- * Careers & Talent Management
- */
 export const fetchCareersData = async (): Promise<CareersConfig> => {
   const stored = localStorage.getItem(CAREERS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return {
-    hero: { title: "Join Our Team", subtitle: "Build the future." },
-    notice: { isActive: false, title: "", description: "", commissionDetails: "" },
+    hero: { title: 'Build the Future With Us', subtitle: 'Work with a passionate team...' },
+    notice: { title: 'Building Together', description: '', commissionDetails: '', isActive: true },
     culture: [],
     benefits: [],
     jobs: [],
-    internship: { title: "Internship", duration: "3-6 months", features: [] },
-    attachment: { title: "Attachment", duration: "3 months", features: [] },
+    internship: { title: 'Internship Program', duration: '3-6 Months', features: [] },
+    attachment: { title: 'Industrial Attachment', duration: '3 Months', features: [] },
     applicationSteps: []
   };
 };
 
-export const saveCareersData = async (config: CareersConfig) => {
+export const saveCareersData = async (config: CareersConfig): Promise<void> => {
   localStorage.setItem(CAREERS_STORAGE_KEY, JSON.stringify(config));
 };
 
-/**
- * Blog Content Repository
- */
 export const fetchBlogPosts = async (): Promise<BlogPost[]> => {
-  const stored = localStorage.getItem(BLOG_STORAGE_KEY);
+  const stored = localStorage.getItem(BLOG_POSTS_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return [];
 };
 
-export const saveBlogPosts = async (posts: BlogPost[]) => {
-  localStorage.setItem(BLOG_STORAGE_KEY, JSON.stringify(posts));
+export const saveBlogPosts = async (posts: BlogPost[]): Promise<void> => {
+  localStorage.setItem(BLOG_POSTS_STORAGE_KEY, JSON.stringify(posts));
 };
 
-/**
- * Existing Methods
- */
 export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
   const stored = localStorage.getItem(HOME_PAGE_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
@@ -597,7 +559,7 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
       showGrid: true
     },
     hero: {
-      badge: 'TechSafi Intelligence Protocol',
+      badge: 'TechSafi Intelligence Protocol v1.4',
       typewriterWords: ['Digital Ecosystems', 'AI Integration', 'Modern Logic'],
       subtitle: "Empowering businesses with AI-enhanced software, tailored automation, and scalable architectures designed for the next era of digital dominance.",
       images: [
@@ -614,9 +576,7 @@ export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
     partners: [
       { id: 'p1', name: 'Vercel', description: 'Next-gen deployment infrastructure.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/vercel.svg' },
       { id: 'p2', name: 'Stripe', description: 'Financial infrastructure for global business.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/stripe-2.svg' },
-      { id: 'p3', name: 'Google Cloud', description: 'AI and computing backbone.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/google-cloud-1.svg' },
-      { id: 'p4', name: 'AWS', description: 'Cloud scalability and DevOps tooling.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/aws-2.svg' },
-      { id: 'p5', name: 'Nvidia', description: 'Compute power for custom LLM training.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/nvidia.svg' }
+      { id: 'p3', name: 'Google Cloud', description: 'AI and computing backbone.', logoUrl: 'https://cdn.worldvectorlogo.com/logos/google-cloud-1.svg' }
     ],
     servicesPreview: [
       { id: 's1', title: 'Web Development', description: 'High-performance applications.', iconName: 'Globe', color: 'blue' },
@@ -681,8 +641,43 @@ export const fetchGlobalLayoutConfig = async (): Promise<GlobalLayoutConfig> => 
   const stored = localStorage.getItem(CONFIG_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return {
-    navbar: { logoPrimary: "Tech", logoAccent: "Safi", ctaLabel: "Initiate", links: [] },
-    footer: { tagline: "Future software.", email: "", phone: "", address: "", socials: [], quickLinks: [], serviceLinks: [], legalLinks: [], copyright: "", officeHours: "" }
+    navbar: { 
+      logoPrimary: "Tech", 
+      logoAccent: "Safi", 
+      ctaLabel: "Initiate", 
+      links: [
+        { id: '1', label: 'Home', path: '/' },
+        { id: '2', label: 'Company', path: '/company' },
+        { id: '3', label: 'Services', path: '/services' },
+        { id: '4', label: 'Pricing', path: '/pricing' },
+        { id: '5', label: 'Blog', path: '/blog' },
+        { id: '6', label: 'Contact', path: '/contact' }
+      ] 
+    },
+    footer: { 
+      tagline: "Building the next generation of intelligent software.", 
+      email: "info@techsafi.com", 
+      phone: "+254 751 380 948", 
+      address: "Nairobi, Kenya", 
+      socials: [
+        { id: 's1', platform: 'Linkedin', url: '#' },
+        { id: 's2', platform: 'Github', url: '#' }
+      ], 
+      quickLinks: [
+        { id: 'q1', label: 'Home', path: '/' },
+        { id: 'q2', label: 'Portfolio', path: '/portfolio' }
+      ], 
+      serviceLinks: [
+        { id: 'sv1', label: 'Web Dev', path: '/services' },
+        { id: 'sv2', label: 'AI Integration', path: '/ai-solutions' }
+      ], 
+      legalLinks: [
+        { id: 'l1', label: 'Privacy Policy', path: '/privacy-policy' },
+        { id: 'l2', label: 'Terms of Service', path: '/terms-of-service' }
+      ], 
+      copyright: "TechSafi - 2025 Innovation Elevated", 
+      officeHours: "Mon-Fri 9AM-6PM" 
+    }
   };
 };
 
@@ -695,11 +690,22 @@ export const fetchContactPageConfig = async (): Promise<ContactPageConfig> => {
   const stored = localStorage.getItem(CONTACT_PAGE_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return {
-    hero: { badge: "Contact Us", title: "Let's Connect", subtitle: "We are ready." },
-    cards: [],
-    form: { title: "", subjects: [], budgets: [], success: { title: "", message: "" } },
-    whatsapp: { title: "", description: "", number: "", isActive: false },
-    faqs: []
+    hero: { badge: "Contact Us", title: "Let's Connect", subtitle: "We are ready to build your next project." },
+    cards: [
+      { id: 'c1', type: 'email', title: 'Email Us', desc: 'Direct support', primaryDetail: 'info@techsafi.com', secondaryDetail: '24/7 Response', link: 'mailto:info@techsafi.com', color: 'blue' },
+      { id: 'c2', type: 'phone', title: 'Call Us', desc: 'Direct line', primaryDetail: '+254 751 380 948', secondaryDetail: 'Mon-Fri 9-5', link: 'tel:+254751380948', color: 'purple' },
+      { id: 'c3', type: 'address', title: 'Visit Us', desc: 'Our HQ', primaryDetail: 'Nairobi, Kenya', secondaryDetail: 'CBD Office', link: '#', color: 'emerald' }
+    ],
+    form: { 
+      title: "Send a Message", 
+      subjects: ['General Inquiry', 'Project Proposal', 'AI Integration', 'Career Opportunity'], 
+      budgets: ['Under KES 50k', 'KES 50k - 150k', 'KES 150k - 500k', 'Over KES 500k'], 
+      success: { title: "Message Received", message: "Our team will contact you within 24 hours." } 
+    },
+    whatsapp: { title: "WhatsApp Support", description: "Get instant responses via chat.", number: "254751380948", isActive: true },
+    faqs: [
+      { id: 'f1', question: 'How long to start?', answer: 'Most projects start within 7 days of contract signing.' }
+    ]
   };
 };
 
@@ -718,11 +724,11 @@ export const saveContactSubmissions = async (submissions: ContactSubmission[]): 
 };
 
 export const fetchSystemStats = async (): Promise<SystemStats> => ({
-  latency: '18ms', uptime: '99.99%', activeLeads: 12, pendingDeploys: 1
+  latency: '14ms', uptime: '99.99%', activeLeads: 14, pendingDeploys: 1
 });
 
 export const fetchActivityLogs = async (): Promise<ActivityLog[]> => [
-  { id: '1', action: 'Matrix Sync', user: 'Kennedy', timestamp: 'Just now', status: 'success' }
+  { id: '1', action: 'Matrix Sync', user: 'System', timestamp: 'Just now', status: 'success' }
 ];
 
 export const fetchTrafficData = async (): Promise<ChartDataPoint[]> => [
