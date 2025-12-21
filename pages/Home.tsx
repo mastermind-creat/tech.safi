@@ -50,8 +50,8 @@ const BackgroundSlider = ({ images }: { images: string[] }) => {
           className="absolute inset-0"
         >
           <img src={images[index]} alt="Hero Background" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-[#020617]/70 dark:bg-[#020617]/80" />
-          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/40 via-transparent to-[#020617]" />
+          <div className="absolute inset-0 bg-[#020617]/85 dark:bg-[#020617]/90" />
+          <div className="absolute inset-0 bg-gradient-to-b from-[#020617]/50 via-transparent to-[#020617]" />
         </MotionDiv>
       </AnimatePresence>
     </div>
@@ -90,7 +90,6 @@ const MagicCard: React.FC<{ children: React.ReactNode, className?: string }> = (
   );
 };
 
-// Fixed error: Added missing TiltCard component definition to handle 3D hover interactions
 const TiltCard: React.FC<{ children: React.ReactNode, className?: string }> = ({ children, className = "" }) => {
   const x = useMotionValue(0);
   const y = useMotionValue(0);
@@ -122,20 +121,10 @@ const TiltCard: React.FC<{ children: React.ReactNode, className?: string }> = ({
     <motion.div
       onMouseMove={handleMouseMove}
       onMouseLeave={handleMouseLeave}
-      style={{
-        rotateY,
-        rotateX,
-        transformStyle: "preserve-3d",
-      }}
+      style={{ rotateY, rotateX, transformStyle: "preserve-3d" }}
       className={`relative w-full h-full ${className}`}
     >
-      <div
-        style={{
-          transform: "translateZ(30px)",
-          transformStyle: "preserve-3d",
-        }}
-        className="w-full h-full"
-      >
+      <div style={{ transform: "translateZ(30px)", transformStyle: "preserve-3d" }} className="w-full h-full">
         {children}
       </div>
     </motion.div>
@@ -173,7 +162,6 @@ const NeuralNodeCanvas = ({ animationType, color }: { animationType: string, col
       ctx.strokeStyle = color === 'purple' ? 'rgba(139, 92, 246, 0.1)' : 'rgba(6, 182, 212, 0.1)';
 
       particles.forEach((p, i) => {
-        // Animation logic based on type
         if (animationType === 'orbit') {
           const time = Date.now() * 0.001;
           p.x += Math.cos(time + i) * 0.5;
@@ -199,7 +187,6 @@ const NeuralNodeCanvas = ({ animationType, color }: { animationType: string, col
         ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
         ctx.fill();
 
-        // Connect nearby nodes
         for (let j = i + 1; j < count; j++) {
           const p2 = particles[j];
           const dist = Math.hypot(p.x - p2.x, p.y - p2.y);
@@ -236,11 +223,15 @@ export const Home: React.FC = () => {
   const navigate = useNavigate();
   const [config, setConfig] = useState<HomePageConfig | null>(null);
   const [loading, setLoading] = useState(true);
-  const [greeting, setGreeting] = useState('');
-  const [platform, setPlatform] = useState<'web' | 'mobile' | 'both'>('web');
-  const [features, setFeatures] = useState<string[]>([]);
   const { scrollYProgress } = useScroll();
   const MotionDiv = motion.div as any;
+
+  // Multi-color transform for Discovery Pulse: Blue -> Purple -> Emerald
+  const pulseColor = useTransform(
+    scrollYProgress, 
+    [0.4, 0.6, 0.8], 
+    ['#06b6d4', '#8b5cf6', '#10b981']
+  );
 
   useEffect(() => {
     const load = async () => {
@@ -249,136 +240,101 @@ export const Home: React.FC = () => {
       setLoading(false);
     };
     load();
-    const hour = new Date().getHours();
-    if (hour < 12) setGreeting('Good Morning');
-    else if (hour < 18) setGreeting('Good Afternoon');
-    else setGreeting('Good Evening');
   }, []);
-
-  const calculateEstimate = () => {
-    if (!config) return 0;
-    let base = platform === 'web' ? config.estimator.baseWeb : platform === 'mobile' ? config.estimator.baseMobile : config.estimator.baseBoth;
-    const extras = features.reduce((acc, fId) => acc + (config.estimator.features.find(x => x.id === fId)?.price || 0), 0);
-    return base + extras;
-  };
 
   if (loading || !config) return (
     <div className="min-h-screen flex items-center justify-center bg-[#020617]">
-       <div className="relative">
-          <RefreshCw size={64} className="text-primary animate-spin" />
-          <div className="absolute inset-0 bg-primary/20 blur-2xl animate-pulse"></div>
-       </div>
+       <RefreshCw size={64} className="text-primary animate-spin" />
     </div>
   );
 
   return (
-    <div className="bg-slate-50 dark:bg-[#020617] text-slate-900 dark:text-slate-200 selection:bg-primary/30 font-sans">
+    <div className="bg-slate-50 dark:bg-[#020617] text-slate-900 dark:text-slate-200 selection:bg-primary/30 font-sans overflow-x-hidden">
       
       {/* --- HERO --- */}
       <section className="relative min-h-screen flex flex-col justify-center items-center px-4 pt-20 overflow-hidden">
         <BackgroundSlider images={config.hero.images} />
-        <div className="absolute inset-0 bg-[radial-gradient(#ffffff08_1px,transparent_1px)] [background-size:32px_32px] pointer-events-none opacity-40"></div>
-        <div className="relative z-10 max-w-7xl mx-auto text-center space-y-12">
-          <MotionDiv initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center px-5 py-2 rounded-full bg-white/10 dark:bg-white/5 border border-white/20 backdrop-blur-xl text-xs font-bold text-white tracking-[0.3em] uppercase">
-            {greeting} • Silicon Valley Standard
+        <div className="relative z-10 max-w-7xl mx-auto text-center space-y-8 md:space-y-12">
+          <MotionDiv initial={{ opacity: 0, y: -20 }} animate={{ opacity: 1, y: 0 }} className="inline-flex items-center px-5 py-2 rounded-full bg-white/5 border border-white/10 backdrop-blur-xl text-[10px] md:text-xs font-bold text-white tracking-[0.3em] uppercase">
+            {config.hero.badge}
           </MotionDiv>
-          <h1 className="text-6xl md:text-8xl lg:text-[10rem] font-black font-display text-white leading-[0.9] tracking-tighter">
-            Logic. <br />
+          <h1 className="text-5xl md:text-8xl lg:text-[9rem] font-black font-display text-white leading-[0.9] tracking-tighter text-balance">
+            Future. <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-blue-500 to-purple-500">
               <Typewriter words={config.hero.typewriterWords} />
             </span>
           </h1>
-          <p className="text-xl md:text-2xl text-slate-300 font-light max-w-3xl mx-auto drop-shadow-xl leading-relaxed">
+          <p className="text-base md:text-xl text-slate-300 font-light max-w-3xl mx-auto leading-relaxed px-4">
             {config.hero.subtitle}
           </p>
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-8 pt-6">
-            <Link to="/contact"><Button size="lg" className="rounded-full px-12 py-5 shadow-[0_0_40px_rgba(255,255,255,0.2)] hover:scale-105 transition-transform bg-white text-dark font-black text-xl border-0">Initiate Project</Button></Link>
-            <Link to="/services"><Button variant="outline" size="lg" className="border-white/30 text-white rounded-full px-12 py-5 backdrop-blur-xl hover:bg-white/10 font-bold text-xl">The Intelligence Layer</Button></Link>
-          </div>
-        </div>
-        <div className="absolute bottom-12 left-0 right-0 hidden md:flex justify-center z-10">
-          <div className="flex divide-x divide-white/10 bg-black/20 backdrop-blur-3xl border border-white/10 rounded-3xl px-12 py-6">
-            {config.hero.stats.map((stat, i) => (
-              <div key={i} className="px-10 text-center group">
-                <div className="text-4xl font-black text-white mb-2 group-hover:text-primary transition-colors">{stat.value}</div>
-                <div className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-black">{stat.label}</div>
-              </div>
-            ))}
+          <div className="flex flex-col sm:flex-row items-center justify-center gap-6 pt-6 px-4">
+            <Link to="/contact" className="w-full sm:w-auto"><Button size="lg" className="w-full rounded-full px-12 py-5 shadow-2xl hover:scale-105 transition-transform bg-white text-dark font-black text-xl border-0">Initiate Project</Button></Link>
+            <Link to="/services" className="w-full sm:w-auto"><Button variant="outline" size="lg" className="w-full border-white/20 text-white rounded-full px-12 py-5 backdrop-blur-xl hover:bg-white/10 font-bold text-xl">The Ecosystem</Button></Link>
           </div>
         </div>
       </section>
 
       {/* --- PARTNERS MARQUEE --- */}
-      <section className="py-20 bg-white dark:bg-[#020617] border-y border-slate-200 dark:border-white/5 relative z-10 overflow-hidden">
-        <div className="flex items-center gap-16 animate-[marquee_20s_linear_infinite] whitespace-nowrap" style={{ animationDuration: `${config.settings.marqueeSpeed}s` }}>
+      <section className="py-12 md:py-20 bg-white dark:bg-[#020617] border-y border-slate-200 dark:border-white/5 relative z-10 overflow-hidden">
+        <div className="flex items-center gap-10 md:gap-16 animate-[marquee_infinite_linear] whitespace-nowrap" style={{ animationDuration: `${config.settings.marqueeSpeed}s` }}>
           {[...config.partners, ...config.partners, ...config.partners].map((p, idx) => (
-            <div key={idx} className="flex items-center gap-6 px-10 group cursor-pointer">
+            <div key={idx} className="flex items-center gap-6 px-6 md:px-10 group cursor-pointer">
               <div className="relative">
-                <img src={p.logoUrl} alt={p.name} className="h-10 object-contain dark:invert opacity-40 group-hover:opacity-100 transition-all duration-500" />
-                <div className="absolute -top-12 left-1/2 -translate-x-1/2 bg-[#0f172a] text-white text-[10px] px-3 py-1.5 rounded-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-normal w-40 text-center shadow-2xl z-50">
+                <img src={p.logoUrl} alt={p.name} className="h-8 md:h-10 object-contain dark:invert opacity-40 group-hover:opacity-100 transition-all duration-500" />
+                <div className="absolute -top-14 left-1/2 -translate-x-1/2 bg-[#0f172a] text-white text-[10px] px-3 py-2 rounded-lg border border-white/10 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-normal w-40 text-center shadow-2xl z-50">
                   {p.description}
                 </div>
               </div>
-              <span className="text-2xl font-black font-display uppercase tracking-tighter dark:text-white/20 group-hover:text-primary transition-colors">{p.name}</span>
+              <span className="text-xl md:text-2xl font-black font-display uppercase tracking-tighter dark:text-white/20 group-hover:text-primary transition-colors">{p.name}</span>
             </div>
           ))}
         </div>
-        <style>{`@keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.33%); } }`}</style>
+        <style>{`
+          @keyframes marquee { 0% { transform: translateX(0); } 100% { transform: translateX(-33.33%); } }
+          .animate-[marquee_infinite_linear] { animation: marquee 20s linear infinite; }
+        `}</style>
       </section>
 
       {/* --- AI EFFICIENCY SHOWCASE --- */}
-      <section className="py-40 bg-slate-50 dark:bg-[#020617] relative z-10 overflow-hidden">
+      <section className="py-24 md:py-40 bg-slate-50 dark:bg-[#020617] relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-           <div className="flex flex-col lg:flex-row items-center gap-24">
-              <div className="lg:w-1/2 space-y-10">
+           <div className="flex flex-col lg:flex-row items-center gap-16 md:gap-24">
+              <div className="lg:w-1/2 space-y-8 md:space-y-10">
                  <div className="inline-flex items-center px-4 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/20 text-emerald-500 text-[10px] font-black tracking-widest uppercase">
-                    <Zap size={12} className="mr-2" /> Efficiency Matrix
+                    <Zap size={12} className="mr-2" /> Performance Matrix
                  </div>
-                 <h2 className="text-5xl md:text-7xl font-bold font-display leading-[0.9] tracking-tighter">
-                    Legacy Process <br /> <span className="text-slate-400">Obsolete.</span>
+                 <h2 className="text-4xl md:text-7xl font-bold font-display leading-[0.9] tracking-tighter">
+                    Precision <br /> <span className="text-slate-400">Engineering.</span>
                  </h2>
-                 <p className="text-slate-600 dark:text-slate-400 text-xl leading-relaxed font-light">
-                    Our AI-first methodology reduces manual oversight by <span className="text-primary font-bold">85%</span>, allowing us to deploy enterprise-grade logic in a fraction of traditional timelines.
+                 <p className="text-slate-600 dark:text-slate-400 text-lg md:text-xl leading-relaxed font-light">
+                    {config.aiSpeedShowcase.subtitle}
                  </p>
-                 <div className="space-y-8">
+                 <div className="space-y-6 md:space-y-8">
                     {config.aiSpeedShowcase.metrics.map((m, i) => (
                       <div key={i} className="space-y-3">
-                         <div className="flex justify-between text-xs font-black uppercase tracking-widest text-slate-500">
+                         <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-500">
                             <span>{m.label}</span>
                             <span className="text-primary">TechSafi: {m.techsafi} {m.unit}</span>
                          </div>
-                         <div className="h-2 w-full bg-slate-200 dark:bg-white/5 rounded-full overflow-hidden flex">
-                            <motion.div 
-                               initial={{ width: 0 }}
-                               whileInView={{ width: `${(m.techsafi / m.traditional) * 100}%` }}
-                               transition={{ duration: 2, ease: "easeOut" }}
-                               className="h-full bg-gradient-to-r from-blue-500 to-cyan-400"
-                            />
-                            <motion.div 
-                               initial={{ opacity: 0 }}
-                               whileInView={{ opacity: 1 }}
-                               className="h-full flex-1 bg-slate-200 dark:bg-white/10"
-                            />
+                         <div className="h-1.5 md:h-2 w-full bg-slate-200 dark:bg-white/5 rounded-full overflow-hidden flex">
+                            <motion.div initial={{ width: 0 }} whileInView={{ width: `${(m.techsafi / m.traditional) * 100}%` }} transition={{ duration: 2, ease: "easeOut" }} className="h-full bg-gradient-to-r from-blue-500 to-cyan-400" />
+                            <div className="h-full flex-1 bg-slate-200 dark:bg-white/10" />
                          </div>
-                         <div className="text-[10px] text-slate-500 italic">Traditional Avg: {m.traditional} {m.unit}</div>
+                         <div className="text-[9px] text-slate-500 italic">Traditional Average: {m.traditional} {m.unit}</div>
                       </div>
                     ))}
                  </div>
               </div>
-              <div className="lg:w-1/2 relative">
-                 <div className="absolute inset-0 bg-blue-500/20 blur-[120px] rounded-full animate-pulse-slow"></div>
-                 <MagicCard className="p-12 aspect-square flex items-center justify-center">
-                    <div className="text-center space-y-8 relative z-10">
-                       <div className="relative inline-block">
-                          <Activity size={120} className="text-primary animate-pulse" />
-                          <div className="absolute inset-0 border-4 border-primary/20 rounded-full animate-ping"></div>
-                       </div>
-                       <h3 className="text-4xl font-bold">Latency: 0ms</h3>
-                       <p className="text-slate-400 max-w-xs mx-auto">Real-time neural synchronization across all nodes in the TechSafi ecosystem.</p>
+              <div className="lg:w-1/2 w-full">
+                 <MagicCard className="p-8 md:p-12 aspect-square flex items-center justify-center relative overflow-hidden">
+                    <div className="absolute inset-0 bg-blue-500/5 blur-[100px]" />
+                    <div className="text-center space-y-6 md:space-y-8 relative z-10">
+                       <Activity size={100} className="text-primary animate-pulse mx-auto" />
+                       <h3 className="text-3xl md:text-4xl font-bold">Latency: 0ms</h3>
                        <div className="grid grid-cols-2 gap-4">
                           <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
                              <div className="text-2xl font-black text-primary"><Counter value={99} />%</div>
-                             <div className="text-[8px] uppercase tracking-widest text-slate-500 font-bold">Logic Match</div>
+                             <div className="text-[8px] uppercase tracking-widest text-slate-500 font-bold">Uptime</div>
                           </div>
                           <div className="p-4 rounded-2xl bg-white/5 border border-white/10">
                              <div className="text-2xl font-black text-purple-500"><Counter value={10} />X</div>
@@ -392,202 +348,108 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {/* --- NEURAL INFRASTRUCTURE (BENTO V2) --- */}
-      <section className="py-40 bg-white dark:bg-[#050b1d] border-y border-slate-200 dark:border-white/5 relative z-10">
+      {/* --- NEURAL INFRASTRUCTURE --- */}
+      <section className="py-24 md:py-40 bg-white dark:bg-[#050b1d] border-y border-slate-200 dark:border-white/5 relative z-10">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-32 space-y-6">
-            <h2 className="text-5xl md:text-8xl font-black font-display tracking-tighter">Neural <span className="text-primary">Infrastructure</span></h2>
-            <p className="text-slate-600 dark:text-slate-400 text-2xl font-light max-w-3xl mx-auto leading-relaxed">Proprietary autonomous systems driving Silicon Valley-tier performance for local markets.</p>
+          <div className="text-center mb-16 md:mb-32 space-y-6">
+            <h2 className="text-4xl md:text-8xl font-black font-display tracking-tighter">Neural <span className="text-primary">Architecture</span></h2>
+            <p className="text-lg md:text-2xl font-light max-w-3xl mx-auto">Proprietary logic systems driving world-class performance for your products.</p>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {config.bento.map((item, i) => {
-              const Icon = ICON_MAP[item.iconName] || Zap;
-              return (
-                <MagicCard key={item.id} className={`p-12 relative ${i === 0 ? 'md:col-span-2' : ''}`}>
-                  <NeuralNodeCanvas animationType={item.animationType} color={item.color} />
-                  <div className="flex flex-col h-full relative z-10">
-                    <div className="flex-1">
-                      {item.badge && <span className={`inline-block px-4 py-1.5 rounded-full bg-${item.color}-500/10 text-${item.color}-500 text-[10px] font-black uppercase tracking-[0.2em] mb-8 border border-${item.color}-500/20`}>{item.badge}</span>}
-                      <h3 className="text-4xl font-bold mb-6 tracking-tight">{item.title}</h3>
-                      <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed max-w-sm">{item.description}</p>
-                    </div>
-                    <div className={`flex justify-end opacity-40 group-hover:opacity-100 group-hover:scale-110 transition-all duration-1000 text-${item.color}-500 mt-12`}>
-                      <Icon size={160} strokeWidth={0.5} />
-                    </div>
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+            {config.bento.map((item, i) => (
+              <MagicCard key={item.id} className={`p-8 md:p-12 relative ${i === 0 ? 'md:col-span-2' : ''}`}>
+                <NeuralNodeCanvas animationType={item.animationType} color={item.color} />
+                <div className="flex flex-col h-full relative z-10">
+                  <div className="flex-1">
+                    <span className={`inline-block px-4 py-1 rounded-full bg-${item.color}-500/10 text-${item.color}-500 text-[10px] font-black uppercase mb-6`}>{item.badge}</span>
+                    <h3 className="text-2xl md:text-4xl font-bold mb-4 tracking-tight">{item.title}</h3>
+                    <p className="text-slate-500 dark:text-slate-400 text-sm md:text-lg leading-relaxed">{item.description}</p>
                   </div>
-                </MagicCard>
-              );
-            })}
+                  <div className={`flex justify-end opacity-40 text-${item.color}-500 mt-10`}>
+                    {React.createElement(ICON_MAP[item.iconName] || Zap, { size: 100, strokeWidth: 0.5 })}
+                  </div>
+                </div>
+              </MagicCard>
+            ))}
           </div>
         </div>
       </section>
 
-      {/* --- SERVICES ECOSYSTEM --- */}
-      <section className="py-40 bg-slate-50 dark:bg-[#020617] relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex flex-col md:flex-row justify-between items-end gap-12 mb-32">
-            <div className="max-w-2xl space-y-6">
-              <h2 className="text-5xl md:text-7xl font-bold font-display tracking-tight leading-[0.9]">Master <br /> <span className="text-primary">Ecosystem</span></h2>
-              <p className="text-slate-600 dark:text-slate-400 text-xl font-light leading-relaxed">Full-cycle software engineering from rapid prototyping to enterprise-scale neural architectures.</p>
-            </div>
-            <Link to="/services"><Button variant="outline" className="rounded-full px-10 py-5 text-lg">Access Full Solutions <ArrowRight size={20} className="ml-3" /></Button></Link>
-          </div>
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-10">
-            {config.servicesPreview.map((svc) => {
-              const Icon = ICON_MAP[svc.iconName] || Globe;
-              return (
-                <TiltCard key={svc.id}>
-                  <MagicCard className="p-12 h-full group hover:border-primary/50 transition-all duration-500">
-                    <div className={`w-20 h-20 rounded-[2rem] bg-${svc.color}-500/10 flex items-center justify-center text-${svc.color}-500 mb-10 group-hover:scale-110 group-hover:rotate-12 transition-transform duration-700`}>
-                      <Icon size={40} strokeWidth={1.5} />
-                    </div>
-                    <h3 className="text-3xl font-bold mb-6 tracking-tight">{svc.title}</h3>
-                    <p className="text-slate-600 dark:text-slate-400 text-md leading-relaxed mb-12 font-light">{svc.description}</p>
-                    <Link to="/services" className="text-xs font-black text-primary flex items-center gap-3 uppercase tracking-[0.2em] group/link">
-                      Explore Technicals <ArrowRight size={16} className="group-hover/link:translate-x-2 transition-transform" />
-                    </Link>
-                  </MagicCard>
-                </TiltCard>
-              );
-            })}
-          </div>
-        </div>
-      </section>
-
-      {/* --- DISCOVERY TIMELINE (COLOR PULSE) --- */}
-      <section className="relative py-40 bg-white dark:bg-[#050b1d] border-y border-slate-200 dark:border-white/5 overflow-hidden">
+      {/* --- DISCOVERY PULSE (COLOR SHIFTING) --- */}
+      <section className="relative py-24 md:py-40 bg-white dark:bg-[#050b1d] overflow-hidden">
          <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
-            <div className="text-center mb-32 space-y-6">
-              <h2 className="text-5xl md:text-8xl font-black text-slate-900 dark:text-white font-display tracking-tighter">
+            <div className="text-center mb-16 md:mb-32 space-y-6">
+              <h2 className="text-4xl md:text-8xl font-black font-display tracking-tighter">
                  Project <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 via-purple-500 to-emerald-500 animate-pulse">Discovery</span>
               </h2>
-              <p className="text-slate-600 dark:text-slate-400 text-2xl font-light max-w-2xl mx-auto">Precision-engineered methodology ensuring predictable project success at speed.</p>
+              <p className="text-slate-600 dark:text-slate-400 text-lg md:text-2xl font-light">Precision methodology ensuring predictable success.</p>
             </div>
 
             <div className="relative">
-               <div className="absolute left-[30px] md:left-1/2 top-0 bottom-0 w-[1px] bg-slate-100 dark:bg-white/5 -translate-x-1/2">
+               <div className="absolute left-[20px] md:left-1/2 top-0 bottom-0 w-[1px] bg-slate-100 dark:bg-white/5 -translate-x-1/2">
                   <motion.div 
-                    style={{ scaleY: scrollYProgress, transformOrigin: "top" }} 
-                    className="w-full h-full bg-gradient-to-b from-blue-500 via-purple-500 to-emerald-500 shadow-[0_0_30px_rgba(59,130,246,0.6)]" 
+                    style={{ scaleY: scrollYProgress, transformOrigin: "top", backgroundColor: pulseColor }} 
+                    className="w-full h-full shadow-[0_0_40px_rgba(59,130,246,0.8)]" 
                   />
-                  <MotionDiv animate={{ top: ['0%', '100%'] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} className="absolute top-0 left-1/2 -translate-x-1/2 w-4 h-32 bg-gradient-to-b from-transparent via-white to-transparent blur-lg opacity-40" />
+                  <MotionDiv animate={{ top: ['0%', '100%'] }} transition={{ duration: 4, repeat: Infinity, ease: "linear" }} className="absolute top-0 left-1/2 -translate-x-1/2 w-3 h-32 bg-gradient-to-b from-transparent via-white to-transparent blur-md opacity-60" />
                </div>
 
-               <div className="space-y-48">
-                  {config.methodology.map((item, idx) => {
-                    const Icon = ICON_MAP[item.iconName] || Search;
-                    return (
-                      <MotionDiv key={idx} initial={{ opacity: 0, y: 100 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-100px" }} transition={{ duration: 1, ease: "easeOut" }} className={`flex flex-col md:flex-row items-center gap-12 md:gap-32 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''} relative`}>
-                         <div className="w-full md:w-1/2 pl-16 md:pl-0">
-                            <TiltCard>
-                               <MagicCard className="p-12 border border-slate-200 dark:border-white/5 hover:border-primary/50 transition-all duration-700">
-                                  <div className="flex items-center gap-6 mb-8">
-                                     <div className={`w-20 h-20 rounded-3xl bg-${item.color}-500/10 flex items-center justify-center text-${item.color}-500 border border-${item.color}-500/20`}>
-                                        <Icon size={36} />
-                                     </div>
-                                     <div>
-                                        <span className={`text-[10px] font-black text-${item.color}-500 uppercase tracking-[0.3em]`}>Phase 0{idx+1}</span>
-                                        <h3 className="text-3xl font-bold dark:text-white mt-1 tracking-tight">{item.title}</h3>
-                                     </div>
-                                  </div>
-                                  <p className="text-slate-500 dark:text-slate-400 text-lg leading-relaxed font-light">{item.description}</p>
-                               </MagicCard>
-                            </TiltCard>
-                         </div>
-                         <div className="hidden md:block w-1/2"></div>
-                      </MotionDiv>
-                    );
-                  })}
-               </div>
-            </div>
-         </div>
-      </section>
-
-      {/* --- SELECTED WORKS --- */}
-      <section className="py-40 bg-slate-50 dark:bg-[#020617] border-b border-slate-200 dark:border-white/5 overflow-hidden">
-         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex flex-col md:flex-row justify-between items-end mb-32 gap-12">
-               <div className="max-w-2xl space-y-6">
-                  <h2 className="text-5xl md:text-8xl font-black font-display tracking-tighter">Case <span className="text-primary">Studies</span></h2>
-                  <p className="text-slate-500 text-2xl font-light">Exceptional delivery across diverse verticals, from Fintech to Healthcare.</p>
-               </div>
-               <Link to="/portfolio"><Button variant="outline" className="rounded-full px-10 py-5 text-lg">View Full Portfolio <ArrowRight size={20} className="ml-3" /></Button></Link>
-            </div>
-            
-            <div className="flex gap-10 overflow-x-auto snap-x snap-mandatory scrollbar-hide pb-20 -mx-4 px-4 md:mx-0">
-               {PROJECTS.map(project => (
-                  <div key={project.id} className="flex-shrink-0 w-[90vw] md:w-[600px] snap-center">
-                    <TiltCard>
-                       <MagicCard className="aspect-[16/10] cursor-pointer group relative overflow-hidden rounded-[3rem]">
-                          <img src={project.image} className="absolute inset-0 w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" />
-                          <div className="absolute inset-0 bg-gradient-to-t from-[#020617] via-[#020617]/20 to-transparent" />
-                          <div className="absolute bottom-0 p-12 w-full">
-                             <div className="flex items-center gap-3 mb-6">
-                                <span className="text-[10px] font-black text-blue-400 uppercase tracking-[0.2em] bg-blue-400/10 px-4 py-1.5 rounded-full backdrop-blur-xl border border-blue-400/20">{project.category}</span>
-                             </div>
-                             <h3 className="text-3xl md:text-5xl font-black text-white mb-10 group-hover:text-primary transition-colors tracking-tighter truncate">{project.title}</h3>
-                             <div className="flex items-center justify-between border-t border-white/10 pt-10">
-                                <div className="flex items-center gap-4">
-                                   <project.stats.icon size={24} className="text-primary" />
-                                   <span className="text-xl font-bold text-slate-300">{project.stats.value} {project.stats.label}</span>
+               <div className="space-y-32 md:space-y-48">
+                  {config.methodology.map((item, idx) => (
+                    <MotionDiv key={idx} initial={{ opacity: 0, y: 100 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true, margin: "-50px" }} transition={{ duration: 1 }} className={`flex flex-col md:flex-row items-center gap-12 md:gap-32 ${idx % 2 !== 0 ? 'md:flex-row-reverse' : ''} relative`}>
+                       <div className="w-full md:w-1/2 pl-12 md:pl-0">
+                          <TiltCard>
+                             <MagicCard className="p-8 md:p-12 border border-slate-200 dark:border-white/5 hover:border-primary/50 transition-all duration-700">
+                                <div className="flex items-center gap-6 mb-6 md:mb-8">
+                                   <div className={`w-16 h-16 md:w-20 md:h-20 rounded-3xl bg-${item.color}-500/10 flex items-center justify-center text-${item.color}-500 border border-${item.color}-500/20`}>
+                                      {React.createElement(ICON_MAP[item.iconName] || Search, { size: 36 })}
+                                   </div>
+                                   <div>
+                                      <span className={`text-[10px] font-black text-${item.color}-500 uppercase tracking-widest`}>Phase 0{idx+1}</span>
+                                      <h3 className="text-2xl md:text-3xl font-bold dark:text-white mt-1 tracking-tight">{item.title}</h3>
+                                   </div>
                                 </div>
-                                <div className="w-16 h-16 rounded-full bg-white text-slate-900 flex items-center justify-center group-hover:translate-x-4 transition-transform shadow-2xl"><ArrowRight size={32} /></div>
-                             </div>
-                          </div>
-                       </MagicCard>
-                    </TiltCard>
-                  </div>
-               ))}
+                                <p className="text-slate-500 dark:text-slate-400 text-sm md:text-lg font-light leading-relaxed">{item.description}</p>
+                             </MagicCard>
+                          </TiltCard>
+                       </div>
+                       <div className="hidden md:block w-1/2"></div>
+                    </MotionDiv>
+                  ))}
+               </div>
             </div>
          </div>
       </section>
 
-      {/* --- PARTNER ECHO (CAROUSEL) --- */}
-      <section className="py-40 bg-white dark:bg-[#020617] relative z-10 overflow-hidden">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="text-center mb-32 space-y-6">
-            <h2 className="text-5xl md:text-8xl font-black font-display tracking-tighter">Partner <span className="text-emerald-500">Echo</span></h2>
-            <p className="text-slate-600 dark:text-slate-400 text-2xl font-light">Direct feedback from the executive suites of our partner companies.</p>
-          </div>
-          
-          <div className="flex items-center gap-8 animate-[carousel_40s_linear_infinite]">
-            {[...config.testimonials, ...config.testimonials].map((t, idx) => (
-              <div key={idx} className="w-[350px] md:w-[450px] flex-shrink-0">
-                <MagicCard className="p-12 group hover:border-emerald-500/50 transition-all duration-500 h-full">
-                  <Quote size={64} className={`text-${t.color}-500 opacity-10 mb-12 group-hover:opacity-30 transition-opacity duration-1000`} />
-                  <p className="text-xl font-light leading-relaxed mb-16 text-slate-600 dark:text-slate-300 italic line-clamp-4">"{t.text}"</p>
-                  <div className="flex items-center gap-6 mt-auto">
-                    <div className={`w-16 h-16 rounded-full bg-${t.color}-500/10 flex items-center justify-center font-black text-2xl text-${t.color}-500 shadow-inner`}>{t.name.charAt(0)}</div>
-                    <div>
-                      <div className="text-xl font-bold dark:text-white tracking-tight">{t.name}</div>
-                      <div className="text-xs text-slate-500 uppercase tracking-[0.2em] font-black">{t.role}</div>
-                    </div>
-                  </div>
-                </MagicCard>
-              </div>
-            ))}
-          </div>
-          <style>{`
-            @keyframes carousel {
-              0% { transform: translateX(0); }
-              100% { transform: translateX(-50%); }
-            }
-          `}</style>
+      {/* --- PARTNER ECHO CAROUSEL --- */}
+      <section className="py-24 md:py-40 bg-white dark:bg-[#020617] relative z-10 overflow-hidden">
+        <div className="max-w-7xl mx-auto px-4 mb-20 text-center">
+          <h2 className="text-4xl md:text-8xl font-black font-display tracking-tighter">Partner <span className="text-emerald-500">Echo</span></h2>
         </div>
+        <div className="flex items-center gap-8 animate-[carousel_40s_linear_infinite] whitespace-nowrap">
+          {[...config.testimonials, ...config.testimonials, ...config.testimonials].map((t, idx) => (
+            <div key={idx} className="w-[300px] md:w-[450px] flex-shrink-0">
+              <MagicCard className="p-8 md:p-12 h-full whitespace-normal">
+                <Quote size={40} className={`text-${t.color}-500 opacity-20 mb-8`} />
+                <p className="text-base md:text-xl font-light italic text-slate-300 mb-10 line-clamp-4">"{t.text}"</p>
+                <div className="flex items-center gap-4">
+                  <div className={`w-12 h-12 rounded-full bg-${t.color}-500/10 flex items-center justify-center font-black text-${t.color}-500`}>{t.name.charAt(0)}</div>
+                  <div><div className="font-bold text-sm md:text-base">{t.name}</div><div className="text-[10px] text-slate-500 uppercase">{t.role}</div></div>
+                </div>
+              </MagicCard>
+            </div>
+          ))}
+        </div>
+        <style>{` @keyframes carousel { 0% { transform: translateX(0); } 100% { transform: translateX(-33.33%); } } `}</style>
       </section>
 
-      {/* --- FINAL CTA (MESH GRADIENT) --- */}
-      <section className="py-60 relative overflow-hidden">
-        <div className="absolute inset-0 bg-[#050b1d] z-0" />
-        <div className="absolute inset-0 bg-gradient-to-br from-indigo-900 via-black to-purple-900 opacity-90 z-0" />
-        <div className="absolute top-0 left-0 w-full h-full bg-[url('https://www.transparenttextures.com/patterns/carbon-fibre.png')] opacity-20 z-1" />
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-500/10 rounded-full blur-[150px] animate-pulse z-0" />
-        
+      {/* --- FINAL CTA (REFINE MESH) --- */}
+      <section className="py-40 md:py-60 relative overflow-hidden bg-[#020617]">
+        <div className="absolute inset-0 bg-gradient-to-br from-indigo-950 via-black to-purple-950 opacity-100 z-0" />
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-blue-600/10 rounded-full blur-[180px] animate-pulse z-0" />
         <div className="relative z-10 max-w-5xl mx-auto text-center px-4 space-y-12">
-          <h2 className="text-6xl md:text-9xl font-black text-white font-display mb-12 leading-[0.8] tracking-tighter">Ready to <br /> Engineer the <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Next.</span></h2>
-          <Link to="/contact">
-            <Button className="bg-white text-dark hover:bg-slate-200 rounded-full px-20 py-8 text-2xl font-black shadow-[0_0_50px_rgba(255,255,255,0.3)] transition-all hover:scale-105 border-0">Collaborate with TechSafi</Button>
-          </Link>
+          <h2 className="text-5xl md:text-9xl font-black text-white font-display leading-[0.8] tracking-tighter">Scale Your <br /> <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 to-purple-500">Business.</span></h2>
+          <Link to="/contact"><Button className="bg-white text-dark hover:bg-slate-200 rounded-full px-12 md:px-20 py-6 md:py-8 text-xl md:text-2xl font-black shadow-[0_0_50px_rgba(255,255,255,0.2)] transition-all hover:scale-105 border-0">Initiate Ecosystem Access</Button></Link>
         </div>
       </section>
 
