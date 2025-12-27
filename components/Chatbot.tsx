@@ -1,5 +1,6 @@
 
-import React, { useState, useRef, useEffect } from 'react';
+import * as React from 'react';
+import { useState, useRef, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { MessageCircle, Minimize2, User, Sparkles, AlertCircle, WifiOff, ChevronRight, RefreshCw, Send, Bot } from 'lucide-react';
 import { Button } from './ui/Button';
@@ -83,7 +84,7 @@ export const Chatbot: React.FC = () => {
 
   const handleBasicModeQuery = (query: string): { text: string, suggestions: string[] } => {
     const lowerQuery = query.toLowerCase();
-    
+
     // Find best match based on keyword density
     let bestMatch = null;
     let maxScore = 0;
@@ -106,9 +107,9 @@ export const Chatbot: React.FC = () => {
     }
 
     // Default Fallback
-    return { 
-      text: "I didn't quite catch that. I'm currently in **Basic Mode** and best at answering specific questions about our services.\n\nTry asking about:", 
-      suggestions: ["Web Development", "Mobile Apps", "Pricing Info", "Contact Us"] 
+    return {
+      text: "I didn't quite catch that. I'm currently in **Basic Mode**. I can help you with our services, pricing, and how to reach us.\n\nTry asking about:",
+      suggestions: ["View Services", "Our Pricing", "Company Info", "Hiring & Careers"]
     };
   };
 
@@ -130,45 +131,42 @@ export const Chatbot: React.FC = () => {
         chatSessionRef.current = ai.chats.create({
           model: 'gemini-3-pro-preview',
           config: {
-            systemInstruction: `You are the intelligent virtual assistant for TechSafi, a premier AI-driven software company in Nairobi, Kenya.
+            systemInstruction: `You are the ultimate intelligent virtual assistant for TechSafi, a premier AI-driven software company based in Nairobi, Kenya. Your goal is to provide comprehensive, accurate, and helpful information about the entire TechSafi ecosystem.
             
-            **Company Profile:**
-            - **Name:** TechSafi
-            - **Tagline:** Innovation Elevated
-            - **Mission:** Empowering businesses with AI, custom software, and digital transformation.
-            - **Location:** Nairobi, Kenya.
-            - **Contact:** info@techsafi.com | +254 751 380 948 | +254 110 046 523
-            - **Support:** Available 24/7.
+            **Company Mission:** 
+            "Innovation Elevated" - We empower businesses through high-end AI, custom software, and digital transformation.
 
-            **Services & Pricing (KES):**
+            **Navigation Guide (Help users find these pages):**
+            - **Home**: Overview of our innovation and value proposition.
+            - **Company/About**: Our history, mission, and team in Nairobi.
+            - **Services**: Advanced Web Dev, Mobile Apps, and AI Integrations.
+            - **AI Solutions**: Specialized division for Chatbots, Predictive Analytics, and Automation.
+            - **Portfolio**: Real-world success stories across various industries.
+            - **Pricing**: Clear, transparent KES-based pricing tiers for all services.
+            - **Careers**: Where talent meets opportunity (hiring roadmap & internships).
+            - **Blog**: Insights into the latest tech trends and company news.
+            - **Contact**: Easy ways to reach us for custom quotes or support.
+
+            **Detailed Services & Pricing (KES):**
             *Web Development:*
-            - **Portfolio Website:** KES 35,000 (5 pages, Basic SEO)
-            - **Business Website:** KES 85,000 (10 pages, CMS, Blog)
-            - **E-commerce Store:** KES 150,000 (Shopping cart, M-Pesa Integration)
+            - **Portfolio Website:** KES 35,000 (Ideal for startups)
+            - **Business Website:** KES 85,000 (Complete CMS & SEO)
+            - **E-commerce Store:** KES 150,000 (M-Pesa integration included)
 
             *Mobile App Development:*
-            - **Basic App:** KES 250,000 (Cross-platform, 5 screens)
-            - **Advanced App:** KES 550,000 (Native, User Auth, Payments)
+            - **Basic Cross-platform:** KES 250,000
+            - **Advanced Native (iOS/Android):** KES 550,000+
 
-            *AI Integration:*
-            - **AI Chatbot:** KES 60,000
-            - **Advanced AI Features:** KES 180,000 (GPT Integration, Recommendations)
-            - **Enterprise AI Suite:** KES 350,000
-            - **AI-Powered Website:** KES 280,000
-            - **Custom AI Application:** Starting at KES 700,000+
+            *AI & Automation:*
+            - **Custom Chatbot:** KES 60,000
+            - **Advanced AI Solutions:** KES 180,000 - 700,000+ depending on complexity.
 
-            *Monthly Services:*
-            - **Chatbot Maintenance:** KES 10,000/mo
-            - **Website Maintenance:** KES 15,000/mo
-            - **SEO Optimization:** KES 25,000/mo
-            - **AI Model Training:** KES 30,000/mo
-
-            **Tone & Style:**
-            - Professional, enthusiastic, and helpful.
-            - Use Markdown formatting for lists and bold text to make responses readable.
-            - Keep answers concise but informative.
-            - If asked about custom projects not listed, encourage the user to use the Contact form for a custom quote.
-            - Always mention prices in KES.
+            **Conversation Rules:**
+            1. **Be Comprehensive**: Answer anything related to our services, technology stack (React, Python, Gemini, etc.), and company culture.
+            2. **Summarize & Guide**: When explaining a complex service, provide a summary and suggest the user visits the specific page (e.g., "Check our Portfolio page for examples").
+            3. **Currency**: Always use KES.
+            4. **Tone**: Premium, professional, enthusiastic, and helpful. Use bold text and lists for readability.
+            5. **Fallback**: If you don't know a specific detail, kindly ask the user to use the Contact form so a human expert can assist.
             `
           }
         });
@@ -183,6 +181,10 @@ export const Chatbot: React.FC = () => {
   }, []);
 
   const scrollToBottom = () => {
+    const chatContainer = document.getElementById('chat-container');
+    if (chatContainer) {
+      chatContainer.scrollTop = chatContainer.scrollHeight;
+    }
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   };
 
@@ -206,46 +208,46 @@ export const Chatbot: React.FC = () => {
 
     // AI Streaming Response
     if (isAiActive && chatSessionRef.current) {
-        const botMsgId = (Date.now() + 1).toString();
-        // Add placeholder for streaming
-        setMessages(prev => [...prev, {
-            id: botMsgId,
-            type: 'bot',
-            text: '',
-            timestamp: new Date()
-        }]);
+      const botMsgId = (Date.now() + 1).toString();
+      // Add placeholder for streaming
+      setMessages(prev => [...prev, {
+        id: botMsgId,
+        type: 'bot',
+        text: '',
+        timestamp: new Date()
+      }]);
 
-        try {
-            const resultStream = await chatSessionRef.current.sendMessageStream({ message: userMsg.text });
-            
-            let fullText = '';
-            for await (const chunk of resultStream) {
-                // Correctly handle chunk from sendMessageStream as GenerateContentResponse
-                const response = chunk as GenerateContentResponse;
-                const chunkText = response.text;
-                if (chunkText) {
-                    fullText += chunkText;
-                    setMessages(prev => prev.map(m => 
-                        m.id === botMsgId ? { ...m, text: fullText } : m
-                    ));
-                }
-            }
-        } catch (error) {
-            console.warn("AI service interrupted, using fallback.", error);
-            // Revert the empty bubble to a fallback message if AI completely fails mid-stream or start
-            setMessages(prev => prev.filter(m => m.id !== botMsgId));
-            const { text: fallbackText, suggestions } = handleBasicModeQuery(userMsg.text);
-            const fallbackResponse: Message = {
-                id: (Date.now() + 2).toString(),
-                type: 'bot',
-                text: fallbackText,
-                timestamp: new Date(),
-                suggestions: suggestions
-            };
-            setMessages(prev => [...prev, fallbackResponse]);
+      try {
+        const resultStream = await chatSessionRef.current.sendMessageStream({ message: userMsg.text });
+
+        let fullText = '';
+        for await (const chunk of resultStream) {
+          // Correctly handle chunk from sendMessageStream as GenerateContentResponse
+          const response = chunk as GenerateContentResponse;
+          const chunkText = response.text;
+          if (chunkText) {
+            fullText += chunkText;
+            setMessages(prev => prev.map(m =>
+              m.id === botMsgId ? { ...m, text: fullText } : m
+            ));
+          }
         }
-        setIsTyping(false);
-        return;
+      } catch (error) {
+        console.warn("AI service interrupted, using fallback.", error);
+        // Revert the empty bubble to a fallback message if AI completely fails mid-stream or start
+        setMessages(prev => prev.filter(m => m.id !== botMsgId));
+        const { text: fallbackText, suggestions } = handleBasicModeQuery(userMsg.text);
+        const fallbackResponse: Message = {
+          id: (Date.now() + 2).toString(),
+          type: 'bot',
+          text: fallbackText,
+          timestamp: new Date(),
+          suggestions: suggestions
+        };
+        setMessages(prev => [...prev, fallbackResponse]);
+      }
+      setIsTyping(false);
+      return;
     }
 
     // Basic Mode Fallback (Simulated Delay)
@@ -286,10 +288,10 @@ export const Chatbot: React.FC = () => {
       // Check for bullet points
       const isBullet = line.trim().startsWith('- ') || line.trim().startsWith('* ') || line.trim().startsWith('• ');
       const cleanLine = isBullet ? line.trim().replace(/^[-*•]\s+/, '') : line;
-      
+
       // Parse Bold (**text**)
       const parts = cleanLine.split(/(\*\*.*?\*\*)/g);
-      
+
       return (
         <div key={i} className={`text-sm leading-relaxed ${isBullet ? 'flex items-start ml-2 mb-1.5' : 'mb-2 min-h-[1.2em]'}`}>
           {isBullet && <span className="mr-2 mt-1.5 w-1.5 h-1.5 bg-current rounded-full flex-shrink-0 opacity-60"></span>}
@@ -349,14 +351,14 @@ export const Chatbot: React.FC = () => {
                 </div>
               </div>
               <div className="flex items-center gap-1">
-                <button 
+                <button
                   onClick={clearChat}
                   className="p-2 hover:bg-white/10 rounded-full transition-colors"
                   title="Clear Chat"
                 >
                   <RefreshCw size={16} />
                 </button>
-                <button 
+                <button
                   onClick={() => setIsOpen(false)}
                   className="p-2 hover:bg-white/10 rounded-full transition-colors"
                 >
@@ -385,26 +387,24 @@ export const Chatbot: React.FC = () => {
                   >
                     <div className={`flex items-end max-w-[85%] ${msg.type === 'user' ? 'flex-row-reverse' : 'flex-row'}`}>
                       {/* Avatar */}
-                      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mb-1 shadow-sm ${
-                        msg.type === 'user' ? 'ml-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300' : 'mr-2 bg-gradient-to-br from-blue-500 to-purple-500 text-white'
-                      }`}>
+                      <div className={`w-6 h-6 rounded-full flex items-center justify-center flex-shrink-0 mb-1 shadow-sm ${msg.type === 'user' ? 'ml-2 bg-slate-200 dark:bg-slate-700 text-slate-600 dark:text-slate-300' : 'mr-2 bg-gradient-to-br from-blue-500 to-purple-500 text-white'
+                        }`}>
                         {msg.type === 'user' ? <User size={12} /> : <Sparkles size={12} />}
                       </div>
 
                       {/* Bubble */}
-                      <div className={`px-4 py-2.5 rounded-2xl shadow-sm ${
-                        msg.type === 'user' 
-                          ? 'bg-blue-600 text-white rounded-br-none' 
-                          : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-white/5 rounded-bl-none'
-                      }`}>
+                      <div className={`px-4 py-2.5 rounded-2xl shadow-sm ${msg.type === 'user'
+                        ? 'bg-blue-600 text-white rounded-br-none'
+                        : 'bg-white dark:bg-[#1e293b] text-slate-700 dark:text-slate-200 border border-slate-100 dark:border-white/5 rounded-bl-none'
+                        }`}>
                         {msg.type === 'bot' ? formatMessage(msg.text) : <div className="text-sm">{msg.text}</div>}
                       </div>
                     </div>
                   </MotionDiv>
-                  
+
                   {/* Suggestions Chips (Only for last message of type bot) */}
                   {msg.type === 'bot' && msg.suggestions && msg.id === messages[messages.length - 1].id && !isTyping && (
-                    <MotionDiv 
+                    <MotionDiv
                       initial={{ opacity: 0 }}
                       animate={{ opacity: 1 }}
                       className="flex flex-wrap gap-2 pl-9"
@@ -450,8 +450,8 @@ export const Chatbot: React.FC = () => {
                   placeholder={isAiActive ? "Type your question..." : "Ask keywords like 'pricing', 'contact'..."}
                   className="flex-1 bg-slate-100 dark:bg-[#1e293b] text-slate-900 dark:text-white text-sm rounded-xl px-4 py-2.5 focus:outline-none focus:ring-2 focus:ring-blue-500/50 border border-transparent focus:bg-white dark:focus:bg-[#0f172a] transition-all placeholder-slate-400"
                 />
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   disabled={!inputValue.trim() || isTyping}
                   className={`px-3 rounded-xl ${!inputValue.trim() ? 'opacity-50 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700 text-white'}`}
                 >

@@ -20,26 +20,14 @@ export const Footer: React.FC = () => {
 
   return (
     <footer className="bg-slate-50 dark:bg-[#020617] border-t border-slate-200 dark:border-white/5 pt-16 pb-8 text-sm transition-colors duration-300 overflow-hidden relative">
-      {isDecember && (
-        <>
-          <div className="absolute top-10 right-10 opacity-10 pointer-events-none">
-            <Snowflake size={120} className="text-blue-500 animate-spin-slow" />
-          </div>
-          <div className="absolute bottom-20 left-10 opacity-5 pointer-events-none">
-            <Gift size={80} className="text-purple-500 animate-bounce" />
-          </div>
-        </>
-      )}
 
       <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12">
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-8 gap-y-12 mb-16">
 
           {/* Column 1: Brand & Socials */}
           <div className="col-span-2 lg:col-span-1 space-y-6">
-            <div className="flex items-center space-x-2 mb-4">
-              <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-2xl shadow-lg shadow-primary/20">
-                <img src="https://cdn-icons-png.flaticon.com/512/3208/3208728.png" className="w-6 h-6 invert" alt="Logo" />
-              </div>
+            <div className="flex items-center space-x-3 mb-4">
+              <img src="/images/logo/logo1.png" alt="TechSafi Logo" className="h-10 w-auto" />
               <div className="flex flex-col">
                 <span className="text-xl font-bold font-display text-slate-900 dark:text-white leading-none">
                   {config.navbar.logoPrimary}<span className="text-primary">{config.navbar.logoAccent}</span>
@@ -154,11 +142,6 @@ export const Footer: React.FC = () => {
             <span className="flex items-center">
               <span className="text-blue-500 mr-1 font-bold">{config.footer.copyright.split(' - ')[0]}</span> - {config.footer.copyright.split(' - ')[1]}
             </span>
-            {isDecember && (
-              <span className="bg-emerald-500/10 text-emerald-600 dark:text-emerald-400 px-3 py-1 rounded-full font-bold flex items-center border border-emerald-500/20">
-                <Gift size={10} className="mr-1.5" /> Happy Holidays!
-              </span>
-            )}
           </div>
           <div className="flex flex-wrap justify-center gap-4 text-xs font-medium text-slate-500">
             {config.footer.legalLinks.map((link) => (

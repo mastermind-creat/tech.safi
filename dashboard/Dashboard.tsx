@@ -1,11 +1,15 @@
 
-import React, { useState } from 'react';
+import * as React from 'react';
+import * as ReactRouter from 'react-router-dom';
+import * as ReactFramerMotion from 'framer-motion';
+import * as ReactLucide from 'lucide-react';
+import { useState, useEffect } from 'react';
 import { Routes, Route, Link, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  LayoutDashboard, FileText, BarChart3, Settings, 
-  Users, Bell, History, ShieldAlert, LogOut, 
-  Menu, X, Sun, Moon, Search, Cpu, Zap, 
+import {
+  LayoutDashboard, FileText, BarChart3, Settings,
+  Users, Bell, History, ShieldAlert, LogOut,
+  Menu, X, Sun, Moon, Search, Cpu, Zap,
   ChevronRight, Globe, Image as ImageIcon, MessageSquare,
   Home as HomeIcon, Building2, Layers, CreditCard, Newspaper, Mail,
   ChevronDown, PanelTop, PanelBottom, Briefcase, Brain, LayoutGrid,
@@ -32,7 +36,7 @@ import { LiveAnalytics } from './sections/LiveAnalytics';
 import { Button } from '../components/ui/Button';
 
 // Icons for nested items
-const InfoIcon = (props: any) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 16v-4"/><path d="M12 8h.01"/></svg>;
+const InfoIcon = (props: any) => <svg {...props} xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><path d="M12 16v-4" /><path d="M12 8h.01" /></svg>;
 
 // --- REFINED SIDEBAR DATA STRUCTURE ---
 const NAV_GROUPS = [
@@ -46,16 +50,16 @@ const NAV_GROUPS = [
   {
     title: 'Management',
     items: [
-      { 
-        id: 'pages-group', 
-        label: 'Website Pages', 
-        icon: FileText, 
+      {
+        id: 'pages-group',
+        label: 'Website Pages',
+        icon: FileText,
         path: '#',
         children: [
           { label: 'Home Page', path: '/control-centre/pages/home', icon: HomeIcon },
-          { 
+          {
             id: 'inner-company',
-            label: 'Company', 
+            label: 'Company',
             icon: Building2,
             path: '#',
             children: [
@@ -71,10 +75,10 @@ const NAV_GROUPS = [
           { label: 'Contact CRM', path: '/control-centre/pages/contact', icon: Mail },
         ]
       },
-      { 
-        id: 'layout-group', 
-        label: 'Global UI', 
-        icon: Palette, 
+      {
+        id: 'layout-group',
+        label: 'Global UI',
+        icon: Palette,
         path: '#',
         children: [
           { label: 'Navbar Config', path: '/control-centre/manage/navbar', icon: PanelTop },
@@ -86,10 +90,10 @@ const NAV_GROUPS = [
   {
     title: 'Infrastructure',
     items: [
-      { 
-        id: 'system-group', 
-        label: 'System Tools', 
-        icon: Settings2, 
+      {
+        id: 'system-group',
+        label: 'System Tools',
+        icon: Settings2,
         path: '#',
         children: [
           { label: 'Media Library', path: '/control-centre/content', icon: ImageIcon },
@@ -106,15 +110,28 @@ const NAV_GROUPS = [
 export const Dashboard: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(true);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [expandedItems, setExpandedItems] = useState<string[]>(['pages-group', 'system-group']); 
+  const [expandedItems, setExpandedItems] = useState<string[]>(['pages-group', 'system-group']);
   const { theme, setTheme } = useTheme();
   const location = useLocation();
   const navigate = useNavigate();
 
   const toggleSidebar = () => setSidebarOpen(!sidebarOpen);
+  const toggleMobileMenu = () => setMobileMenuOpen(!mobileMenuOpen);
+
+  // Ensure sidebar stays open on desktop and handles basic resize
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth >= 1024) {
+        setSidebarOpen(true);
+      }
+    };
+    handleResize();
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const toggleExpand = (id: string) => {
-    setExpandedItems(prev => 
+    setExpandedItems(prev =>
       prev.includes(id) ? prev.filter(item => item !== id) : [...prev, id]
     );
   };
@@ -124,20 +141,26 @@ export const Dashboard: React.FC = () => {
     navigate('/login');
   };
 
-  const NavItem: React.FC<{ item: any; depth?: number }> = ({ item, depth = 0 }) => {
+  const NavItem: React.FC<{
+    item: any;
+    depth?: number;
+    expandedItems: string[];
+    sidebarOpen: boolean;
+    activePath: string;
+    onToggleExpand: (id: string) => void;
+  }> = ({ item, depth = 0, expandedItems, sidebarOpen, activePath, onToggleExpand }) => {
     const isExpanded = expandedItems.includes(item.id);
-    const isActive = location.pathname === item.path;
+    const isActive = activePath === item.path;
     const hasChildren = item.children && item.children.length > 0;
 
     return (
       <div className="w-full">
         {hasChildren ? (
           <div className="w-full">
-            <button 
-              onClick={() => toggleExpand(item.id)}
-              className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all group ${
-                isExpanded ? 'text-primary bg-primary/5 dark:bg-primary/10' : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
-              }`}
+            <button
+              onClick={() => onToggleExpand(item.id)}
+              className={`w-full flex items-center gap-3 p-2.5 rounded-xl transition-all group ${isExpanded ? 'text-primary bg-primary/5 dark:bg-primary/10' : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
+                }`}
               style={{ paddingLeft: `${(depth * 12) + 12}px` }}
             >
               <item.icon size={18} className={`${isExpanded ? 'text-primary' : 'group-hover:text-primary transition-colors'}`} />
@@ -148,30 +171,37 @@ export const Dashboard: React.FC = () => {
                 </div>
               )}
             </button>
-            
+
             <AnimatePresence initial={false}>
               {isExpanded && sidebarOpen && (
-                <motion.div 
+                <motion.div
                   initial={{ height: 0, opacity: 0 }}
                   animate={{ height: 'auto', opacity: 1 }}
                   exit={{ height: 0, opacity: 0 }}
                   className="overflow-hidden border-l border-slate-100 dark:border-white/5 ml-4 my-1"
                 >
                   {item.children.map((child: any, idx: number) => (
-                    <NavItem key={idx} item={{...child, id: child.id || `${item.id}-${idx}`}} depth={depth + 1} />
+                    <NavItem
+                      key={idx}
+                      item={{ ...child, id: child.id || `${item.id}-${idx}` }}
+                      depth={depth + 1}
+                      expandedItems={expandedItems}
+                      sidebarOpen={sidebarOpen}
+                      activePath={activePath}
+                      onToggleExpand={onToggleExpand}
+                    />
                   ))}
                 </motion.div>
               )}
             </AnimatePresence>
           </div>
         ) : (
-          <Link 
+          <Link
             to={item.path === '#' ? '#' : item.path}
-            className={`flex items-center gap-3 p-2.5 rounded-xl transition-all group ${
-              isActive 
-                ? 'bg-primary/10 text-primary border-r-2 border-primary font-bold' 
-                : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
-            }`}
+            className={`flex items-center gap-3 p-2.5 rounded-xl transition-all group ${isActive
+              ? 'bg-primary/10 text-primary border-r-2 border-primary font-bold'
+              : 'text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5'
+              }`}
             style={{ paddingLeft: `${(depth * 12) + 12}px` }}
           >
             <item.icon size={18} className={`${isActive ? 'text-primary' : 'group-hover:text-primary transition-colors'}`} />
@@ -191,18 +221,21 @@ export const Dashboard: React.FC = () => {
 
   return (
     <div className="min-h-screen bg-slate-50 dark:bg-[#020617] flex font-sans transition-colors duration-300">
-      
+
       {/* --- DESKTOP SIDEBAR --- */}
-      <motion.aside 
+      <motion.aside
         initial={false}
-        animate={{ width: sidebarOpen ? 280 : 80 }}
-        className="hidden lg:flex flex-col bg-white dark:bg-[#0f172a] border-r border-slate-200 dark:border-white/5 fixed inset-y-0 z-30 transition-all shadow-xl"
+        animate={{
+          width: sidebarOpen ? 280 : 80,
+          x: 0
+        }}
+        className="hidden lg:flex flex-col bg-white dark:bg-[#0f172a] border-r border-slate-200 dark:border-white/5 fixed inset-y-0 left-0 z-40 shadow-xl"
       >
         <div className="h-16 flex items-center px-6 border-b border-slate-200 dark:border-white/5">
           <Link to="/" className="flex items-center gap-3 group">
             <div className="w-8 h-8 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-xl shadow-lg">T</div>
             {sidebarOpen && (
-              <motion.span 
+              <motion.span
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }}
                 className="font-display font-bold text-slate-900 dark:text-white"
               >
@@ -222,7 +255,14 @@ export const Dashboard: React.FC = () => {
               )}
               <div className="space-y-1">
                 {group.items.map((item) => (
-                  <NavItem key={item.id} item={item} />
+                  <NavItem
+                    key={item.id}
+                    item={item}
+                    expandedItems={expandedItems}
+                    sidebarOpen={sidebarOpen}
+                    activePath={location.pathname}
+                    onToggleExpand={toggleExpand}
+                  />
                 ))}
               </div>
             </div>
@@ -230,14 +270,14 @@ export const Dashboard: React.FC = () => {
         </div>
 
         <div className="p-4 border-t border-slate-200 dark:border-white/5 space-y-2">
-          <button 
+          <button
             onClick={() => navigate('/')}
             className="w-full flex items-center gap-3 p-3 rounded-xl text-slate-500 hover:bg-slate-100 dark:hover:bg-white/5 transition-all group"
           >
             <Globe size={18} className="group-hover:text-primary transition-colors" />
             {sidebarOpen && <span className="text-sm font-bold">Public Website</span>}
           </button>
-          <button 
+          <button
             onClick={handleLogout}
             className="w-full flex items-center gap-3 p-3 rounded-xl text-red-500 hover:bg-red-50 dark:hover:bg-red-500/10 transition-all group"
           >
@@ -251,47 +291,59 @@ export const Dashboard: React.FC = () => {
       <AnimatePresence>
         {mobileMenuOpen && (
           <>
-            <motion.div 
-              initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
               onClick={() => setMobileMenuOpen(false)}
-              className="lg:hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-[40]" 
+              className="lg:hidden fixed inset-0 bg-slate-900/60 backdrop-blur-sm z-[100]"
             />
             <motion.aside
-              initial={{ x: '-100%' }} animate={{ x: 0 }} exit={{ x: '-100%' }}
-              className="lg:hidden fixed inset-y-0 left-0 w-[85%] max-w-sm bg-white dark:bg-[#0f172a] z-[50] shadow-2xl p-6 overflow-y-auto"
+              initial={{ x: '-100%' }}
+              animate={{ x: 0 }}
+              exit={{ x: '-100%' }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="lg:hidden fixed inset-y-0 left-0 w-full sm:w-[320px] bg-white dark:bg-[#020617] z-[110] shadow-2xl flex flex-col overflow-hidden"
             >
-              <div className="flex items-center justify-between mb-8">
+              <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-white/5">
                 <div className="flex items-center gap-3">
-                   <div className="w-10 h-10 rounded-lg bg-primary flex items-center justify-center text-white font-bold text-2xl">T</div>
-                   <span className="font-display font-bold text-xl dark:text-white">Control Centre</span>
+                  <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-2xl shadow-lg">T</div>
+                  <span className="font-display font-bold text-xl dark:text-white">Control Centre</span>
                 </div>
-                <button onClick={() => setMobileMenuOpen(false)} className="p-2 dark:text-white bg-slate-100 dark:bg-white/5 rounded-full"><X size={20} /></button>
+                <button onClick={() => setMobileMenuOpen(false)} className="p-3 dark:text-white bg-slate-100 dark:bg-white/5 rounded-2xl hover:rotate-90 transition-transform"><X size={20} /></button>
               </div>
-              
-              <div className="space-y-6">
+
+              <div className="flex-1 overflow-y-auto p-6 scrollbar-hide">
                 {NAV_GROUPS.map((group, idx) => (
                   <div key={idx}>
                     <h5 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-4 px-2">{group.title}</h5>
                     <div className="space-y-1">
                       {group.items.map((item) => (
-                        <NavItem key={item.id} item={item} />
+                        <NavItem
+                          key={item.id}
+                          item={item}
+                          expandedItems={expandedItems}
+                          sidebarOpen={true} // Mobile drawer is always "open" conceptually for labels
+                          activePath={location.pathname}
+                          onToggleExpand={toggleExpand}
+                        />
                       ))}
                     </div>
                   </div>
                 ))}
               </div>
 
-              <div className="mt-12 pt-6 border-t border-slate-100 dark:border-white/5 space-y-3">
-                 <button 
+              <div className="p-6 border-t border-slate-100 dark:border-white/5 space-y-3">
+                <button
                   onClick={() => { setMobileMenuOpen(false); navigate('/'); }}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-white/5 font-bold"
+                  className="w-full flex items-center gap-4 p-4 rounded-2xl text-slate-600 dark:text-slate-400 bg-slate-50 dark:bg-white/5 font-bold hover:bg-primary/5 hover:text-primary transition-all"
                 >
                   <Globe size={18} />
                   <span>Public Website</span>
                 </button>
-                <button 
+                <button
                   onClick={handleLogout}
-                  className="w-full flex items-center gap-4 p-4 rounded-xl text-red-500 bg-red-50 dark:bg-red-500/10 font-bold"
+                  className="w-full flex items-center gap-4 p-4 rounded-2xl text-red-500 bg-red-50 dark:bg-red-500/10 font-bold hover:scale-[1.02] transition-all"
                 >
                   <LogOut size={18} />
                   <span>Sign Out</span>
@@ -303,13 +355,15 @@ export const Dashboard: React.FC = () => {
       </AnimatePresence>
 
       {/* --- MAIN CONTENT AREA --- */}
-      <main 
-        className="flex-1 min-w-0 transition-all"
-        style={{ marginLeft: sidebarOpen ? '280px' : '80px', transition: 'margin 0.3s cubic-bezier(0.4, 0, 0.2, 1)' }}
+      <main
+        className="flex-1 min-w-0 transition-all duration-300 ease-in-out"
+        style={{
+          paddingLeft: sidebarOpen ? '280px' : '80px',
+        }}
       >
         <style>{`
-          @media (max-width: 1024px) {
-            main { margin-left: 0 !important; }
+          @media (max-width: 1023px) {
+            main { padding-left: 0 !important; }
           }
         `}</style>
 
@@ -325,7 +379,7 @@ export const Dashboard: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
-            <button 
+            <button
               onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
               className="p-2 rounded-xl bg-slate-100 dark:bg-white/5 text-slate-500 dark:text-slate-400 hover:text-primary transition-all"
             >
@@ -368,20 +422,20 @@ export const Dashboard: React.FC = () => {
             <Route path="/logs" element={<ActivityLogs />} />
             <Route path="/alerts" element={<SecurityAlerts />} />
             <Route path="/settings" element={<GlobalSettings />} />
-            
+
             {/* Catch-all for non-implemented management routes */}
             <Route path="*" element={
               <div className="flex flex-col items-center justify-center py-32 text-center">
-                 <div className="w-20 h-20 bg-slate-100 dark:bg-white/5 rounded-3xl flex items-center justify-center mb-6">
-                    <Settings className="text-slate-400 animate-spin-slow" size={40} />
-                 </div>
-                 <h2 className="text-2xl font-bold dark:text-white mb-2">Module Under Construction</h2>
-                 <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-8 text-sm">
-                    This management interface is currently being synchronized with our production environment. Core tools will be active shortly.
-                 </p>
-                 <Button onClick={() => navigate('/control-centre')} variant="outline" className="rounded-full px-8">
-                    Return to Overview
-                 </Button>
+                <div className="w-20 h-20 bg-slate-100 dark:bg-white/5 rounded-3xl flex items-center justify-center mb-6">
+                  <Settings className="text-slate-400 animate-spin-slow" size={40} />
+                </div>
+                <h2 className="text-2xl font-bold dark:text-white mb-2">Module Under Construction</h2>
+                <p className="text-slate-500 dark:text-slate-400 max-w-md mx-auto mb-8 text-sm">
+                  This management interface is currently being synchronized with our production environment. Core tools will be active shortly.
+                </p>
+                <Button onClick={() => navigate('/control-centre')} variant="outline" className="rounded-full px-8">
+                  Return to Overview
+                </Button>
               </div>
             } />
           </Routes>

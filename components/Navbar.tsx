@@ -54,13 +54,12 @@ export const Navbar: React.FC = () => {
       >
         <div className="max-w-[1440px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-12 h-full flex items-center justify-between">
           {/* Logo Section */}
-          <NavLink to="/" className="flex items-center space-x-3 group">
-            <div className="relative">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-secondary flex items-center justify-center text-white font-bold text-xl shadow-lg transition-transform group-hover:scale-110 group-hover:rotate-3">
-                {config.navbar.logoPrimary.charAt(0)}
-              </div>
-              <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-emerald-500 rounded-full border-2 border-white dark:border-[#020617] animate-pulse"></div>
-            </div>
+          <NavLink to="/" className="flex items-center space-x-2 group">
+            <img
+              src="/images/logo/logo1.png"
+              alt="TechSafi Logo"
+              className="h-10 w-auto transition-transform group-hover:scale-105"
+            />
             <span className="text-2xl font-bold font-display tracking-tighter text-slate-900 dark:text-white">
               {config.navbar.logoPrimary}<span className="text-primary">{config.navbar.logoAccent}</span>
             </span>
@@ -181,7 +180,7 @@ export const Navbar: React.FC = () => {
             >
               <div className="flex items-center justify-between p-6 border-b border-slate-100 dark:border-white/5">
                 <div className="flex items-center gap-3">
-                  <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-white font-bold text-2xl shadow-lg">T</div>
+                  <img src="/images/logo/logo1.png" alt="Logo" className="h-8 w-auto" />
                   <span className="text-xl font-bold font-display text-slate-900 dark:text-white">
                     {config.navbar.logoPrimary}<span className="text-primary">{config.navbar.logoAccent}</span>
                   </span>
