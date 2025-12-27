@@ -638,7 +638,7 @@ export const saveBlogPosts = async (posts: BlogPost[]): Promise<void> => {
 export const fetchHomePageConfig = async (): Promise<HomePageConfig> => {
   const stored = localStorage.getItem(HOME_PAGE_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
-  
+
   const defaultConfig: HomePageConfig = {
     settings: { animationIntensity: 'medium', marqueeSpeed: 20, showGrid: true },
     hero: {
@@ -723,42 +723,50 @@ export const fetchGlobalLayoutConfig = async (): Promise<GlobalLayoutConfig> => 
   const stored = localStorage.getItem(CONFIG_STORAGE_KEY);
   if (stored) return JSON.parse(stored);
   return {
-    navbar: { 
-      logoPrimary: "Tech", 
-      logoAccent: "Safi", 
-      ctaLabel: "Initiate", 
+    navbar: {
+      logoPrimary: "Tech",
+      logoAccent: "Safi",
+      ctaLabel: "Initiate",
       links: [
         { id: '1', label: 'Home', path: '/' },
         { id: '2', label: 'Company', path: '/company' },
-        { id: '3', label: 'Services', path: '/services' },
+        {
+          id: '3',
+          label: 'Services',
+          path: '/services',
+          children: [
+            { id: '3-1', label: 'All Services', path: '/services' },
+            { id: '3-2', label: 'AI Solutions', path: '/ai-solutions' }
+          ]
+        },
         { id: '4', label: 'Pricing', path: '/pricing' },
         { id: '5', label: 'Blog', path: '/blog' },
         { id: '6', label: 'Contact', path: '/contact' }
-      ] 
+      ]
     },
-    footer: { 
-      tagline: "Building the next generation of intelligent software.", 
-      email: "info@techsafi.com", 
-      phone: "+254 751 380 948", 
-      address: "Nairobi, Kenya", 
+    footer: {
+      tagline: "Building the next generation of intelligent software.",
+      email: "info@techsafi.com",
+      phone: "+254 751 380 948",
+      address: "Nairobi, Kenya",
       socials: [
         { id: 's1', platform: 'Linkedin', url: '#' },
         { id: 's2', platform: 'Github', url: '#' }
-      ], 
+      ],
       quickLinks: [
         { id: 'q1', label: 'Home', path: '/' },
         { id: 'q2', label: 'Portfolio', path: '/portfolio' }
-      ], 
+      ],
       serviceLinks: [
         { id: 'sv1', label: 'Web Dev', path: '/services' },
         { id: 'sv2', label: 'AI Integration', path: '/ai-solutions' }
-      ], 
+      ],
       legalLinks: [
         { id: 'l1', label: 'Privacy Policy', path: '/privacy-policy' },
         { id: 'l2', label: 'Terms of Service', path: '/terms-of-service' }
-      ], 
-      copyright: "TechSafi - 2025 Innovation Elevated", 
-      officeHours: "Mon-Fri 9AM-6PM" 
+      ],
+      copyright: "TechSafi - 2025 Innovation Elevated",
+      officeHours: "Mon-Fri 9AM-6PM"
     }
   };
 };
@@ -778,11 +786,11 @@ export const fetchContactPageConfig = async (): Promise<ContactPageConfig> => {
       { id: 'c2', type: 'phone', title: 'Call Us', desc: 'Direct line', primaryDetail: '+254 751 380 948', secondaryDetail: 'Mon-Fri 9-5', link: 'tel:+254751380948', color: 'purple' },
       { id: 'c3', type: 'address', title: 'Visit Us', desc: 'Our HQ', primaryDetail: 'Nairobi, Kenya', secondaryDetail: 'CBD Office', link: '#', color: 'emerald' }
     ],
-    form: { 
-      title: "Send a Message", 
-      subjects: ['General Inquiry', 'Project Proposal', 'AI Integration', 'Career Opportunity'], 
-      budgets: ['Under KES 50k', 'KES 50k - 150k', 'KES 150k - 500k', 'Over KES 500k'], 
-      success: { title: "Message Received", message: "Our team will contact you within 24 hours." } 
+    form: {
+      title: "Send a Message",
+      subjects: ['General Inquiry', 'Project Proposal', 'AI Integration', 'Career Opportunity'],
+      budgets: ['Under KES 50k', 'KES 50k - 150k', 'KES 150k - 500k', 'Over KES 500k'],
+      success: { title: "Message Received", message: "Our team will contact you within 24 hours." }
     },
     whatsapp: { title: "WhatsApp Support", description: "Get instant responses via chat.", number: "254751380948", isActive: true },
     faqs: [

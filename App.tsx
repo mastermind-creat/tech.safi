@@ -1,9 +1,11 @@
-import React, { useEffect, Suspense } from 'react';
+import * as React from 'react';
 import { HashRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import { Layout } from './components/Layout';
 import { ThemeProvider } from './context/ThemeContext';
 import { ConfigProvider } from './context/ConfigContext';
 import { RefreshCw } from 'lucide-react';
+import { useEffect } from 'react';
+import { Suspense } from 'react';
 
 // Lazy load pages for better performance
 const Home = React.lazy(() => import('./pages/Home').then(m => ({ default: m.Home })));
@@ -50,7 +52,7 @@ const App: React.FC = () => {
               <Route element={<Layout><Company /></Layout>} path="/company" />
               <Route element={<Layout><Portfolio /></Layout>} path="/portfolio" />
               <Route element={<Layout><Services /></Layout>} path="/services" />
-              <Route element={<Layout><AiSolutions /></Layout>} path="/ai-solutions" /> 
+              <Route element={<Layout><AiSolutions /></Layout>} path="/ai-solutions" />
               <Route element={<Layout><Pricing /></Layout>} path="/pricing" />
               <Route element={<Layout><Careers /></Layout>} path="/careers" />
               <Route element={<Layout><Contact /></Layout>} path="/contact" />
@@ -60,7 +62,7 @@ const App: React.FC = () => {
               <Route element={<Layout><TermsOfService /></Layout>} path="/terms-of-service" />
               <Route element={<Layout><CookiePolicy /></Layout>} path="/cookie-policy" />
               <Route element={<Layout><Sitemap /></Layout>} path="/sitemap" />
-              
+
               {/* Dashboard Route */}
               <Route element={<Dashboard />} path="/control-centre/*" />
             </Routes>
