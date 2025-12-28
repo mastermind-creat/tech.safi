@@ -21,19 +21,36 @@ export const Login: React.FC = () => {
     setIsTyping(false);
     setIsLoading(true);
 
-    // Hardcoded Executive Credentials
-    const EXEC_EMAIL = 'executive@techsafi.com';
-    const EXEC_PASS = 'TechSafi';
+    // Hardcoded Executive Credentials (REMOVED)
+    // const EXEC_EMAIL = 'executive@techsafi.com';
+    // const EXEC_PASS = 'TechSafi';
 
     // Simulate Network Delay
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    if (email === EXEC_EMAIL && password === EXEC_PASS) {
-      // In a real app, we'd set a token/cookie here
+    try {
+      const response = await fetch('http://localhost:8000/api/login', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({ email, password })
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.message || 'Login failed');
+      }
+
+      // Login successful
       localStorage.setItem('techsafi_auth', 'true');
+      // Store user info if needed: localStorage.setItem('techsafi_user', JSON.stringify(data.user));
       navigate('/control-centre');
-    } else {
-      setError('Invalid executive credentials. Please verify and try again.');
+
+    } catch (err: any) {
+      setError(err.message || 'An error occurred during login.');
       setIsLoading(false);
     }
   };
@@ -73,7 +90,7 @@ export const Login: React.FC = () => {
           {/* Progress loader overlay */}
           <AnimatePresence>
             {isLoading && (
-              <MotionDiv 
+              <MotionDiv
                 initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }}
                 className="absolute inset-0 bg-white/60 dark:bg-[#020617]/60 backdrop-blur-sm z-20 flex flex-col items-center justify-center"
               >

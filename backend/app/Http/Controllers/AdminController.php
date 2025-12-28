@@ -99,4 +99,35 @@ class AdminController extends Controller
             'user' => $admin
         ]);
     }
+    /**
+     * Authenticate admin.
+     */
+    public function login(Request $request)
+    {
+        $validated = $request->validate([
+            'email' => 'required|email',
+            'password' => 'required',
+        ]);
+
+        $admin = User::where('email', $validated['email'])
+                    ->where('role', 'admin')
+                    ->first();
+
+        if (!$admin || !Hash::check($validated['password'], $admin->password)) {
+            return response()->json([
+                'message' => 'Invalid credentials'
+            ], 401);
+        }
+
+        if (!$admin->is_active) {
+            return response()->json([
+                'message' => 'Account suspended'
+            ], 403);
+        }
+
+        return response()->json([
+            'message' => 'Login successful',
+            'user' => $admin
+        ]);
+    }
 }
