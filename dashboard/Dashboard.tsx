@@ -33,6 +33,7 @@ import { ActivityLogs } from './sections/ActivityLogs';
 import { SecurityAlerts } from './sections/SecurityAlerts';
 import { GlobalSettings } from './sections/GlobalSettings';
 import { LiveAnalytics } from './sections/LiveAnalytics';
+import { AdminManagement } from './sections/AdminManagement';
 import { Button } from '../components/ui/Button';
 
 // Icons for nested items
@@ -99,6 +100,7 @@ const NAV_GROUPS = [
           { label: 'Media Library', path: '/control-centre/content', icon: ImageIcon },
           { label: 'Activity Logs', path: '/control-centre/logs', icon: History },
           { label: 'Security Alerts', path: '/control-centre/alerts', icon: ShieldAlert },
+          { label: 'Admin Access', path: '/control-centre/manage/admins', icon: Users },
         ]
       },
       { id: 'employees', label: 'Employee Hub', icon: Users, path: '/control-centre/employees', badge: 'Soon' },
@@ -421,6 +423,7 @@ export const Dashboard: React.FC = () => {
             <Route path="/content" element={<MediaLibrary />} />
             <Route path="/logs" element={<ActivityLogs />} />
             <Route path="/alerts" element={<SecurityAlerts />} />
+            <Route path="/manage/admins" element={<AdminManagement />} />
             <Route path="/settings" element={<GlobalSettings />} />
 
             {/* Catch-all for non-implemented management routes */}
