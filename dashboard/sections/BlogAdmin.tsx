@@ -203,11 +203,11 @@ export const BlogAdmin: React.FC = () => {
                            <div className="space-y-4">
                               <div className="space-y-1">
                                  <label className="text-[9px] font-bold text-slate-500 uppercase">Author Name</label>
-                                 <input value={currentPost?.author?.name} onChange={e => setCurrentPost({ ...currentPost, author: { ...currentPost.author!, name: e.target.value } })} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs font-bold dark:text-white outline-none" />
+                                 <input value={currentPost?.author?.name || ''} onChange={e => setCurrentPost(currentPost ? { ...currentPost, author: { ...(currentPost.author || { name: '', role: '', avatar: '' }), name: e.target.value } } : null)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs font-bold dark:text-white outline-none" />
                               </div>
                               <div className="space-y-1">
                                  <label className="text-[9px] font-bold text-slate-500 uppercase">Author Role</label>
-                                 <input value={currentPost?.author?.role} onChange={e => setCurrentPost({ ...currentPost, author: { ...currentPost.author!, role: e.target.value } })} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs dark:text-white outline-none" />
+                                 <input value={currentPost?.author?.role || ''} onChange={e => setCurrentPost(currentPost ? { ...currentPost, author: { ...(currentPost.author || { name: '', role: '', avatar: '' }), role: e.target.value } } : null)} className="w-full bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 rounded-lg px-3 py-1.5 text-xs dark:text-white outline-none" />
                               </div>
                               <div className="flex items-center justify-between">
                                  <div className="space-y-1">
